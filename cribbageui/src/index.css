@@ -1,0 +1,14 @@
+body {
+  margin: 0px;
+  padding: 10px;
+  font-family: sans-serif;
+  background-color: rgb(192,192,192);  
+}
+.page .row
+{
+  display: inline;
+}
+.page .column
+{
+  display: grid;
+}
