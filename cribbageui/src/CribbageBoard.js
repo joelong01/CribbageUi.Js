@@ -7,17 +7,17 @@ class CribbageBoard extends React.Component
     {
         super();
         this.draw = this.draw.bind(this);
-        this.left = 175 * 7 + 10;
-        this.height = 125 * 3 + 10;
+        this.left = 0;
+        this.height = 175 * 3 + 10;
 
     }
     render()
     {
-        let w = window.innerWidth - this.left;
+        let w = window.innerWidth;
         return (
             <canvas ref="boardCanvas">
                 width={w}
-                height= {this.height}
+                height= {175 * 3 + 10};
                 left = {this.left};
             top = {0};
         </canvas>
@@ -27,12 +27,118 @@ class CribbageBoard extends React.Component
     {
 
         const canvas = this.refs.boardCanvas;
+        canvas.width = 400;
+        canvas.height = 535;
+        canvas.left = 0;
+        canvas.top = 0;
+
         const hdc = this.refs.boardCanvas.getContext('2d');
         hdc.fillStyle = 'rgba(0,0,255, 1)';
         hdc.fillRect(0, 0, canvas.width, canvas.height);
         //roundRect(hdc, 0, 0, canvas.width, this.height, 4, true, true);
+        
+        printCanvasInfo(hdc, "crib", canvas.left, canvas.top, canvas.width, canvas.height);
+
+    }
+
+    componentDidMount()
+    {
+        window.addEventListener('resize', (value, e) => this.handleResize(this, false));
+
+        this.draw();
+    }
+
+    componentWillUnmount()
+    {
+        window.removeEventListener('resize', this.handleResize);
+
+    }
+
+    handleResize(value, e)
+    {
+        this.draw();
+    }
+}
+
+class CribCanvas extends React.Component
+{
+
+    render()
+    {
+
+        return (
+            <canvas ref="cribCanvas">
+                width={0}
+                height= {0}
+                left = {0};
+                top = {0};
+        </canvas>
+        );
+    }
+    draw()
+    {
+        var canvas = this.refs.cribCanvas;
+        canvas.width = 127;
+        canvas.height = 535;
+        canvas.left = 0;
+        canvas.top = 0;
+        const hdc = this.refs.cribCanvas.getContext('2d');
+        hdc.fillStyle = 'rgba(128,128,128, .75)';
+        hdc.fillRect(0, 0, canvas.clientWidth, canvas.clientHeight);
         hdc.fillStyle = 'rgba(0, 64, 0, 1)';
         hdc.strokeStyle = 'rgba(255, 0, 0, 1)';
+        roundRect(hdc, 1, 1, 125, 175, 4, true, true);
+        printCanvasInfo(hdc, "crib", canvas.left, canvas.top, canvas.width, canvas.height);
+    }
+
+    componentDidMount()
+    {
+        window.addEventListener('resize', (value, e) => this.handleResize(this, false));
+
+        this.draw();
+    }
+
+    componentWillUnmount()
+    {
+        window.removeEventListener('resize', this.handleResize);
+
+    }
+
+    handleResize(value, e)
+    {
+        this.draw();
+    }
+}
+
+class ControlCanvas extends React.Component
+{
+
+    render()
+    {
+
+        return (
+            <canvas ref="controlCanvas">
+                width={0}
+                height= {0}
+                left = {0};
+                top = {0};
+        </canvas>
+        );
+    }
+    draw()
+    {
+        var canvas = this.refs.controlCanvas;
+        canvas.width = 1292;
+        canvas.height = 400;
+        canvas.left = 0;
+        canvas.top = 0;
+        const hdc = this.refs.controlCanvas.getContext('2d');
+        hdc.fillStyle = 'rgba(0,128,128, .75)';
+        hdc.fillRect(0, 0, canvas.width, canvas.height);
+        hdc.fillStyle = 'rgba(0, 64, 64, 1)';
+        hdc.strokeStyle = 'rgba(255, 0, 255, 1)';
+        roundRect(hdc, 4, 4, 1284, 392, true, true);
+        printCanvasInfo(hdc, "control", canvas.left, canvas.top, canvas.width, canvas.height);
     }
 
     componentDidMount()
@@ -88,9 +194,14 @@ class CardGrid extends React.Component
     draw()
     {
         const canvas = this.refs.cardCanvas;
+        canvas.width = (this.state.cardCount * 125) + (2 * this.state.left);
+        canvas.left = 0;
+        canvas.top = 0;
+        canvas.height = 177;
+        
         const hdc = this.refs.cardCanvas.getContext('2d');
-        canvas.width = this.state.cardCount * 125 + this.state.left * 2;
-        canvas.height = 175 + this.state.top * 2;
+        
+        
 
         hdc.fillStyle = 'rgba(128,128,128, .5)';
         hdc.fillRect(0, 0, canvas.width, canvas.height);
@@ -98,11 +209,11 @@ class CardGrid extends React.Component
         hdc.fillStyle = 'rgba(0, 64, 0, 1)';
         hdc.strokeStyle = 'rgba(255, 0, 0, 1)';
 
-        roundRect(hdc, this.state.left, this.state.top, this.state.cardCount * 125, 175, 10, true, true);
-        hdc.font = "18px sans-serif";
-        hdc.fillStyle = 'rgba(255,255,255,1)';
-        hdc.fillText(this.state.gridName, 20, 40);
+        roundRect(hdc, 1,1, this.state.cardCount * 125, 175, 10, true, true);
+        printCanvasInfo(hdc, this.state.gridName, canvas.left, canvas.top, canvas.width, canvas.height);
+        
     }
+
 
     componentDidMount()
     {
@@ -124,7 +235,14 @@ class CardGrid extends React.Component
 
 }
 
-
+function printCanvasInfo (hdc, name, left, top, width, height)
+{
+        hdc.font = "12px Courier New";
+        hdc.fillStyle = 'rgba(255,255,255,1)';
+        hdc.fillText(name + "[l,t,w,h]", 20, 40);
+        hdc.fillText("[" + left +"," + top + "," +  width + "," + height + "]" , 20, 60);
+     
+};
 
 export class CribbageGame extends Component
 {
@@ -206,33 +324,31 @@ export class CribbageGame extends Component
 
         return (
 
-            <div className='page'>
-                <div className='row'>
-                    <div ref="cribCardGrid" className='column'>
-                        {this.renderCardGrid(1, 2, 2, true, 'crib1')}
-                        {this.renderCardGrid(1, 2, 2, true, 'crib2')}
-                        {this.renderCardGrid(1, 2, 2, true, 'crib3')}
-                    </div>
-                    <div className='row'>
-                        <div className='row'>
-                            {this.renderCardGrid(6, 2, 2, true, 'computer')}
-                            {this.renderCardGrid(5, 2, 2, true, 'counted')}
-                            {this.renderCardGrid(1, 2, 2, true, 'deck')}
-                            {this.renderCardGrid(6, 2, 0, true, 'player')}
-                        </div>
-                    </div>
-                    <div class='row'>
-                        {<CribbageBoard />}
-                    </div>
+            <div className='cribbagePage'>
+                <div ref="cribCardGrid" className='firstCol'>
+                    {<CribCanvas/>}
                 </div>
+                <div className='secondRow' ref='controlCanvas'>
+                    <ControlCanvas/>
+                </div>
+                <div className='secondCol'>                    
+                        {this.renderCardGrid(6, 2, 2, true, 'computer')}
+                        {this.renderCardGrid(5, 2, 2, true, 'counted')}
+                        {this.renderCardGrid(1, 2, 2, true, 'deck')}
+                        {this.renderCardGrid(6, 2, 0, true, 'player')}                    
+                </div>
+                <div className='thirdCol'>
+                    {<CribbageBoard />}
+                </div>
+               
+
             </div>
         );
     }
 
-
-
-
 }
+
+
 
 
 /**
