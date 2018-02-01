@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "makerjs": "^0.9.85",
+    "makerjs": "^0.9.86",
+    "prop-types": "^15.6.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-hybrid-canvas": "^1.0.0",

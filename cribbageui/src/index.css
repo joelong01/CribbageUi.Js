@@ -6,6 +6,18 @@ body {
 
 }
 
+.radioButton
+{
+  font-family: 'Verdana';
+  
+}
+.optionForm
+{
+  width: 150px;
+  height: 40px;
+  background-color: gray;
+}
+
 .cribbagePage
 {
   display: grid;
