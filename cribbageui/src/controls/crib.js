@@ -29,11 +29,11 @@ class CribCanvas extends React.Component
 
     cribOwnerChanged(e, newOwner)
     {
-        
-        this.setState({ cribOwner: newOwner}, () => 
+
+        this.setState({ cribOwner: newOwner }, () => 
         {
             console.log("cribOwnerChanged to: " + this.state.newOwner);
-            this.draw(); 
+            this.draw();
         });
 
     }
@@ -45,7 +45,7 @@ class CribCanvas extends React.Component
             <canvas ref={canvas => this.canvas = canvas} />
         );
     }
-    
+
 
 
     draw()
@@ -62,15 +62,27 @@ class CribCanvas extends React.Component
         }
         hdc.fillRect(0, 0, this.canvas.clientWidth, this.canvas.clientHeight);
         hdc.fillStyle = 'rgba(0, 64, 0, 1)';
-        hdc.strokeStyle = 'rgba(255, 0, 0, 1)';
+        hdc.strokeStyle = 'rgba(255, 0, 0, 1)';        
         roundRect(hdc, 1, cribTop, 125, 175, 4, true, true);
         printCanvasInfo(hdc, "crib", 0, cribTop, this.canvas.width, this.canvas.height);
         hdc.font = "12px Courier New";
         hdc.fillStyle = 'rgba(255,255,255,1)';
-        hdc.fillText(this.state.isComputerOwned ? "Computer's Crib" : "Player's Crib", 10, 80 + cribTop);
-        console.log("in crib.draw.  cribOwner: " + this.state.cribOwner);
+        hdc.fillText(this.state.cribOwner === "Computer" ? "Computer's Crib" : "Player's Crib", 10, 80 + cribTop);
+        console.log("in crib.draw.  cribOwner: " + this.state.cribOwner); 
+      
+        var img = new Image();
+       
+        img.onload = function()
+        {
+            img.width = 125;
+            img.height = 175;
+            hdc.drawImage(img, 0, 0);
+        }
+        img.src = "./BackOfCard.svg";
+     //img.src = "https://i.pinimg.com/736x/df/84/ec/df84ecb887a8970635d0011664dcb887.jpg";
     }
 
+    
     componentDidUpdate(prevProps, prevState) 
     {
         if (this.props.cribOwner !== prevProps.cribOwner || this.props.clientHeight !== prevProps.clientHeight) 
