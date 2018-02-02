@@ -27,14 +27,15 @@ class CribCanvas extends React.Component
 
     }
 
+
     cribOwnerChanged(e, newOwner)
     {
-
-        this.setState({ cribOwner: newOwner }, () => 
+        console.log("cribOwnerChanged to: " + newOwner);
+        this.setState({ cribOwner: newOwner }, function ()
         {
-            console.log("cribOwnerChanged to: " + this.state.newOwner);
             this.draw();
         });
+
 
     }
 
