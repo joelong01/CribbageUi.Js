@@ -9,6 +9,7 @@
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-hybrid-canvas": "^1.0.0",
+    "react-inlinesvg": "^0.7.5",
     "react-konva": "^1.6.6",
     "react-scripts": "1.1.0"
   },
