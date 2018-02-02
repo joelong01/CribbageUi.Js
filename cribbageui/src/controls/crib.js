@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import { roundRect } from "../helper_functions";
 import { printCanvasInfo } from "../helper_functions";
+import iSVG from 'react-inlinesvg';
+
 
 class CribCanvas extends React.Component
 {
@@ -12,18 +14,13 @@ class CribCanvas extends React.Component
         this.state =
             {
                 cribOwner: "Computer",
-                clientHeight: 340
+
             }
 
         this.cribOwnerChanged = this.cribOwnerChanged.bind(this);
-        this.draw = this.draw.bind(this);
-        this.animateCribToOwner = this.animateCribToOwner.bind(this);
 
 
-    }
-    animateCribToOwner(computerOwns)
-    {
-        this.setState({ isComputerOwned: computerOwns });
+
 
     }
 
@@ -33,7 +30,22 @@ class CribCanvas extends React.Component
         console.log("cribOwnerChanged to: " + newOwner);
         this.setState({ cribOwner: newOwner }, function ()
         {
-            this.draw();
+            var top = 0;
+            if (newOwner === "Player") 
+            {
+                // this.mySvg.style['transform'] = "rotate(180deg)"; //"translate(0, 361px);" //
+                this.mySvg.style['transform'] = "translate(0px, 361px)";
+                this.mySvg.top = "361px";
+
+            }
+            else
+            {
+                //this.mySvg.style['transform'] =  "rotate(0deg)"; //"translate(0,0px)"; //
+                this.mySvg.style['transform'] = "translate(0px, 0px)";
+                this.mySvg.top = "0px";
+            }
+
+
         });
 
 
@@ -43,78 +55,38 @@ class CribCanvas extends React.Component
     render()
     {
         return (
-            <canvas ref={canvas => this.canvas = canvas} />
+
+
+            <svg className="cribSvg" width="127px" height="535px" ref={mySvg => this.mySvg = mySvg} >
+                <defs>
+                    <filter id="filter1" x="0" y="0">
+                        <feGaussianBlur in="SourceGraphic" stdDeviation="8" />
+                    </filter>
+
+                    <filter id="filter2" x="0" y="0" width="110%" height="150%">
+                        <feOffset result="offOut" in="SourceAlpha" dx="10" dy="10" />
+                        <feGaussianBlur result="blurOut" in="offOut" stdDeviation="10" />
+                        <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+                    </filter>
+                </defs>
+                <g y="10px" >
+                    <rect className="cribCard" width={125} height={175} fill={'rgba(128,0,0,1)'} ref={cribCard => this.cribCard = cribCard}/* y={this.state.cribOwner === "Computer" ? 0 : 535 - 177} */ filter="url(#filter2)" />
+                    <text x={10} y={40} fill='white'>
+                        {this.state.cribOwner}
+                    </text>
+                </g>
+            </svg>
+
+
+
         );
     }
 
 
 
-    draw()
-    {
-        const hdc = this.canvas.getContext('2d');
-        hdc.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        hdc.fillStyle = 'rgba(128,128,128, .75)';
-        let cribTop = 2;
-        console.log("in draw cribOwner is " + this.state.cribOwner);
-        if (this.state.cribOwner !== "Computer")
-        {
-            cribTop = this.canvas.clientHeight - 177;
-        }
-        hdc.fillRect(0, 0, this.canvas.clientWidth, this.canvas.clientHeight);
-        hdc.fillStyle = 'rgba(0, 64, 0, 1)';
-        hdc.strokeStyle = 'rgba(255, 0, 0, 1)';        
-        roundRect(hdc, 1, cribTop, 125, 175, 4, true, true);
-        printCanvasInfo(hdc, "crib", 0, cribTop, this.canvas.width, this.canvas.height);
-        hdc.font = "12px Courier New";
-        hdc.fillStyle = 'rgba(255,255,255,1)';
-        hdc.fillText(this.state.cribOwner === "Computer" ? "Computer's Crib" : "Player's Crib", 10, 80 + cribTop);
-        console.log("in crib.draw.  cribOwner: " + this.state.cribOwner); 
-      
-        var img = new Image();
-       
-        img.onload = function()
-        {
-            img.width = 125;
-            img.height = 175;
-            hdc.drawImage(img, 0, 0);
-        }
-        img.src = "./BackOfCard.svg";
-     //img.src = "https://i.pinimg.com/736x/df/84/ec/df84ecb887a8970635d0011664dcb887.jpg";
-    }
 
-    
-    componentDidUpdate(prevProps, prevState) 
-    {
-        if (this.props.cribOwner !== prevProps.cribOwner || this.props.clientHeight !== prevProps.clientHeight) 
-        {
-            console.log("state changed. call draw()");
-            this.draw();
-        }
-        else
-        {
-            console.log("state didn't change");
-        }
-    }
 
-    componentDidMount()
-    {
-        window.addEventListener('resize', (value, e) => this.handleResize(this, false));
-        this.canvas.width = 127;
-        this.canvas.height = 535;
-        this.draw();
-    }
-
-    componentWillUnmount()
-    {
-        window.removeEventListener('resize', this.handleResize);
-
-    }
-
-    handleResize(value, e)
-    {
-        this.draw();
-    }
 }
 
 export default CribCanvas;

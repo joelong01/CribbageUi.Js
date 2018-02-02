@@ -2,7 +2,35 @@ body {
   margin: 0px;
   padding: 10px;
   font-family: 'Verdana';
-  background-image: url(./images/felt.png) ;
+  background-image: url(./images/BackOfCard.svg) ;
+  background-clip: content-box;
+  
+}
+
+@keyframes example {
+  from {transform: translate(0px, 0px)};
+  to {transform: translate(0px, 328px)};
+  
+}
+
+.cribSvg
+{
+  
+  transition-duration: 0.5s;
+  transition-property: all;
+  transform:translate(0px,0px);
+  transition-timing-function: linear;
+  font-family: 'Courier New';  
+
+}
+
+.cribCard
+{
+  transition-duration: 0.5s;
+  transition-property: all;
+  transition-timing-function: ease-in-out;
+  border-bottom-left-radius: 15; 
+  border-bottom-right-radius: 15; 
 
 }
 

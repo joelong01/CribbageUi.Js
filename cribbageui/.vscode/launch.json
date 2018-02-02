@@ -9,7 +9,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
-            "url": "http://localhost:3000",
+            "url": "localhost:3000",
             "port": 9222,
             "webRoot": "${workspaceFolder}"
         },
@@ -19,6 +19,20 @@
             "name": "Attach to Chrome",
             "port": 9222,
             "webRoot": "${workspaceFolder}"
+        },
+        {
+            "name": "Launch localhost with sourcemaps",
+            "type": "edge",
+            "request": "launch",
+            "url": "localhost:3000",
+            "webRoot": "${workspaceRoot}/src",
+            "sourceMaps": true
+        },
+        {
+            "name": "Launch index.html (without sourcemaps)",
+            "type": "edge",
+            "request": "launch",
+            "file": "${workspaceRoot}/src"
         }
 
     ]
