@@ -12,7 +12,7 @@ export class CribbageBoard extends React.Component
         super();
         this.draw = this.draw.bind(this);
         this.left = 0;
-        this.height = 175 * 3 + 10;
+        this.height = 225 * 3 + 10;
         
     }
     render()
@@ -21,7 +21,7 @@ export class CribbageBoard extends React.Component
         return (
             <canvas ref="boardCanvas">
                 width={w}
-                height= {175 * 3 + 10};
+                height= {225 * 3 + 10};
                 left = {this.left};
             top = {0};
         </canvas>
@@ -32,7 +32,7 @@ export class CribbageBoard extends React.Component
 
         const canvas = this.refs.boardCanvas;
         canvas.width = 400;
-        canvas.height = 535;
+        canvas.height = 3*(225 + 2);
         canvas.left = 0;
         canvas.top = 0;
 
