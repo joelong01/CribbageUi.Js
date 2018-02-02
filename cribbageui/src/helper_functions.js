@@ -1,3 +1,6 @@
+import React, { Component } from 'react';
+import { Shape } from 'react-konva';
+
 /**
  * Draws a rounded rectangle using the current state of the canvas.
  * If you omit the last three params, it will draw a rectangle
@@ -42,14 +45,38 @@ export const roundRect =  (ctx, x, y, width, height, radius, fill, stroke) =>
     }
 }
 
+export function MyRoundRect(x, y, width, height, radius, fillColor, strokeColor)
+{
+    return(
+    <Shape fill={fillColor} stroke={strokeColor} draggable
+        sceneFunc = 
+        {
+            function (ctx)
+            {
+                ctx.beginPath();
+                ctx.moveTo(x + radius, y);
+                ctx.lineTo(x + width - radius, y);
+                ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+                ctx.lineTo(x + width, y + height - radius);
+                ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                ctx.lineTo(x + radius, y + height);
+                ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+                ctx.lineTo(x, y + radius);
+                ctx.quadraticCurveTo(x, y, x + radius, y);
+                ctx.closePath();
+                
+            }
+        }
+    />);
+}
 
 
 export const printCanvasInfo =  (hdc, name, left, top, width, height) =>
 {
         hdc.font = "12px Courier New";
         hdc.fillStyle = 'rgba(255,255,255,1)';
-        hdc.fillText(name + "[l,t,w,h]", 20, 40);
-        hdc.fillText("[" + left +"," + top + "," +  width + "," + height + "]" , 20, 60);
+        hdc.fillText(name + "[l,t,w,h]", 10, top+40);
+        hdc.fillText("[" + left +"," + top + "," +  width + "," + height + "]" , 10, top+60);
      
 };
  
