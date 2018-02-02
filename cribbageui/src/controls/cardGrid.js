@@ -25,8 +25,8 @@ export class CardGrid extends React.Component
     {
         return (
             <canvas ref="cardCanvas">
-                width={(this.state.cardCount * 125) + (2 * this.state.left)}
-                height= {175 + 2 * this.state.top}
+                width={(this.state.cardCount * 150) + (2 * this.state.left)}
+                height= {225 + 2 * this.state.top}
                 left = {this.state.left}
                 top = {this.state.top}
             </canvas>
@@ -36,10 +36,10 @@ export class CardGrid extends React.Component
     draw()
     {
         const canvas = this.refs.cardCanvas;
-        canvas.width = (this.state.cardCount * 125) + (2 * this.state.left);
+        canvas.width = (this.state.cardCount * 150) + (2 * this.state.left);
         canvas.left = 0;
         canvas.top = 0;
-        canvas.height = 177;
+        canvas.height = 227;
         
         const hdc = this.refs.cardCanvas.getContext('2d');
         
@@ -51,7 +51,7 @@ export class CardGrid extends React.Component
         hdc.fillStyle = 'rgba(0, 64, 0, 1)';
         hdc.strokeStyle = 'rgba(255, 0, 0, 1)';
 
-        roundRect(hdc, 1,1, this.state.cardCount * 125, 175, 10, true, true);
+        roundRect(hdc, 1,1, this.state.cardCount * 150, 225, 10, true, true);
         printCanvasInfo(hdc, this.state.gridName, canvas.left, canvas.top, canvas.width, canvas.height);
         
     }

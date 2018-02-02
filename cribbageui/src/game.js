@@ -106,7 +106,7 @@ export class CribbageGame extends Component
 
             <div className='cribbagePage'>
                 <div ref="cribCardGrid" className='firstCol'>
-                    {<CribCanvas ref="cribCanvas" cribOwner={"Computer"} clientHeight={577} width={127} height={535} />}                    
+                    {<CribCanvas ref="cribCanvas" cribOwner={"Computer"} clientHeight={681} width={127} height={681} />}                    
                 </div>
                 <div className='secondRow' ref='controlCanvas'>
                     <ControlCanvas cribOwnerChanged={this.cribOwnerChanged} cribOwner={"Computer"} />

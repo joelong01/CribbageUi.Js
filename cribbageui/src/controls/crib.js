@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { roundRect } from "../helper_functions";
 import { printCanvasInfo } from "../helper_functions";
-import iSVG from 'react-inlinesvg';
+import isvg from 'react-inlinesvg';
 
 
 class CribCanvas extends React.Component
@@ -34,7 +34,7 @@ class CribCanvas extends React.Component
             if (newOwner === "Player") 
             {
                 // this.mySvg.style['transform'] = "rotate(180deg)"; //"translate(0, 361px);" //
-                this.mySvg.style['transform'] = "translate(0px, 361px)";
+                this.mySvg.style['transform'] = "translate(0px, 460px)";
                 this.mySvg.top = "361px";
 
             }
@@ -55,9 +55,9 @@ class CribCanvas extends React.Component
     render()
     {
         return (
-
-
-            <svg className="cribSvg" width="127px" height="535px" ref={mySvg => this.mySvg = mySvg} >
+           
+            <div>
+            <svg className="cribSvg" width="127px" height="535px" ref={mySvg => this.mySvg = mySvg} use={"./BackOfCard.svg"} >
                 <defs>
                     <filter id="filter1" x="0" y="0">
                         <feGaussianBlur in="SourceGraphic" stdDeviation="8" />
@@ -69,24 +69,41 @@ class CribCanvas extends React.Component
                         <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
                     </filter>
                 </defs>
-                <g y="10px" >
-                    <rect className="cribCard" width={125} height={175} fill={'rgba(128,0,0,1)'} ref={cribCard => this.cribCard = cribCard}/* y={this.state.cribOwner === "Computer" ? 0 : 535 - 177} */ filter="url(#filter2)" />
+                <g>
+                    
+                    <rect className="cribCard" width={150} height={225} fill={'rgba(128,0,0,1)'} ref={cribCard => this.cribCard = cribCard} filter="url(#filter2)" /> 
+
+                    <BackOfCard/>
+
                     <text x={10} y={40} fill='white'>
                         {this.state.cribOwner}
                     </text>
+                   
+                   
+
+                        
                 </g>
             </svg>
-
-
-
+            
+            </div>
+            
+           
         );
     }
 
+}
 
 
-
-
-
+export class BackOfCard extends Component
+{
+    render()
+    {
+        return(
+            <div>
+            <img className="backOfCard" src={require("../images/BackOfCard.png")} alt={""}/>                
+            </div>
+        );
+    }
 }
 
 export default CribCanvas;
