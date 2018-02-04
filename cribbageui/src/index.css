@@ -1,10 +1,10 @@
 body {
-  transform:scale(0.75);
+  transform:scale(1.0);
   transform-origin: top left;
   margin: 0px;
   padding: 10px;
   font-family: 'Verdana';
-  background-image: url(./images/BackOfCard.svg) ;
+  background-image: url(./images/Cards/BackOfCard.svg) ;
   background-clip: content-box;
   
   
@@ -18,7 +18,7 @@ body {
 
 .cribSvg
 {
-  
+  background-color: gray;
   transition-duration: 0.5s;
   transition-property: all;
   transform:translate(0px,0px);
@@ -30,22 +30,58 @@ body {
 .cribCard
 {
   transition-duration: 0.5s;
-  transition-property: all;
+  transition-property: transform;
   transition-timing-function: ease-in-out;
-  border-bottom-left-radius: 15; 
-  border-bottom-right-radius: 15; 
-
+  padding: 2px;
+  background-color:black;
+  border-radius: 5%;
+  
 }
-.backOfCard
+
+.cardGrid
 {
-  top:176px;
+  border-radius: 1em;
+  background-color:darkolivegreen;
+  border-color: black;
+  border-width: 2px;
+  padding: 2px;
+  transform:scale(0.2);
+}
+/* style for the whole card class.  it has a faceup and a facedown. */
+*[class$='_card']
+{  
+  transition-duration: 0.5s;
+  transition-property: transform;
+  transition-timing-function: ease-in-out;
   width: 150px;
   height: 225px;
   border: 1px solid black;
   border-radius: 5px;
   fill: black;
-
+  padding: 0px;
+  margin: 0px;
 }
+
+*[class$='_faceup']
+{  
+  width: 150px;
+  height: 225px;
+  border: 1px solid black;
+  border-radius: 5px;
+  fill: black;
+}
+
+*[class$='_facedown']
+{  
+  transform:translate(-1px, -231px); /* these aren't 0,225 because of some funky div thing */
+  width: 150px;
+  height: 225px;
+  border: 1px solid black;
+  border-radius: 5px;
+  fill: black;
+  opacity: 1;
+}
+
 .radioButton
 {
   font-family: 'Verdana';
@@ -61,7 +97,7 @@ body {
 .cribbagePage
 {
   display: grid;
-  grid-template-columns: 154px 913px 400px;
+  grid-template-columns: 154px 929px 400px;
   grid-template-rows: 685px 400px;
   
   

@@ -1,79 +1,70 @@
 // eslint-disable-next-line
 import React, { Component } from 'react';
-import {roundRect} from "../helper_functions";
-import {printCanvasInfo} from "../helper_functions";
+// eslint-disable-next-line
+import cardImages, { cardFiles } from './deck';
+// eslint-disable-next-line
+import Card from "./card";
+
+
+
 export class CardGrid extends React.Component
 {
     constructor(props)
     {
+        var cards = [];
         super(props);
-        this.cardCount = props.children[5];
-        this.gridName = props.children[9];
-        this.state = {
-            left: props.children[1],
-            top: props.children[3],
-            cardCount: props.children[5],
-            stacked: props.children[7],
-            gridName: props.children[9]
-        }
-        console.log("cardCount:" + this.cardCount);
-        this.draw = this.draw.bind(this);
-        this.render = this.render.bind(this);
+
+        this.state =
+            {
+                cardCount: 3,
+                stacked: false,
+                gridName: "uninitialized"
+            }
+
+
+    }
+
+    componentDidMount() 
+    {
+        this.setState({ cardCount: this.props.cardCount });
+        this.setState({ stacked: this.props.stacked });
+        this.setState({ gridName: this.props.gridName });
+    }
+
+    renderCard(name)
+    {
+        return (<Card ref={name => this.name = name} cardName={name} key={name} />);
     }
 
     render() 
     {
+        console.log("count: " + this.state.cardCount)
+        let w = this.state.cardCount * 150;
+        let h = 225;
+        let c = [];
+        for (let i = 0; i < this.state.cardCount; i++)
+        {
+            let x = this.renderCard("BackOfCard");
+            c.push(x);
+        }
+
         return (
-            <canvas ref="cardCanvas">
-                width={(this.state.cardCount * 150) + (2 * this.state.left)}
-                height= {225 + 2 * this.state.top}
-                left = {this.state.left}
-                top = {this.state.top}
-            </canvas>
+
+            <div name="cardGrid">
+                {c}
+            </div>
+
         );
     }
 
-    draw()
-    {
-        const canvas = this.refs.cardCanvas;
-        canvas.width = (this.state.cardCount * 150) + (2 * this.state.left);
-        canvas.left = 0;
-        canvas.top = 0;
-        canvas.height = 227;
-        
-        const hdc = this.refs.cardCanvas.getContext('2d');
-        
-        
 
-        hdc.fillStyle = 'rgba(128,128,128, .5)';
-        hdc.fillRect(0, 0, canvas.width, canvas.height);
-
-        hdc.fillStyle = 'rgba(0, 64, 0, 1)';
-        hdc.strokeStyle = 'rgba(255, 0, 0, 1)';
-
-        roundRect(hdc, 1,1, this.state.cardCount * 150, 225, 10, true, true);
-        printCanvasInfo(hdc, this.state.gridName, canvas.left, canvas.top, canvas.width, canvas.height);
-        
-    }
-
-
-    componentDidMount()
-    {
-        window.addEventListener('resize', (value, e) => this.handleResize(this, false));
-
-        this.draw();
-    }
-
-    componentWillUnmount()
-    {
-        window.removeEventListener('resize', this.handleResize);
-
-    }
-
-    handleResize(value, e)
-    {
-        this.draw();
-    }
 
 }
 export default CardGrid;
+
+/* <Card ref={card1 => this.card1 = card1} cardName={"AceOfClubs"} />                    
+                    <Card ref={card2 => this.card2 = card2} cardName={"TwoOfClubs"} />
+                    <Card ref={card3 => this.card3 = card3} cardName={"ThreeOfClubs"} />
+                    <Card ref={card4 => this.card4 = card4} cardName={"FourOfClubs"} />
+                    <Card ref={card5 => this.card5 = card5} cardName={"FiveOfHearts"} />
+                    <Card ref={card6 => this.card6 = card6} cardName={"SixOfDiamonds"} /> */

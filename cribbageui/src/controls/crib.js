@@ -1,8 +1,7 @@
 // eslint-disable-next-line
 import React, { Component } from 'react';
-import { roundRect } from "../helper_functions";
-import { printCanvasInfo } from "../helper_functions";
-import isvg from 'react-inlinesvg';
+import cardImages from './deck';
+import Card from "./card";
 
 
 class CribCanvas extends React.Component
@@ -13,7 +12,8 @@ class CribCanvas extends React.Component
 
         this.state =
             {
-                cribOwner: "Computer",
+                cribOwner: "Computer",              // this not only gives the owner but changing it changes the crib position
+                cardImage:cardImages["BackOfCard"]  // the card to display on the top
 
             }
 
@@ -24,25 +24,25 @@ class CribCanvas extends React.Component
 
     }
 
-
     cribOwnerChanged(e, newOwner)
     {
         console.log("cribOwnerChanged to: " + newOwner);
         this.setState({ cribOwner: newOwner }, function ()
-        {
-            var top = 0;
+        {            
             if (newOwner === "Player") 
             {
                 // this.mySvg.style['transform'] = "rotate(180deg)"; //"translate(0, 361px);" //
-                this.mySvg.style['transform'] = "translate(0px, 460px)";
-                this.mySvg.top = "361px";
+                this.cribCard.translate(0, 460);
+                this.cribCard.setCard("AceOfSpades");
+                this.cribCard.setOrientation("faceup");
 
             }
             else
             {
                 //this.mySvg.style['transform'] =  "rotate(0deg)"; //"translate(0,0px)"; //
-                this.mySvg.style['transform'] = "translate(0px, 0px)";
-                this.mySvg.top = "0px";
+                this.cribCard.translate(0, 0);
+                this.cribCard.setCard("JackOfDiamonds");
+                this.cribCard.setOrientation("facedown");
             }
 
 
@@ -54,9 +54,18 @@ class CribCanvas extends React.Component
 
     render()
     {
-        return (
-           
-            <div>
+        
+        return (            
+                <Card ref={cribCard => this.cribCard = cribCard} cardName={"KingOfClubs"} cardOrientation={"faceup"}/>               
+        );
+    }
+
+}
+
+
+                      
+            
+            /* <div>
             <svg className="cribSvg" width="127px" height="535px" ref={mySvg => this.mySvg = mySvg} use={"./BackOfCard.svg"} >
                 <defs>
                     <filter id="filter1" x="0" y="0">
@@ -85,25 +94,20 @@ class CribCanvas extends React.Component
                 </g>
             </svg>
             
-            </div>
-            
-           
-        );
-    }
-
-}
+            </div>  */
 
 
+/* 
 export class BackOfCard extends Component
 {
     render()
     {
-        return(
+        return (
             <div>
-            <img className="backOfCard" src={require("../images/BackOfCard.png")} alt={""}/>                
+                <img className="backOfCard" src={require("../images/Cards/AceOfClubs.png")} srcSet={require("../images/BackOfCard.svg")} alt={""} />
             </div>
         );
     }
-}
+} */
 
 export default CribCanvas;
