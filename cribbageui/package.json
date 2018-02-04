@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "enum": "^2.5.0",
     "konva": "^1.7.6",
     "makerjs": "^0.9.86",
     "prop-types": "^15.6.0",

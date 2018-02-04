@@ -2,10 +2,10 @@
 // eslint-disable-next-line
 import React, { Component } from 'react';
 import CribCanvas from './controls/crib'
-
 import ControlCanvas from './controls/userinput'
 import CardGrid from './controls/cardGrid';
 import CribbageBoard from './controls/CribbageBoard';
+import cardFiles from './controls/deck';
 
 
 
@@ -39,16 +39,10 @@ export class CribbageGame extends Component
 
     }
 
-    renderCardGrid(count, l, t, isStacked, n)
+    renderCardGrid(count, isStacked, n)
     {
         return (
-            <CardGrid>
-                left:{l}
-                top:{t}
-                cardCount:{count}
-                stacked:{isStacked}
-                gridName:{n}
-            </CardGrid>
+            <CardGrid cardCount={count} stacked={isStacked} gridName={n} />
         );
     }
 
@@ -102,21 +96,22 @@ export class CribbageGame extends Component
     {
 
 
+
         return (
 
             <div className='cribbagePage'>
                 <div ref="cribCardGrid" className='firstCol'>
-                    {<CribCanvas ref="cribCanvas" cribOwner={"Computer"} clientHeight={681} width={127} height={681} />}                    
+                    {<CribCanvas ref="cribCanvas" cribOwner={"Computer"} cardName={cardFiles["KingOfSpades"]} clientHeight={681} width={127} height={681} />}                    
                 </div>
                 <div className='secondRow' ref='controlCanvas'>
                     <ControlCanvas cribOwnerChanged={this.cribOwnerChanged} cribOwner={"Computer"} />
                 </div>
-                <div className='secondCol'>
-                    {this.renderCardGrid(6, 2, 2, true, 'computer')}
-                    {this.renderCardGrid(5, 2, 2, true, 'counted')}
-                    {this.renderCardGrid(1, 2, 2, true, 'deck')}
-                    {this.renderCardGrid(6, 2, 0, true, 'player')}
-                </div>
+               {/*  <div className='secondCol'>
+                    {this.renderCardGrid(6,  false, 'computer')}
+                    {this.renderCardGrid(5,  false, 'counted')}
+                    {this.renderCardGrid(1,  true, 'deck')}
+                    {this.renderCardGrid(6,  false, 'player')}
+                </div> */}
                 <div className='thirdCol'>
                     {<CribbageBoard />}
                 </div>
