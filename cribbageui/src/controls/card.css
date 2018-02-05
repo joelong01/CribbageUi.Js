@@ -1,0 +1,65 @@
+/* style for the whole card class.  it has a faceup and a facedown. */
+[class$='_card']
+{  
+  transition-duration: 0.5s;
+  transition-property: transform;	
+  transform: translate(0px, 0px);
+  transition-timing-function: ease-in-out;
+  perspective: 1000px;
+  
+}
+
+/* .KingOfClubs_card.flip .KingOfClubs_flipper
+{
+  transform: rotateY(180deg);
+} */
+
+.flip [class$='_flipper'] 
+{
+  transform: rotateY(180deg);
+}
+
+[class$='_flipper']
+{
+  transition: 1.0s;
+	transform-style: preserve-3d;
+  position: relative;
+  transform: rotateY(0deg);
+  
+}
+
+
+[class$='_faceup'], [class$='_facedown']
+{
+  backface-visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+
+[class$='_faceup']
+{  
+  width: 150px;
+  height: 225px;
+  border: 1px solid black;
+  border-radius: 5px;
+  fill: black;
+
+	/* for firefox 31 */
+	transform: rotateY(180deg);
+
+}
+
+[class$='_facedown']
+{  
+  width: 150px;
+  height: 225px;
+  border: 1px solid black;
+  border-radius: 5px;
+  fill: black;
+  opacity: 1.0;
+  z-index: 2;
+  transform: rotateY(0deg);
+  
+}

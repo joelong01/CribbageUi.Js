@@ -1,5 +1,8 @@
+/*eslint-disable no-unused-vars*/
+
 import React, { Component } from 'react';
 import cardImages from './deck';
+import './card.css';
 
 export default class Card extends React.Component
 {
@@ -19,7 +22,7 @@ export default class Card extends React.Component
 
 
     }
-    componentDidMount() 
+    componentDidMount()
     {
         this.setState({ cardName: this.props.cardName });
         this.setState({ cardOrientation: this.props.cardOrientation });
@@ -27,23 +30,48 @@ export default class Card extends React.Component
     }
     setOrientation(o)
     {
+      //  console.log("old orientation: ", this.state.cardOrientation, "new orientation: ", o, "cardname: ", this.state.cardName);
+      //  console.log("transform", this.myFlipper.style['tranform'] );
         if (o === "facedown")
         {
-            this.setState({ cardOrientation: "facedown" });
-            this.facedownCard.style['opacity'] = 1.0;
+            
+            this.setState({ cardOrientation: "facedown" }, () => 
+            {
+             //   console.log("attempting to flip to faceup");
+               /*  let transform = "rotateY(0deg)";
+                this.myFlipper.style['tranform'] = transform; */
+            });
+
         }
         else
         {
-            this.setState({ cardOrientation: "faceup" });
-            this.facedownCard.style['opacity'] = 0.0;
+            this.setState({ cardOrientation: "faceup" }, () => 
+            {
+              //  console.log("attempting to flip to faceup");
+              /*   let tranform = "rotateY(180deg)";
+                this.myFlipper.style['tranform'] = tranform; */
+            }
+            );
+
         }
 
     }
 
     handleClick()
     {
-        console.log("clicked");
-        this.flipper.classList.toggle("flip")
+       console.log("classList has flip", this.myCard.classList.contains('flip'));
+        this.myCard.classList.toggle('flip');
+        if (this.state.cardOrientation === "facedown")
+        {
+            this.setOrientation("faceup");
+        }
+        else
+        {
+            this.setOrientation("facedown");
+
+        }
+        /*       console.log("flipper.classList.contains('flip')", this.flipper.classList.contains("flip"));
+              this.flipper.classList.toggle("flip") */
     }
 
     translate(x, y)
@@ -66,7 +94,7 @@ export default class Card extends React.Component
         let flipperName = this.state.cardName + "_flipper";
         return (
             <div className={cardClassName} ref={myCard => this.myCard = myCard} onClick={this.handleClick}>
-                <div classNaem={flipperName} ref={flipper => this.flipper = flipper}>
+                <div className={flipperName} ref={myFlipper => this.myFlipper = myFlipper} >
                     <img className={faceupName}
                         alt={require("../images/Cards/error.png")}
                         srcSet={faceupImage}
