@@ -1,4 +1,4 @@
-// eslint-disable-next-line
+/*eslint-disable no-unused-vars*/
 import React, { Component } from 'react';
 import cardImages from './deck';
 import Card from "./card";
@@ -12,8 +12,7 @@ class CribCanvas extends React.Component
 
         this.state =
             {
-                cribOwner: "Computer",              // this not only gives the owner but changing it changes the crib position
-                cardImage:cardImages["BackOfCard"]  // the card to display on the top
+                cribOwner: "Computer",              // this not only gives the owner but changing it changes the crib position                
 
             }
 
@@ -34,7 +33,7 @@ class CribCanvas extends React.Component
                 // this.mySvg.style['transform'] = "rotate(180deg)"; //"translate(0, 361px);" //
                 this.cribCard.translate(0, 460);
                 this.cribCard.setCard("AceOfSpades");
-                this.cribCard.setOrientation("faceup");
+              //  this.cribCard.setOrientation("faceup");
 
             }
             else
@@ -42,7 +41,7 @@ class CribCanvas extends React.Component
                 //this.mySvg.style['transform'] =  "rotate(0deg)"; //"translate(0,0px)"; //
                 this.cribCard.translate(0, 0);
                 this.cribCard.setCard("JackOfDiamonds");
-                this.cribCard.setOrientation("facedown");
+               // this.cribCard.setOrientation("facedown");
             }
 
 
@@ -56,7 +55,7 @@ class CribCanvas extends React.Component
     {
         
         return (            
-                <Card ref={cribCard => this.cribCard = cribCard} cardName={"KingOfClubs"} cardOrientation={"faceup"}/>               
+                <Card ref={cribCard => this.cribCard = cribCard} cardName={"KingOfClubs"} cardOrientation={"facedown"}/>               
         );
     }
 

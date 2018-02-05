@@ -1,3 +1,4 @@
+/*eslint-disable no-unused-vars*/
 // eslint-disable-next-line
 import React, { Component } from 'react';
 // eslint-disable-next-line

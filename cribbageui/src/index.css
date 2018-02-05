@@ -11,34 +11,6 @@ body {
   
 }
 
-@keyframes example {
-  from {transform: translate(0px, 0px)};
-  to {transform: translate(0px, 328px)};
-  
-}
-
-.cribSvg
-{
-  background-color: gray;
-  transition-duration: 0.5s;
-  transition-property: all;
-  transform:translate(0px,0px);
-  transition-timing-function: linear;
-  font-family: 'Courier New';  
-
-}
-
-.cribCard
-{
-  transition-duration: 0.5s;
-  transition-property: transform;
-  transition-timing-function: ease-in-out;
-  padding: 2px;
-  background-color:black;
-  border-radius: 5%;
-  
-}
-
 .cardGrid
 {
   border-radius: 1em;
@@ -50,69 +22,7 @@ body {
 }
 
 
-/* style for the whole card class.  it has a faceup and a facedown. */
-*[class$='_card']
-{  
-  transition-duration: 0.5s;
-  transition-property: transform;	
-  transform: translate(0px, 0px);
-  transition-timing-function: ease-in-out;
-  perspective: 1000px;
-  
-}
 
-*[class$='_flipper']
-{
-  transition: 1.0s;
-	transform-style: preserve-3d;
-	position: relative;
-
-}
-
-
-*[class$='_card']:hover *[class$='_flipper'], *[class$='_card'].hover *[class$='_flipper'], *[class$='_card'].flip *[class$='_flipper'] 
-{
-	transform: rotateY(180deg);
-}
-
-
-
-
-*[class$='_faceup'], *[class$='_facedown']
-{
-  backface-visibility: hidden;
-  transition: 0.6s;
-	transform-style: preserve-3d;
-	position: absolute;
-
-}
-
-
-*[class$='_faceup']
-{  
-  width: 150px;
-  height: 225px;
-  border: 1px solid black;
-  border-radius: 5px;
-  fill: black;
-  z-index: 2;
-	/* for firefox 31 */
-	transform: rotateY(0deg);
-
-}
-
-*[class$='_facedown']
-{  
-  /*(transform:translate(-1px, -231px);*/ /* these aren't 0,225 because of some funky div thing */
-  width: 150px;
-  height: 225px;
-  border: 1px solid black;
-  border-radius: 5px;
-  fill: black;
-  opacity: 1.0;
-  transform: rotateY(180deg);
-  
-}
 
 .radioButton
 {
