@@ -43,7 +43,7 @@
   width: 150px;
   height: 225px;
   border: 1px solid black;
-  border-radius: 5px;
+  border-radius: 0.5em;
   fill: black;
 
 	/* for firefox 31 */
@@ -56,7 +56,7 @@
   width: 150px;
   height: 225px;
   border: 1px solid black;
-  border-radius: 5px;
+  border-radius: 0.5em;
   fill: black;
   opacity: 1.0;
   z-index: 2;

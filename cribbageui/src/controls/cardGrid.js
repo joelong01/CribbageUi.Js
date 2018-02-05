@@ -1,12 +1,9 @@
 /*eslint-disable no-unused-vars*/
-// eslint-disable-next-line
+
 import React, { Component } from 'react';
-// eslint-disable-next-line
-import cardImages, { cardFiles } from './deck';
-// eslint-disable-next-line
+import cardImages, { cardFiles, cardNames } from './deck';
 import Card from "./card";
-
-
+import './cardGrid.css';
 
 export class CardGrid extends React.Component
 {
@@ -39,21 +36,43 @@ export class CardGrid extends React.Component
 
     render() 
     {
-        console.log("count: " + this.state.cardCount)
-        let w = this.state.cardCount * 150;
-        let h = 225;
+        
+        let gridName = "grid_" + this.state.gridName;
+        var w = this.state.cardCount * 150;
+        let h = 225; // 4 for the padding
+        switch (this.state.gridName)
+        {
+            case "uninitialized":
+                w = 0;
+                break;
+            case "player":
+            case "computer":
+                w = 900;
+                break;
+            case "deck":
+                w = 150;
+                break;
+            case "counted":
+                w = 748; // 2 for the right margin
+                break;
+            default:
+                console.log("warning:  gridname", this.state.gridName, " unexpected.");
+
+        }
+        
         let c = [];
+
         for (let i = 0; i < this.state.cardCount; i++)
         {
-            let x = this.renderCard("BackOfCard");
+            let x = this.renderCard(cardNames[i]);
             c.push(x);
         }
 
         return (
 
-            <div name="cardGrid">
-                {c}
-            </div>
+            <svg className={gridName} ref={myGrid => this.myGrid = myGrid} width={w} height = {h}>
+               
+            </svg>
 
         );
     }
