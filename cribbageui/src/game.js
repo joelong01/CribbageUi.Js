@@ -106,12 +106,12 @@ export class CribbageGame extends Component
                 <div className='secondRow' ref='controlCanvas'>
                     <ControlCanvas cribOwnerChanged={this.cribOwnerChanged} cribOwner={"Computer"} />
                 </div>
-               {/*  <div className='secondCol'>
+               { <div className='secondCol'>
                     {this.renderCardGrid(6,  false, 'computer')}
                     {this.renderCardGrid(5,  false, 'counted')}
                     {this.renderCardGrid(1,  true, 'deck')}
-                    {this.renderCardGrid(6,  false, 'player')}
-                </div> */}
+                    {this.renderCardGrid(6,  false, 'player')} 
+                </div>}
                 <div className='thirdCol'>
                     {<CribbageBoard />}
                 </div>

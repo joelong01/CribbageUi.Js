@@ -1,0 +1,13 @@
+[class^='grid_']
+{
+  border-radius: 0.5em;
+  background-color:darkolivegreen;
+  border-color: black;
+  border-width: 1px;
+  padding: 2px;
+  margin-right: 2px;
+  position: static;
+ 
+}
+
+
