@@ -6,6 +6,7 @@ import ControlCanvas from './controls/userinput'
 import CardGrid from './controls/cardGrid';
 import CribbageBoard from './controls/CribbageBoard';
 import cardFiles from './controls/deck';
+import "./game.css";
 
 
 
@@ -28,7 +29,7 @@ export class CribbageGame extends Component
 
             }
         this.cribOwnerChanged = this.cribOwnerChanged.bind(this);
-        
+
 
     }
 
@@ -84,43 +85,84 @@ export class CribbageGame extends Component
 
     cribOwnerChanged(e, ownerName)
     {
-        this.setState({ cribOwner: ownerName }, () => {
+        this.setState({ cribOwner: ownerName }, () =>
+        {
             var crib = this.refs.cribCanvas;
             crib.cribOwnerChanged(this, ownerName);
         });
-        
+
     }
 
-  
+
     render()
     {
 
 
 
         return (
+            <table className="GameTable" bgcolor={"transparent"} >
+                <tr valign={"top"} halign="center">
+                    <td className="cribCell" ref={myCrib => this.myCrib = myCrib}>
+                        
+                    </td>
+                    <td className="computerCell" colSpan={1} >
+                        
+                    </td>
+                    <td className="cribbageBoard" rowSpan={3} >
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td className="blank_2" />
+                    <table colSpan={4}>
+                        <tr valign="top" halign="left" className="secondRow">
+                            <td className="countedCell" >
+                                
+                            </td>
+                            <td className="deckCell">
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </tr>
+                <tr valign={"top"} halign="center">
+                    <td className="blank_3" />
+                    <td className="playerCell">
+                        
+                    </td>                    
+                </tr>
+                <tr valign={"top"} halign="left">
+                    <td className="control_cell" colSpan={3} >
+                        
+                    </td>
+                </tr>
+            </table>
 
-            <div className='cribbagePage'>
-                <div ref="cribCardGrid" className='firstCol'>
-                    {<CribCanvas ref="cribCanvas" cribOwner={"Computer"} cardName={cardFiles["KingOfSpades"]} clientHeight={681} width={127} height={681} />}                    
-                </div>
-                <div className='secondRow' ref='controlCanvas'>
-                    <ControlCanvas cribOwnerChanged={this.cribOwnerChanged} cribOwner={"Computer"} />
-                </div>
-               { <div className='secondCol'>
-                    {this.renderCardGrid(6,  false, 'computer')}
-                    {this.renderCardGrid(5,  false, 'counted')}
-                    {this.renderCardGrid(1,  true, 'deck')}
-                    {this.renderCardGrid(6,  false, 'player')} 
-                </div>}
-                <div className='thirdCol'>
-                    {<CribbageBoard />}
-                </div>
-
-
-            </div>
         );
     }
 
 }
 
 export default CribbageGame;
+/*
+<div className='cribbagePage'>
+<div ref="cribCardGrid" className='firstCol'>
+    {<CribCanvas ref="cribCanvas" cribOwner={"Computer"} cardName={cardFiles["KingOfSpades"]} clientHeight={681} width={127} height={681} />}                    
+</div>
+<div className='secondRow' ref='controlCanvas'>
+    <ControlCanvas cribOwnerChanged={this.cribOwnerChanged} cribOwner={"Computer"} />
+</div>
+{ <div className='secondCol'>
+    {this.renderCardGrid(6,  false, 'computer')}
+    {this.renderCardGrid(5,  false, 'counted')}
+    {this.renderCardGrid(1,  true, 'deck')}
+    {this.renderCardGrid(6,  false, 'player')} 
+</div>}
+<div className='thirdCol'>
+    {<CribbageBoard />}
+</div>
+
+
+</div>
+
+*/

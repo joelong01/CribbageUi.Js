@@ -53,7 +53,7 @@ export class CardGrid extends React.Component
                 w = 150;
                 break;
             case "counted":
-                w = 748; // 2 for the right margin
+                w = 750; // 2 for the right margin
                 break;
             default:
                 console.log("warning:  gridname", this.state.gridName, " unexpected.");
