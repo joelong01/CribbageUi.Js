@@ -1,7 +1,7 @@
 .GameTable
 {
    
-    background: lightcyan;
+    background: transparent;
     opacity: 1;
 }
 
@@ -10,14 +10,14 @@
     align-content: center;
     margin: 0px;
     padding: 0px;    
-    background-color: yellow;    
+    background-color: transparent;    
     
  
 }
 
 .computerCell, .playerCell
 {
-    background-color: olive;
+    background-color: transparent;
     width: 900px;
     align-content: initial;
     height: 225px;
@@ -26,7 +26,7 @@
 {
     width: 150px;
     height: 225px;
-    background: lightgreen;
+    background: transparent;
 }
 
 .empty
@@ -35,34 +35,34 @@
 }
 .secondRow
 {
-        background: gray;
+        background: transparent;
 }
 
 .cribbageBoard
 {
     width: 225px;
-    background: blue;
-    opacity: 0.25;
+    background: burlywood;
+    opacity: 1.0;
 }
 
 .countedCell
 {
     width: 750px;
     height: 225px;
-    background: black;
+    background: transparent;
 }
 
 .deckCell
 {
     width: 150px;
     height: 225px;
-    background: green;
+    background: transparent;
     align-content: flex-start;
-    opacity: 0.25;
+    opacity: 1.0;
 }
 
 .control_cell
 {
-    background: lightgray;
+    background: transparent;
     height: 400px;
 }

@@ -103,13 +103,13 @@ export class CribbageGame extends Component
             <table className="GameTable" bgcolor={"transparent"} >
                 <tr valign={"top"} halign="center">
                     <td className="cribCell" ref={myCrib => this.myCrib = myCrib}>
-                        
+                    {<CribCanvas ref="cribCanvas" cribOwner={"Computer"} cardName={cardFiles["KingOfSpades"]} />} 
                     </td>
                     <td className="computerCell" colSpan={1} >
-                        
+                    {this.renderCardGrid(6,  false, 'computer')}
                     </td>
                     <td className="cribbageBoard" rowSpan={3} >
-                        
+                    {<CribbageBoard />}
                     </td>
                 </tr>
                 <tr>
@@ -117,10 +117,10 @@ export class CribbageGame extends Component
                     <table colSpan={4}>
                         <tr valign="top" halign="left" className="secondRow">
                             <td className="countedCell" >
-                                
+                            {this.renderCardGrid(5,  false, 'counted')}
                             </td>
                             <td className="deckCell">
-                                
+                            {this.renderCardGrid(1,  true, 'deck')}
                             </td>
                         </tr>
                     </table>
@@ -128,12 +128,12 @@ export class CribbageGame extends Component
                 <tr valign={"top"} halign="center">
                     <td className="blank_3" />
                     <td className="playerCell">
-                        
+                    {this.renderCardGrid(6,  false, 'player')} 
                     </td>                    
                 </tr>
                 <tr valign={"top"} halign="left">
                     <td className="control_cell" colSpan={3} >
-                        
+                        <ControlCanvas cribOwnerChanged={this.cribOwnerChanged} cribOwner={"Computer"} />
                     </td>
                 </tr>
             </table>
