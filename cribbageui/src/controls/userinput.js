@@ -60,7 +60,7 @@ class ControlCanvas extends React.Component
     draw()
     {
         var canvas = this.refs.controlCanvas;
-        canvas.width = 1467;
+        canvas.width = 1275;
         canvas.height = 400;
         canvas.left = 0;
         canvas.top = 0;
@@ -69,7 +69,7 @@ class ControlCanvas extends React.Component
         hdc.fillRect(0, 0, canvas.width, canvas.height);
         hdc.fillStyle = 'rgba(0, 64, 64, 1)';
         hdc.strokeStyle = 'rgba(255, 0, 255, 1)';
-        roundRect(hdc, 4, 4, 1459, 392, true, true);
+        roundRect(hdc, 4, 4, 1270, 392, true, true);
         printCanvasInfo(hdc, "control", canvas.left, canvas.top, canvas.width, canvas.height);
     }
 
