@@ -93,8 +93,8 @@ export default class Card extends React.Component
         let facedownImage = cardImages["BackOfCard"];
         let flipperName = this.state.cardName + "_flipper";
         return (
-            <div className={cardClassName} ref={myCard => this.myCard = myCard} onClick={this.handleClick}>
-                <div className={flipperName} ref={myFlipper => this.myFlipper = myFlipper} >
+            <div className={cardClassName} ref={myCard => this.myCard = myCard} onClick={this.handleClick} width={150} height={225}>
+                <div className={flipperName} ref={myFlipper => this.myFlipper = myFlipper} width={150} height={225}>
                     <img className={faceupName}
                         alt={require("../images/Cards/error.png")}
                         srcSet={faceupImage}

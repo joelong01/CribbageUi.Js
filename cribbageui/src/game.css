@@ -1,0 +1,68 @@
+.GameTable
+{
+   
+    background: lightcyan;
+    opacity: 1;
+}
+
+.cribCell
+{
+    align-content: center;
+    margin: 0px;
+    padding: 0px;    
+    background-color: yellow;    
+    
+ 
+}
+
+.computerCell, .playerCell
+{
+    background-color: olive;
+    width: 900px;
+    align-content: initial;
+    height: 225px;
+}
+[class^='blank_']
+{
+    width: 150px;
+    height: 225px;
+    background: lightgreen;
+}
+
+.empty
+{
+    width: 225;
+}
+.secondRow
+{
+        background: gray;
+}
+
+.cribbageBoard
+{
+    width: 225px;
+    background: blue;
+    opacity: 0.25;
+}
+
+.countedCell
+{
+    width: 750px;
+    height: 225px;
+    background: black;
+}
+
+.deckCell
+{
+    width: 150px;
+    height: 225px;
+    background: green;
+    align-content: flex-start;
+    opacity: 0.25;
+}
+
+.control_cell
+{
+    background: lightgray;
+    height: 400px;
+}

@@ -6,6 +6,10 @@
   transform: translate(0px, 0px);
   transition-timing-function: ease-in-out;
   perspective: 1000px;
+  width: 150px;
+  height: 225px;
+  padding: 0px;
+  margin: 0px;
   
 }
 
@@ -34,7 +38,7 @@
   backface-visibility: hidden;
   position: absolute;
   top: 0;
-  left: 0;
+	left: 0;
 }
 
 
