@@ -40,7 +40,7 @@ export class CardGrid extends React.Component
         let gridName = "grid_" + this.state.gridName;
         var w = this.state.cardCount * 150;
         let h = 225; // 4 for the padding
-        switch (this.state.gridName)
+       /*  switch (this.state.gridName)
         {
             case "uninitialized":
                 w = 0;
@@ -58,7 +58,7 @@ export class CardGrid extends React.Component
             default:
                 console.log("warning:  gridname", this.state.gridName, " unexpected.");
 
-        }
+        } */
         
         let c = [];
 

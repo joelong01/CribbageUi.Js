@@ -29,19 +29,17 @@ class CribCanvas extends React.Component
         this.setState({ cribOwner: newOwner }, function ()
         {            
             if (newOwner === "Player") 
-            {
-                // this.mySvg.style['transform'] = "rotate(180deg)"; //"translate(0, 361px);" //
-                this.cribCard.translate(0, 460);
-                this.cribCard.setCard("AceOfSpades");
-              //  this.cribCard.setOrientation("faceup");
+            {               
+                this.cribCard.translate(0, 470);
+                this.cribCard.setCard("AceOfSpades");              
 
             }
             else
             {
-                //this.mySvg.style['transform'] =  "rotate(0deg)"; //"translate(0,0px)"; //
+                
                 this.cribCard.translate(0, 0);
                 this.cribCard.setCard("JackOfDiamonds");
-               // this.cribCard.setOrientation("facedown");
+               
             }
 
 

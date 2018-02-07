@@ -101,41 +101,36 @@ export class CribbageGame extends Component
 
         return (
             <table className="GameTable" bgcolor={"transparent"} >
-                <tr valign={"top"} halign="center">
-                    <td className="cribCell" ref={myCrib => this.myCrib = myCrib}>
-                    {<CribCanvas ref="cribCanvas" cribOwner={"Computer"} cardName={cardFiles["KingOfSpades"]} />} 
-                    </td>
-                    <td className="computerCell" colSpan={1} >
-                    {this.renderCardGrid(6,  false, 'computer')}
-                    </td>
-                    <td className="cribbageBoard" rowSpan={3} >
-                    {<CribbageBoard />}
-                    </td>
-                </tr>
-                <tr>
-                    <td className="blank_2" />
-                    <table colSpan={4}>
-                        <tr valign="top" halign="left" className="secondRow">
-                            <td className="countedCell" >
-                            {this.renderCardGrid(5,  false, 'counted')}
-                            </td>
-                            <td className="deckCell">
-                            {this.renderCardGrid(1,  true, 'deck')}
-                            </td>
-                        </tr>
-                    </table>
-                </tr>
-                <tr valign={"top"} halign="center">
-                    <td className="blank_3" />
-                    <td className="playerCell">
-                    {this.renderCardGrid(6,  false, 'player')} 
-                    </td>                    
-                </tr>
-                <tr valign={"top"} halign="left">
-                    <td className="control_cell" colSpan={3} >
-                        <ControlCanvas cribOwnerChanged={this.cribOwnerChanged} cribOwner={"Computer"} />
-                    </td>
-                </tr>
+                <tbody>
+                    <tr className="first_row">
+                        <td className="cribCell" ref={myCrib => this.myCrib = myCrib} rowSpan={3}>
+                            {<CribCanvas ref="cribCanvas" cribOwner={"Computer"} cardName={cardFiles["KingOfSpades"]}  />}
+                        </td>
+                        <td className="computerCell" colSpan={1} >
+                            {this.renderCardGrid(6, false, 'computer')}
+                        </td>
+
+                        <td className="cribbageBoard" rowSpan={3} >
+                            {<CribbageBoard />}
+                        </td>
+                    </tr>
+                    <tr className="second_row">                
+                        <td className="countedCell" >
+                            {this.renderCardGrid(5, false, 'counted')}
+                            {this.renderCardGrid(1, true, 'deck')}
+                        </td>
+                    </tr>
+                    <tr className="third_row">                        
+                        <td className="playerCell">
+                            {this.renderCardGrid(6, false, 'player')}
+                        </td>
+                    </tr>
+                    <tr className="fourth_row">
+                        <td className="control_cell" colSpan={3} >
+                            <ControlCanvas cribOwnerChanged={this.cribOwnerChanged} cribOwner={"Computer"} />
+                        </td>
+                    </tr>
+                </tbody>
             </table>
 
         );

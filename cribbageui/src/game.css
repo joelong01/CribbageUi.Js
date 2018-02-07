@@ -1,68 +1,98 @@
 .GameTable
 {
-   
-    background: transparent;
+    table-layout: fixed;
+    background: lightgrey;
+    overflow-x: hidden;
+    word-wrap:break-word;
     opacity: 1;
+    margin: 0px;
+    width: 1375px;
+
 }
 
 .cribCell
 {
-    align-content: center;
+    vertical-align: top;
     margin: 0px;
-    padding: 0px;    
+    padding: 1px;        
     background-color: transparent;    
-    
- 
+    overflow: hidden;
+    width: 152px;
+     
 }
 
 .computerCell, .playerCell
 {
     background-color: transparent;
-    width: 900px;
+    
     align-content: initial;
     height: 225px;
+    padding: 0px;
+    margin: 0px;
+    overflow: hidden;
 }
 [class^='blank_']
 {
     width: 150px;
     height: 225px;
     background: transparent;
+    padding: 0px;
+    margin: 0px;
+    opacity: .25;
+    overflow: hidden;
 }
 
 .empty
 {
     width: 225;
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
 }
-.secondRow
+[class$='_row']
 {
-        background: transparent;
+    width: 1350px;
+    background: transparent;
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
 }
 
 .cribbageBoard
 {
-    width: 225px;
+    width: 250px;
     background: burlywood;
     opacity: 1.0;
+    margin: 0px;
+    padding: 1px;
+    overflow: hidden;
 }
 
 .countedCell
 {
-    width: 750px;
+    width: 912px;
     height: 225px;
     background: transparent;
+    padding-right: 0px;
+    overflow: hidden;
 }
 
 .deckCell
 {
     width: 150px;
     height: 225px;
-    background: transparent;
-    align-content: flex-start;
+    background: transparent;    
+    margin: 0px;
+    padding: 0px;
     opacity: 1.0;
+    overflow: hidden;
 }
 
 .control_cell
 {
     background: transparent;
     height: 400px;
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
 }

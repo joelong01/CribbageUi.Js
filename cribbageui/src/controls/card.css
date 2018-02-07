@@ -1,35 +1,39 @@
 /* style for the whole card class.  it has a faceup and a facedown. */
 [class$='_card']
 {  
+  perspective: 500px;
   transition-duration: 0.5s;
   transition-property: transform;	
   transform: translate(0px, 0px);
   transition-timing-function: ease-in-out;
-  perspective: 1000px;
+    
+}
+[class$='_card'],  [class$='_flipper'], [class$='_faceup'],[class$='_facedown']
+{
   width: 150px;
   height: 225px;
   padding: 0px;
   margin: 0px;
-  
+  top: 0px;
+  left: 0px;
+  fill: transparent;
 }
 
-/* .KingOfClubs_card.flip .KingOfClubs_flipper
+ .flip [class$='_flipper'] 
 {
+  transform-style: preserve-3d;
+  position: relative;
   transform: rotateY(180deg);
-} */
-
-.flip [class$='_flipper'] 
-{
-  transform: rotateY(180deg);
+ 
 }
 
 [class$='_flipper']
 {
-  transition: 1.0s;
+  transition: 0.6s;
 	transform-style: preserve-3d;
   position: relative;
-  transform: rotateY(0deg);
-  
+  fill: transparent;
+    
 }
 
 
@@ -37,33 +41,22 @@
 {
   backface-visibility: hidden;
   position: absolute;
-  top: 0;
-	left: 0;
+  border: 1px solid black;
+  border-radius: 0.5em;
+  
 }
 
 
 [class$='_faceup']
 {  
-  width: 150px;
-  height: 225px;
-  border: 1px solid black;
-  border-radius: 0.5em;
-  fill: black;
-
-	/* for firefox 31 */
-	transform: rotateY(180deg);
+  /* for firefox 31 */
+  transform: rotateY(180deg);
+  left: -2px;
 
 }
 
 [class$='_facedown']
 {  
-  width: 150px;
-  height: 225px;
-  border: 1px solid black;
-  border-radius: 0.5em;
-  fill: black;
-  opacity: 1.0;
   z-index: 2;
-  transform: rotateY(0deg);
-  
+  transform: rotateY(0deg);  
 }
