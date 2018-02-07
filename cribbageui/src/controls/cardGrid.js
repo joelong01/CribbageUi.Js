@@ -29,51 +29,55 @@ export class CardGrid extends React.Component
         this.setState({ gridName: this.props.gridName });
     }
 
-    renderCard(name)
+    renderCard(name, orientation)
     {
-        return (<Card ref={name => this.name = name} cardName={name} key={name} />);
+        let n = this.state.gridName + "_" + name;
+        let divName = "innerdiv_" + name;
+        //<Card cardOrientation={"faceup"} cardName={"KingOfSpades"}  className={ this.state.gridName + "_KingOfClubs_card"}  />           
+
+        return (
+            <div className={divName}>
+                <Card ref={name => this.name = name} cardOrientation={orientation} cardName={name} className={n} key={n} />
+            </div>
+        );
     }
 
     render() 
     {
-        
-        let gridName = "grid_" + this.state.gridName;
-        var w = this.state.cardCount * 150;
-        let h = 225; // 4 for the padding
-       /*  switch (this.state.gridName)
-        {
-            case "uninitialized":
-                w = 0;
-                break;
-            case "player":
-            case "computer":
-                w = 900;
-                break;
-            case "deck":
-                w = 150;
-                break;
-            case "counted":
-                w = 750; // 2 for the right margin
-                break;
-            default:
-                console.log("warning:  gridname", this.state.gridName, " unexpected.");
 
-        } */
-        
+        let gridName = "grid_" + this.state.gridName;
+        let h = 225; // 4 for the padding
+
         let c = [];
+
+
 
         for (let i = 0; i < this.state.cardCount; i++)
         {
-            let x = this.renderCard(cardNames[i]);
-            c.push(x);
+            console.log("rendering ", this.state.gridName);
+            if (this.state.gridName === "deck")
+            {
+
+                let x = this.renderCard(cardNames[i], "facedown");
+                c.push(x);
+            }
+            else
+            {
+                let x = this.renderCard(cardNames[i], "faceup");
+                c.push(x);
+            }
+
         }
 
+
+
         return (
+            
+                <div className={gridName} height={h}>
 
-            <svg className={gridName} ref={myGrid => this.myGrid = myGrid} width={w} height = {h}>
-               
-            </svg>
+                    {c}
 
+                </div>            
         );
     }
 

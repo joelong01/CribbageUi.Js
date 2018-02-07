@@ -1,13 +1,29 @@
-[class^='grid_']
+.grid_computer, .grid_player, .grid_deck, .grid_counted
 {
-  border-radius: 0.5em;
-  background-color:darkolivegreen;
-  border-color: black;
-  border-width: 1px;
-  padding: 2px;
-  margin-right: 2px;
-  position: static;
- 
+  
+  background-color:hotpink;
+  height: 230px;  
+  width: inherit;
+  padding-left: 5px;
+  padding-bottom: 5px;
+  padding-right: 0px;
+  border-radius: 10px;
+  display: flex;
+  
+  border-width: 0px !important;
+}
+
+[class^="innerdiv_"]
+{
+  margin-top: 3.5px;
+  margin-right: 4px;
+  margin-left: 3px;
 }
 
 
+
+[class$='_card'],  [class$='_flipper'], [class$='_faceup'],[class$='_facedown']
+{  
+  margin: 0px;
+   
+}

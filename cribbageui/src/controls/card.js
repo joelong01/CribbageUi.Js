@@ -24,14 +24,21 @@ export default class Card extends React.Component
     }
     componentDidMount()
     {
-        this.setState({ cardName: this.props.cardName });
-        this.setState({ cardOrientation: this.props.cardOrientation });
+        this.setState({ cardName: this.props.cardName }, () =>
+        {
+            this.setOrientation(this.props.cardOrientation);
+        });
+
 
     }
     setOrientation(o)
     {
+        console.log("setting ", this.state.cardName, "from ", this.state.cardOrientation, "to ", o);
+        if (this.state.cardOrientation === o)
+            return;
         if (o === "facedown" && this.state.cardOrientation !== "facedown")
-        {           
+        {
+
             this.setState({ cardOrientation: "facedown" }, () => 
             {
                 this.myCard.classList.toggle('flip');
@@ -50,7 +57,7 @@ export default class Card extends React.Component
     }
 
     handleClick()
-    {               
+    {
         if (this.state.cardOrientation === "facedown")
         {
             this.setOrientation("faceup");
@@ -59,12 +66,12 @@ export default class Card extends React.Component
         {
             this.setOrientation("facedown");
 
-        }       
+        }
     }
 
     translate(x, y)
     {
-        var cmd = "translate(" + x + "px, " + y + "px)";        
+        var cmd = "translate(" + x + "px, " + y + "px)";
         this.myCard.style['transform'] = cmd;
     }
     setCard(cName)
@@ -84,12 +91,12 @@ export default class Card extends React.Component
                 <div className={flipperName} ref={myFlipper => this.myFlipper = myFlipper} >
                     <img className={faceupName}
                         alt={require("../images/Cards/error.png")}
-                        srcSet={faceupImage}                        
+                        srcSet={faceupImage}
                         ref={faceupCard => this.faceupCard = faceupCard}
                     />
-                    <img className={facedownName}                        
+                    <img className={facedownName}
                         alt={require("../images/Cards/error.png")}
-                        srcSet={facedownImage}                        
+                        srcSet={facedownImage}
                         ref={facedownCard => this.facedownCard = facedownCard}
                     />
                 </div>

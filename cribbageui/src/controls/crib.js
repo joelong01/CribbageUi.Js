@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import cardImages from './deck';
 import Card from "./card";
-
+import "./crib.css";
 
 class CribCanvas extends React.Component
 {
@@ -18,14 +18,17 @@ class CribCanvas extends React.Component
 
         this.cribOwnerChanged = this.cribOwnerChanged.bind(this);
 
+    }
 
-
-
+    componentDidMount() 
+    {
+        
+      
     }
 
     cribOwnerChanged(e, newOwner)
     {
-        console.log("cribOwnerChanged to: " + newOwner);
+         console.log("cribOwnerChanged to: " + newOwner);
         this.setState({ cribOwner: newOwner }, function ()
         {            
             if (newOwner === "Player") 
@@ -53,7 +56,11 @@ class CribCanvas extends React.Component
     {
         
         return (            
-                <Card ref={cribCard => this.cribCard = cribCard} cardName={"KingOfClubs"} cardOrientation={"facedown"}/>               
+                <Card ref={cribCard => this.cribCard = cribCard} 
+                      cardName={"KingOfClubs"} cardOrientation={"facedown"} 
+                      class="cribCard"
+                      
+                      />               
         );
     }
 

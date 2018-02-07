@@ -43,7 +43,7 @@ export class CribbageGame extends Component
     renderCardGrid(count, isStacked, n)
     {
         return (
-            <CardGrid cardCount={count} stacked={isStacked} gridName={n} />
+            <CardGrid cardCount={count} stacked={isStacked} gridName={n} key={n} />
         );
     }
 
@@ -104,7 +104,7 @@ export class CribbageGame extends Component
                 <tbody>
                     <tr className="first_row">
                         <td className="cribCell" ref={myCrib => this.myCrib = myCrib} rowSpan={3}>
-                            {<CribCanvas ref="cribCanvas" cribOwner={"Computer"} cardName={cardFiles["KingOfSpades"]}  />}
+                            {<CribCanvas ref="cribCanvas" cribOwner={"Computer"} cardName={cardFiles["KingOfSpades"]} />}
                         </td>
                         <td className="computerCell" colSpan={1} >
                             {this.renderCardGrid(6, false, 'computer')}
@@ -114,13 +114,17 @@ export class CribbageGame extends Component
                             {<CribbageBoard />}
                         </td>
                     </tr>
-                    <tr className="second_row">                
-                        <td className="countedCell" >
-                            {this.renderCardGrid(5, false, 'counted')}
-                            {this.renderCardGrid(1, true, 'deck')}
+                    <tr className="second_row">
+                        <td className="countedCell">
+                            <div className="divCounted">
+                                {this.renderCardGrid(5, false, 'counted')}
+                            </div>
+                            <div className="divDeck">
+                                {this.renderCardGrid(1, true, 'deck')}
+                            </div>
                         </td>
                     </tr>
-                    <tr className="third_row">                        
+                    <tr className="third_row">
                         <td className="playerCell">
                             {this.renderCardGrid(6, false, 'player')}
                         </td>
