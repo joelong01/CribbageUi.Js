@@ -6,25 +6,28 @@
   transition-property: transform;	
   transform: translate(0px, 0px);
   transition-timing-function: ease-in-out;
-    
+  
 }
 [class$='_card'],  [class$='_flipper'], [class$='_faceup'],[class$='_facedown']
 {
   width: 150px;
   height: 225px;
   padding: 0px;
-  margin: 0px;
+  margin: 2px;
   top: 0px;
   left: 0px;
   fill: transparent;
+  float: left;
+  
 }
+
 
  .flip [class$='_flipper'] 
 {
   transform-style: preserve-3d;
   position: relative;
   transform: rotateY(180deg);
- 
+  
 }
 
 [class$='_flipper']
@@ -33,7 +36,7 @@
 	transform-style: preserve-3d;
   position: relative;
   fill: transparent;
-    
+ 
 }
 
 
@@ -51,12 +54,13 @@
 {  
   /* for firefox 31 */
   transform: rotateY(180deg);
-  left: -2px;
-
+  left: 0px;
+  
 }
 
 [class$='_facedown']
 {  
   z-index: 2;
   transform: rotateY(0deg);  
+  
 }

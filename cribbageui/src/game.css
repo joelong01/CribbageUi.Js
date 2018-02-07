@@ -1,15 +1,14 @@
 .GameTable
 {
     table-layout: fixed;
-    background: lightgrey;
+    background-image: url('./images/felt.png');
     overflow-x: hidden;
     word-wrap:break-word;
     opacity: 1;
     margin: 0px;
-    width: 1375px;
+    width: 1370px;
 
 }
-
 .cribCell
 {
     vertical-align: top;
@@ -17,24 +16,23 @@
     padding: 1px;        
     background-color: transparent;    
     overflow: hidden;
-    width: 152px;
+    width: 154px;
      
 }
 
 .computerCell, .playerCell
 {
     background-color: transparent;
-    
     align-content: initial;
     height: 225px;
     padding: 0px;
     margin: 0px;
     overflow: hidden;
 }
+
+
 [class^='blank_']
 {
-    width: 150px;
-    height: 225px;
     background: transparent;
     padding: 0px;
     margin: 0px;
@@ -44,14 +42,11 @@
 
 .empty
 {
-    width: 225;
-    margin: 0px;
-    padding: 0px;
     overflow: hidden;
 }
 [class$='_row']
 {
-    width: 1350px;
+    
     background: transparent;
     margin: 0px;
     padding: 0px;
@@ -68,23 +63,14 @@
     overflow: hidden;
 }
 
-.countedCell
-{
-    width: 912px;
-    height: 225px;
-    background: transparent;
-    padding-right: 0px;
-    overflow: hidden;
-}
+
 
 .deckCell
 {
-    width: 150px;
-    height: 225px;
-    background: transparent;    
+    background: darkolivegreen;    
     margin: 0px;
     padding: 0px;
-    opacity: 1.0;
+    opacity: .25;
     overflow: hidden;
 }
 
@@ -96,3 +82,24 @@
     padding: 0px;
     overflow: hidden;
 }
+
+.countedCell
+{    
+    width: 950px;
+    display: flex;
+    border-radius: 20px;
+}
+
+.divCounted
+{
+    width: 785px;
+   padding-right: 2px;
+}
+
+.divDeck
+{
+    width:160px;    
+    border-radius: 20px;
+    margin-left: 5px;
+}
+
