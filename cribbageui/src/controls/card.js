@@ -30,37 +30,27 @@ export default class Card extends React.Component
     }
     setOrientation(o)
     {
-      //  console.log("old orientation: ", this.state.cardOrientation, "new orientation: ", o, "cardname: ", this.state.cardName);
-      //  console.log("transform", this.myFlipper.style['tranform'] );
-        if (o === "facedown")
-        {
-            
+        if (o === "facedown" && this.state.cardOrientation !== "facedown")
+        {           
             this.setState({ cardOrientation: "facedown" }, () => 
             {
-             //   console.log("attempting to flip to faceup");
-               /*  let transform = "rotateY(0deg)";
-                this.myFlipper.style['tranform'] = transform; */
+                this.myCard.classList.toggle('flip');
             });
 
         }
-        else
+        else if (this.state.cardOrientation !== "faceup")
         {
             this.setState({ cardOrientation: "faceup" }, () => 
             {
-              //  console.log("attempting to flip to faceup");
-              /*   let tranform = "rotateY(180deg)";
-                this.myFlipper.style['tranform'] = tranform; */
+                this.myCard.classList.toggle('flip');
             }
             );
-
         }
 
     }
 
     handleClick()
-    {
-       console.log("classList has flip", this.myCard.classList.contains('flip'));
-        this.myCard.classList.toggle('flip');
+    {               
         if (this.state.cardOrientation === "facedown")
         {
             this.setOrientation("faceup");
@@ -69,15 +59,12 @@ export default class Card extends React.Component
         {
             this.setOrientation("facedown");
 
-        }
-        /*       console.log("flipper.classList.contains('flip')", this.flipper.classList.contains("flip"));
-              this.flipper.classList.toggle("flip") */
+        }       
     }
 
     translate(x, y)
     {
-        var cmd = "translate(" + x + "px, " + y + "px)";
-        console.log("translate cmd: " + cmd);
+        var cmd = "translate(" + x + "px, " + y + "px)";        
         this.myCard.style['transform'] = cmd;
     }
     setCard(cName)
@@ -93,20 +80,16 @@ export default class Card extends React.Component
         let facedownImage = cardImages["BackOfCard"];
         let flipperName = this.state.cardName + "_flipper";
         return (
-            <div className={cardClassName} ref={myCard => this.myCard = myCard} onClick={this.handleClick} width={150} height={225}>
-                <div className={flipperName} ref={myFlipper => this.myFlipper = myFlipper} width={150} height={225}>
+            <div className={cardClassName} ref={myCard => this.myCard = myCard} onClick={this.handleClick} >
+                <div className={flipperName} ref={myFlipper => this.myFlipper = myFlipper} >
                     <img className={faceupName}
                         alt={require("../images/Cards/error.png")}
-                        srcSet={faceupImage}
-                        width={150} height={225}
+                        srcSet={faceupImage}                        
                         ref={faceupCard => this.faceupCard = faceupCard}
-
                     />
-                    <img className={facedownName}
-                        //style={facedownTranslateStyle}
+                    <img className={facedownName}                        
                         alt={require("../images/Cards/error.png")}
-                        srcSet={facedownImage}
-                        width={150} height={225}
+                        srcSet={facedownImage}                        
                         ref={facedownCard => this.facedownCard = facedownCard}
                     />
                 </div>
