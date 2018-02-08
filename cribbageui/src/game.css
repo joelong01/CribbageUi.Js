@@ -5,11 +5,10 @@
     word-wrap:break-word;
     opacity: 1;
     margin-top: 0px;
-    width: 1450px;
-    
+    width: 1420px;    
     border: 2px solid black !important;
     background-image: url("./images/Cards/BackOfCard.svg");
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
 .tableBody
@@ -20,75 +19,78 @@
     border: 1px transparent dashed;
 }
 
-
-.emptyColumn2
+.Menu_buttonDiv
 {
-    width: 0px;
-    background: yellow;
+    width: 10px;
+}
+
+.emptySecondColumn, .emptyFourthColumn
+{
+    width: 130px;
+}
+
+.first_row
+{
+    width: 100%;
+    background: transparent;
+}
+.deckCell
+{
+    
+    vertical-align: center;
+    align-items: left;
+    margin: 0px;
+    padding-right: 8px;        
+    background-color: blue;    
+    overflow: hidden;    
+    border-radius: 5px;
 }
 
 .cribCell
 {
+    
     vertical-align: top;
+    align-items: left;
     margin: 0px;
     padding-right: 8px;        
     background-color: transparent;    
     overflow: hidden;
-    width: 154px;
+    border: 0px black solid;
+    border-radius: 5px;
      
 }
 
-.computerCell, .playerCell
+
+
+.computerCell, .playerCell, .countedCell
 {
     
-    background-color: transparent;
-    align-content: initial;
-    height: 225px;    
+    background-color: green;
+    align-content: initial;    
     overflow: hidden;
     border: 1px black solid;
-    border-radius: 20px;
-}
-
-.second_row
-{
-    display: flex;  
-    background: transparent;
-}
-.countedCell
-{
-    display: flex;
+    border-radius: 5px;
     
 }
 
-.divCounted
-{    
-    display: flex;
-    overflow: initial;
-    border-radius: 20px;
-    background: transparent;
-    width: 795px;
-    min-width: 795px;
-    max-width: 795px;
-    border: 1px black solid;
-    margin-right: 2px;
-    
-}
-
-.divDeck
+.cribbageBoard
 {
-    overflow: initial;
-    display: flex;
-    border-radius: 20px;
-    margin-left: 0px;    
-    padding-right: 5px;
-    background: transparent;
-    width:154px;
-    min-width: 154px;
-    max-width: 154px;
-    border: 1px black solid;
+    width: 800px;    
+    height: 300px;
+    background: wheat;
+    opacity: 1.0;
+    margin: 1px;
+    padding: 0px;
+    overflow: hidden;
+    border-radius: 10px;
     
 }
 
+.board_row
+{
+    height: 225px;
+    width: 100%;
+}
 
 
 [class^='blank_']
@@ -100,17 +102,7 @@
     overflow: hidden;
 }
 
-.cribbageBoard
-{
-    width: 250px;    
-    background: wheat;
-    opacity: 1.0;
-    margin: 0px;
-    padding: 1px;
-    overflow: hidden;
-    border-radius: 10px;
-    
-}
+
 
 
 .control_cell
@@ -126,7 +118,7 @@
 
 
 
-.emptyColumn1
+.burgerColumn
 {
     width: 50px; /* gives room for the burger menu */
     background: rgb(64, 64, 64);

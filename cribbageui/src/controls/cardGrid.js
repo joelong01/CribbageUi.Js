@@ -17,10 +17,12 @@ export class CardGrid extends React.Component
                 cards: [],
                 cardCount: 3,
                 stacked: false,
-                gridName: "uninitialized"
+                gridName: "uninitialized",
+                orientation: "facedown"
             }
 
             this.setCards = this.setCards.bind(this);
+            this.clear = this.clear.bind(this);
     }
 
     componentDidMount() 
@@ -29,12 +31,19 @@ export class CardGrid extends React.Component
         this.setState({ stacked: this.props.stacked });
         this.setState({ gridName: this.props.gridName });
         this.setState({ cards: this.props.cards });
+        this.setState({ orientation: this.props.orientation });
     }
 
     setCards (cards)
     {
         this.setState({ cards: cards });
     }
+
+    clear()
+    {
+        this.setState({ cards: [] });
+    }
+
     renderCard(name, orientation)
     {
         let n = this.state.gridName + "_" + name;
@@ -58,28 +67,9 @@ export class CardGrid extends React.Component
 
         for (let i = 0; i < this.state.cards.length; i++)
         {
-            let x = this.renderCard(this.state.cards[i], "faceup");
+            let x = this.renderCard(this.state.cards[i], this.state.orientation);
             c.push(x);
         }
-
-        /* 
-        
-                for (let i = 0; i < this.state.cardCount; i++)
-                {            
-                    if (this.state.gridName === "deck")
-                    {
-        
-                        let x = this.renderCard(cardNames[i], "facedown");
-                        c.push(x);
-                    }
-                    else
-                    {
-                        let x = this.renderCard(cardNames[i], "faceup");
-                        c.push(x);
-                    }
-        
-                }
-         */
 
 
         return (
