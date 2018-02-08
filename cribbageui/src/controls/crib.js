@@ -3,8 +3,9 @@ import React, { Component } from 'react';
 import cardImages from './deck';
 import Card from "./card";
 import "./crib.css";
+import CardGrid from './cardGrid';
 
-class CribCanvas extends React.Component
+class CribGrid extends React.Component
 {
     constructor(props)
     {
@@ -13,16 +14,28 @@ class CribCanvas extends React.Component
         this.state =
             {
                 cribOwner: "Computer",              // this not only gives the owner but changing it changes the crib position                
-
+                cards: []
             }
 
         this.cribOwnerChanged = this.cribOwnerChanged.bind(this);
-
+        this.reset = this.reset.bind(this);
     }
 
     componentDidMount() 
     {
+        this.setState({ cards: this.props.cards });
+        this.setState({ cribOwner: this.props.cribOwner }, () =>
+        {
+            this.cribOwnerChanged(null, this.props.cribOwner);
+        });
 
+    
+        
+
+    }
+
+    reset()
+    {
 
     }
 
@@ -32,7 +45,7 @@ class CribCanvas extends React.Component
         this.setState({ cribOwner: newOwner }, function ()
         {
             var cmd = "translate(0px, ";
-            
+
             if (newOwner === "Player") 
             {
                 cmd += "485px)";
@@ -41,7 +54,7 @@ class CribCanvas extends React.Component
             {
                 cmd += "0px)";
             }
-            
+
             this.cribDiv.style['transform'] = cmd;
 
         });
@@ -52,19 +65,23 @@ class CribCanvas extends React.Component
 
     render()
     {
-
+        
         return (
-            <div className="cribDiv" ref={cribDiv => this.cribDiv = cribDiv}  >
-                <Card ref={cribCard => this.cribCard = cribCard}
-                    cardName={"KingOfClubs"} cardOrientation={"facedown"}
-                    class="cribCard"
 
+            <div className="cribDiv" ref={cribDiv => this.cribDiv = cribDiv}>
+                <CardGrid
+                    orientation={"facedown"}
+                    cardCount={1} stacked={true} gridName={"crib"}
+                    key={"crib"} cards={this.props.cards}
+                    ref={cribGrid => this.cribGrid = cribGrid}
                 />
             </div>
+
+
         );
     }
 
 }
 
 
-export default CribCanvas;
+export default CribGrid;

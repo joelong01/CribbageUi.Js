@@ -1,21 +1,11 @@
-[class$='_card'],  [class$='_flipper'], [class$='_faceup'],[class$='_facedown'], #cribCard
-{  
-  margin-top: 10px;
-  margin-left: 0px;
-  margin-right: 10px;
-  margin-bottom: 0px;  
-}
-
 .cribDiv
 {
-  width:100%;
-  height: 229px;
-  padding: 2px;
-  background: transparent;
-  border: 1px black dotted;
-  border-radius: 10px;
+  
   transition-duration: 0.5s;
   transition-property: transform;	
   transform: translate(0px, 0px);
   transition-timing-function: ease-in-out;
+  width: 160px;
+  padding: 0px;
+  margin: 0px;
 }

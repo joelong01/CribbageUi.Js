@@ -12,8 +12,7 @@ export class CribbageBoard extends React.Component
         return (
             <img className="cribbageBoard"
                         alt={require("../images/Cards/error.png")}
-                        srcSet={require("../images/board.svg")}
-                        width={225} height={690}
+                        srcSet={require("../images/horizontalBoard.svg")}                        
                         ref={myBoard => this.myBoard = myBoard}
 
                     />

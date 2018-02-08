@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 425 131" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;">
+    <g id="Artboard1" transform="matrix(6.12323e-17,1,-1,6.12323e-17,425.987,-0.830437)">
+        <rect x="0.83" y="1.728" width="130.067" height="424.26" style="fill:none;"/>
+        <clipPath id="_clip1">
+            <rect x="0.83" y="1.728" width="130.067" height="424.26"/>
+        </clipPath>
+        <g clip-path="url(#_clip1)">
+            <g transform="matrix(1,0,0,1,0.830437,0.727643)">
+                <rect x="0.4" y="68.003" width="29.709" height="358.482" style="fill:rgb(147,163,192);"/>
+                <rect x="100.106" y="68.003" width="29.709" height="318.971" style="fill:rgb(147,163,192);"/>
+                <rect x="50.349" y="69.921" width="29.907" height="317.035" style="fill:rgb(147,163,192);"/>
+                <path d="M80.058,70.521C80.058,62.24 73.407,55.528 65.203,55.528C56.999,55.528 50.349,62.24 50.349,70.521L80.058,70.521Z" style="fill:rgb(147,163,192);"/>
+                <path d="M129.815,68.37C129.815,30.61 100.854,0 65.129,0C29.405,0 0.444,30.61 0.444,68.37L30.235,68.37C30.235,48.001 45.858,31.488 65.129,31.488C84.401,31.488 100.024,48.001 100.024,68.37L129.815,68.37Z" style="fill:rgb(147,163,192);"/>
+                <path d="M50.349,386.409C50.349,408.542 68.179,426.485 90.174,426.485C112.17,426.485 130,408.542 130,386.409L100.131,386.409C100.131,391.942 95.673,396.428 90.174,396.428C84.676,396.428 80.218,391.942 80.218,386.409L50.349,386.409Z" style="fill:rgb(147,163,192);"/>
+            </g>
+            <g transform="matrix(1,0,0,1,0.830437,0.727643)">
+                <circle cx="6.212" cy="406.47" r="2.5" style="fill:rgb(20,19,19);"/>
+            </g>
+            <g transform="matrix(1,0,0,1,0.830437,0.727643)">
+                <circle cx="6.175" cy="416.11" r="2.5" style="fill:rgb(20,19,19);"/>
+            </g>
+            <g transform="matrix(1,0,0,1,60.3451,-348.327)">
+                <circle cx="6.175" cy="416.11" r="2.5" style="fill:rgb(20,19,19);"/>
+            </g>
+            <g transform="matrix(1,0,0,1,0.830437,0.727643)">
+                <circle cx="20.249" cy="406.47" r="2.5" style="fill:rgb(20,19,19);"/>
+            </g>
+            <g transform="matrix(1,0,0,1,0.830437,0.727643)">
+                <circle cx="20.249" cy="392.172" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="20.249" cy="385.748" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="20.249" cy="379.323" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="20.249" cy="372.899" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="20.249" cy="366.474" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="6.212" cy="392.172" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="6.212" cy="385.748" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="6.212" cy="379.323" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="6.212" cy="372.899" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="6.212" cy="366.474" r="2.5" style="fill:rgb(20,19,19);"/>
+                <rect x="2.4" y="362.455" width="25" height="0.5" style="fill:rgb(20,19,19);"/>
+            </g>
+            <g transform="matrix(1,0,0,1,0.830437,0.727643)">
+                <circle cx="19.249" cy="347.842" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="19.249" cy="341.418" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="19.249" cy="334.993" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="19.249" cy="328.569" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="19.249" cy="322.144" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="5.212" cy="347.842" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="5.212" cy="341.418" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="5.212" cy="334.993" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="5.212" cy="328.569" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="5.212" cy="322.144" r="2.5" style="fill:rgb(20,19,19);"/>
+                <rect x="1.4" y="318.125" width="25" height="0.5" style="fill:rgb(20,19,19);"/>
+            </g>
+            <g transform="matrix(1,0,0,1,0.830437,0.727643)">
+                <circle cx="19.957" cy="303.512" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="19.957" cy="297.088" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="19.957" cy="290.663" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="19.957" cy="284.239" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="19.957" cy="277.814" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="5.921" cy="303.512" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="5.921" cy="297.088" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="5.921" cy="290.663" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="5.921" cy="284.239" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="5.921" cy="277.814" r="2.5" style="fill:rgb(20,19,19);"/>
+                <rect x="2.108" y="273.795" width="25" height="0.5" style="fill:rgb(20,19,19);"/>
+            </g>
+            <g transform="matrix(1,0,0,1,0.830437,0.727643)">
+                <circle cx="21.603" cy="259.182" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="21.603" cy="252.757" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="21.603" cy="246.333" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="21.603" cy="239.908" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="21.603" cy="233.484" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="7.566" cy="259.182" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="7.566" cy="252.757" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="7.566" cy="246.333" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="7.566" cy="239.908" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="7.566" cy="233.484" r="2.5" style="fill:rgb(20,19,19);"/>
+                <rect x="3.754" y="229.465" width="25" height="0.5" style="fill:rgb(20,19,19);"/>
+            </g>
+            <g transform="matrix(1,0,0,1,0.830437,0.727643)">
+                <circle cx="21.957" cy="214.852" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="21.957" cy="208.427" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="21.957" cy="202.003" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="21.957" cy="195.578" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="21.957" cy="189.154" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="7.921" cy="214.852" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="7.921" cy="208.427" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="7.921" cy="202.003" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="7.921" cy="195.578" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="7.921" cy="189.154" r="2.5" style="fill:rgb(20,19,19);"/>
+                <rect x="4.108" y="185.135" width="25" height="0.5" style="fill:rgb(20,19,19);"/>
+            </g>
+            <g transform="matrix(1,0,0,1,0.830437,0.727643)">
+                <circle cx="19.957" cy="170.522" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="19.957" cy="164.097" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="19.957" cy="157.673" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="19.957" cy="151.248" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="19.957" cy="144.824" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="5.921" cy="170.522" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="5.921" cy="164.097" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="5.921" cy="157.673" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="5.921" cy="151.248" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="5.921" cy="144.824" r="2.5" style="fill:rgb(20,19,19);"/>
+                <rect x="2.108" y="140.805" width="25" height="0.5" style="fill:rgb(20,19,19);"/>
+            </g>
+            <g transform="matrix(1,0,0,1,0.830437,0.727643)">
+                <circle cx="21.627" cy="106.21" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="21.627" cy="99.786" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="21.627" cy="93.361" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="21.627" cy="86.937" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="21.627" cy="80.512" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="7.59" cy="106.21" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="7.59" cy="99.786" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="7.59" cy="93.361" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="7.59" cy="86.937" r="2.5" style="fill:rgb(20,19,19);"/>
+                <circle cx="7.59" cy="80.512" r="2.5" style="fill:rgb(20,19,19);"/>
+            </g>
+            <g transform="matrix(1,0,0,1,0.830437,0.727643)">
+                <rect x="2.108" y="68.003" width="25" height="0.5" style="fill:rgb(20,19,19);"/>
+            </g>
+            <g transform="matrix(1,0,0,1,0.830437,0.727643)">
+                <circle cx="20.249" cy="416.11" r="2.5" style="fill:rgb(20,19,19);"/>
+            </g>
+            <g transform="matrix(1,0,0,1,0.465323,0.362545)">
+                <rect x="52.149" y="76.499" width="28.114" height="3.286" style="fill:rgb(235,235,235);"/>
+            </g>
+        </g>
+    </g>
+</svg>
