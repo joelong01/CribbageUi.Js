@@ -1,19 +1,37 @@
 .GameTable
 {
-    table-layout: fixed;
-    background-image: url('./images/felt.png');
+    table-layout: fixed;    
     overflow-x: hidden;
     word-wrap:break-word;
     opacity: 1;
-    margin: 0px;
-    width: 1370px;
-
+    margin-top: 0px;
+    width: 1450px;
+    
+    border: 2px solid black !important;
+    background-image: url("./images/Cards/BackOfCard.svg");
+    border-radius: 10px;
 }
+
+.tableBody
+{
+    vertical-align: middle;
+    align-items: center;
+    
+    border: 1px transparent dashed;
+}
+
+
+.emptyColumn2
+{
+    width: 0px;
+    background: yellow;
+}
+
 .cribCell
 {
     vertical-align: top;
     margin: 0px;
-    padding: 1px;        
+    padding-right: 8px;        
     background-color: transparent;    
     overflow: hidden;
     width: 154px;
@@ -22,13 +40,55 @@
 
 .computerCell, .playerCell
 {
+    
     background-color: transparent;
     align-content: initial;
-    height: 225px;
-    padding: 0px;
-    margin: 0px;
+    height: 225px;    
     overflow: hidden;
+    border: 1px black solid;
+    border-radius: 20px;
 }
+
+.second_row
+{
+    display: flex;  
+    background: transparent;
+}
+.countedCell
+{
+    display: flex;
+    
+}
+
+.divCounted
+{    
+    display: flex;
+    overflow: initial;
+    border-radius: 20px;
+    background: transparent;
+    width: 795px;
+    min-width: 795px;
+    max-width: 795px;
+    border: 1px black solid;
+    margin-right: 2px;
+    
+}
+
+.divDeck
+{
+    overflow: initial;
+    display: flex;
+    border-radius: 20px;
+    margin-left: 0px;    
+    padding-right: 5px;
+    background: transparent;
+    width:154px;
+    min-width: 154px;
+    max-width: 154px;
+    border: 1px black solid;
+    
+}
+
 
 
 [class^='blank_']
@@ -40,39 +100,18 @@
     overflow: hidden;
 }
 
-.empty
-{
-    overflow: hidden;
-}
-[class$='_row']
-{
-    
-    background: transparent;
-    margin: 0px;
-    padding: 0px;
-    overflow: hidden;
-}
-
 .cribbageBoard
 {
-    width: 250px;
-    background: burlywood;
+    width: 250px;    
+    background: wheat;
     opacity: 1.0;
     margin: 0px;
     padding: 1px;
     overflow: hidden;
+    border-radius: 10px;
+    
 }
 
-
-
-.deckCell
-{
-    background: darkolivegreen;    
-    margin: 0px;
-    padding: 0px;
-    opacity: .25;
-    overflow: hidden;
-}
 
 .control_cell
 {
@@ -83,23 +122,59 @@
     overflow: hidden;
 }
 
-.countedCell
-{    
-    width: 950px;
-    display: flex;
-    border-radius: 20px;
-}
 
-.divCounted
+
+
+
+.emptyColumn1
 {
-    width: 785px;
-   padding-right: 2px;
+    width: 50px; /* gives room for the burger menu */
+    background: rgb(64, 64, 64);
+    margin:0px;
+    padding:0px;
+    border-radius: 10px;
 }
-
-.divDeck
+.bm-burger-button 
 {
-    width:160px;    
-    border-radius: 20px;
-    margin-left: 5px;
+    position: fixed;
+    width: 36px;
+    height: 30px;
+    left: 10px;
+    top: 20px;
+   background: transparent;
+}
+.bm-burger-bars 
+{
+    background:white;
+    opacity: 1;
 }
 
+.bm-cross-button 
+{
+    height: 24px;
+    width: 24px;
+    position: fixed;
+    align-self: flex-end;
+    left: 270px; /* since the width is 300 */
+    top: 0px;
+    background: green;
+}
+
+.bm-cross {
+    background: #bdc3c7;
+  }
+
+
+.bm-overlay 
+{
+    background: rgba(0, 0, 0, 0.3);
+}
+
+  /* General sidebar styles */
+.bm-menu 
+{
+    background: rgba(64,64,64,1);
+    padding: 0;
+    font-size: 1.15em;
+    
+  }

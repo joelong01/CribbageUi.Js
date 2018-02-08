@@ -22,29 +22,27 @@ class CribCanvas extends React.Component
 
     componentDidMount() 
     {
-        
-      
+
+
     }
 
     cribOwnerChanged(e, newOwner)
     {
-         console.log("cribOwnerChanged to: " + newOwner);
+        console.log("cribOwnerChanged to: " + newOwner);
         this.setState({ cribOwner: newOwner }, function ()
-        {            
+        {
+            var cmd = "translate(0px, ";
+            
             if (newOwner === "Player") 
-            {               
-                this.cribCard.translate(0, 470);
-                this.cribCard.setCard("AceOfSpades");              
-
+            {
+                cmd += "485px)";
             }
             else
             {
-                
-                this.cribCard.translate(0, 0);
-                this.cribCard.setCard("JackOfDiamonds");
-               
+                cmd += "0px)";
             }
-
+            
+            this.cribDiv.style['transform'] = cmd;
 
         });
 
@@ -54,13 +52,15 @@ class CribCanvas extends React.Component
 
     render()
     {
-        
-        return (            
-                <Card ref={cribCard => this.cribCard = cribCard} 
-                      cardName={"KingOfClubs"} cardOrientation={"facedown"} 
-                      class="cribCard"
-                      
-                      />               
+
+        return (
+            <div className="cribDiv" ref={cribDiv => this.cribDiv = cribDiv}  >
+                <Card ref={cribCard => this.cribCard = cribCard}
+                    cardName={"KingOfClubs"} cardOrientation={"facedown"}
+                    class="cribCard"
+
+                />
+            </div>
         );
     }
 
