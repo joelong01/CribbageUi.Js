@@ -1,172 +1,86 @@
-.GameTable
+.LayoutRoot
 {
-    table-layout: fixed;    
-    overflow-x: hidden;
-    word-wrap:break-word;
+    overflow-x: hidden;    
     opacity: 1;
+    padding-top: 10px;
     margin-top: 0px;
-    width: 1420px;    
-    border: 2px solid black !important;
-    background-image: url("./images/Cards/BackOfCard.svg");
-    border-radius: 5px;
-}
-
-.tableBody
-{
-    vertical-align: middle;
-    align-items: center;
     
-    border: 1px transparent dashed;
+    
 }
 
-.Menu_buttonDiv
+[class^="DIV_"]
 {
-    width: 10px;
+    position: absolute;
+    margin-left:50px;
 }
 
-.emptySecondColumn, .emptyFourthColumn
+.DIV_cribbageBoard
 {
-    width: 130px;
+    position: absolute;
+    margin-left: 180px;
 }
 
-.first_row
-{
-    width: 100%;
-    background: transparent;
-}
-.deckCell
+.DIV_crib
 {
     
-    vertical-align: center;
-    align-items: left;
-    margin: 0px;
-    padding-right: 8px;        
-    background-color: blue;    
-    overflow: hidden;    
-    border-radius: 5px;
-}
-
-.cribCell
-{
-    
+    background: blue;
+    width: 170px;
     vertical-align: top;
-    align-items: left;
-    margin: 0px;
-    padding-right: 8px;        
-    background-color: transparent;    
-    overflow: hidden;
-    border: 0px black solid;
-    border-radius: 5px;
-     
+    margin-top:  305px;
 }
 
-
-
-.computerCell, .playerCell, .countedCell
+.DIV_computer, .DIV_player, .DIV_counted
 {
     
-    background-color: green;
-    align-content: initial;    
     overflow: hidden;
-    border: 1px black solid;
-    border-radius: 5px;
+    width: 950px;
+    min-width: 950px;
+
+}
+
+.DIV_computer
+{
+    margin-top: 305px;
+    margin-left: 230px;    
+    background: purple;
+}
+
+.DIV_counted
+{
     
+    background: blue;
+    margin-top: 545px;
+    margin-left: 230px;
+}
+
+.DIV_player
+{
+    background: green;
+    margin-top: 785px;
+    margin-left: 230px;
+}
+
+.DIV_deck
+{
+    
+    background:black;
+    margin-top: 545px;
+    margin-left: 1190px;
 }
 
 .cribbageBoard
 {
-    width: 800px;    
+    width: 950px;    
     height: 300px;
     background: wheat;
     opacity: 1.0;
-    margin: 1px;
+    margin-left: 100px;
     padding: 0px;
     overflow: hidden;
     border-radius: 10px;
-    
-}
-
-.board_row
-{
-    height: 225px;
-    width: 100%;
-}
-
-
-[class^='blank_']
-{
-    background: transparent;
-    padding: 0px;
-    margin: 0px;
-    opacity: .25;
-    overflow: hidden;
+    margin-left: 50px;    
 }
 
 
 
 
-.control_cell
-{
-    background: transparent;
-    height: 400px;
-    margin: 0px;
-    padding: 0px;
-    overflow: hidden;
-}
-
-
-
-
-
-.burgerColumn
-{
-    width: 50px; /* gives room for the burger menu */
-    background: rgb(64, 64, 64);
-    margin:0px;
-    padding:0px;
-    border-radius: 10px;
-}
-.bm-burger-button 
-{
-    position: fixed;
-    width: 36px;
-    height: 30px;
-    left: 10px;
-    top: 20px;
-   background: transparent;
-}
-.bm-burger-bars 
-{
-    background:white;
-    opacity: 1;
-}
-
-.bm-cross-button 
-{
-    height: 24px;
-    width: 24px;
-    position: fixed;
-    align-self: flex-end;
-    left: 270px; /* since the width is 300 */
-    top: 0px;
-    background: green;
-}
-
-.bm-cross {
-    background: #bdc3c7;
-  }
-
-
-.bm-overlay 
-{
-    background: rgba(0, 0, 0, 0.3);
-}
-
-  /* General sidebar styles */
-.bm-menu 
-{
-    background: rgba(64,64,64,1);
-    padding: 0;
-    font-size: 1.15em;
-    
-  }

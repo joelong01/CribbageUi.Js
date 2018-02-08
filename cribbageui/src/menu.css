@@ -3,3 +3,53 @@
 {
     margin: 10px;
 }
+
+.Menu_LayoutRoot
+{
+    background: purple;
+}
+
+.bm-burger-button 
+{
+    position: fixed;
+    width: 36px;
+    height: 30px;
+    left: 10px;
+    top: 10px;
+   background: transparent;
+}
+.bm-burger-bars 
+{
+    background:black;
+    opacity: 1;
+}
+
+.bm-cross-button 
+{
+    height: 24px;
+    width: 24px;
+    position: fixed;
+    align-self: flex-end;
+    left: 270px; /* since the width is 300 */
+    top: 0px;
+    background: green;
+}
+
+.bm-cross {
+    background: #bdc3c7;
+  }
+
+
+.bm-overlay 
+{
+    background: rgb(0, 0, 0);
+}
+
+  /* General sidebar styles */
+.bm-menu 
+{
+    background: darkslategray;
+    padding: 0;
+    font-size: 1.15em;
+    
+}
