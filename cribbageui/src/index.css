@@ -2,9 +2,13 @@ body {
   transform:scale(1.0);
   transform-origin: top left;
   margin: 0px;
-  padding: 0px;
+  overflow: hidden;
+  padding: 1px;
   font-family: 'Verdana';
-  
+  background-image: url("./images/Cards/BackOfCard.svg");
+  border: 0px black solid;
+  width: 1360px;
+  height: 1050px;
 }
 
 
