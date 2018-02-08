@@ -14,12 +14,13 @@ export class CardGrid extends React.Component
 
         this.state =
             {
+                cards: [],
                 cardCount: 3,
                 stacked: false,
                 gridName: "uninitialized"
             }
 
-
+            this.setCards = this.setCards.bind(this);
     }
 
     componentDidMount() 
@@ -27,8 +28,13 @@ export class CardGrid extends React.Component
         this.setState({ cardCount: this.props.cardCount });
         this.setState({ stacked: this.props.stacked });
         this.setState({ gridName: this.props.gridName });
+        this.setState({ cards: this.props.cards });
     }
 
+    setCards (cards)
+    {
+        this.setState({ cards: cards });
+    }
     renderCard(name, orientation)
     {
         let n = this.state.gridName + "_" + name;
@@ -36,7 +42,7 @@ export class CardGrid extends React.Component
         //<Card cardOrientation={"faceup"} cardName={"KingOfSpades"}  className={ this.state.gridName + "_KingOfClubs_card"}  />           
 
         return (
-            <div className={divName}>
+            <div className={divName} key={divName}>
                 <Card ref={name => this.name = name} cardOrientation={orientation} cardName={name} className={n} key={n} />
             </div>
         );
@@ -50,34 +56,39 @@ export class CardGrid extends React.Component
 
         let c = [];
 
-
-
-        for (let i = 0; i < this.state.cardCount; i++)
+        for (let i = 0; i < this.state.cards.length; i++)
         {
-            console.log("rendering ", this.state.gridName);
-            if (this.state.gridName === "deck")
-            {
-
-                let x = this.renderCard(cardNames[i], "facedown");
-                c.push(x);
-            }
-            else
-            {
-                let x = this.renderCard(cardNames[i], "faceup");
-                c.push(x);
-            }
-
+            let x = this.renderCard(this.state.cards[i], "faceup");
+            c.push(x);
         }
 
+        /* 
+        
+                for (let i = 0; i < this.state.cardCount; i++)
+                {            
+                    if (this.state.gridName === "deck")
+                    {
+        
+                        let x = this.renderCard(cardNames[i], "facedown");
+                        c.push(x);
+                    }
+                    else
+                    {
+                        let x = this.renderCard(cardNames[i], "faceup");
+                        c.push(x);
+                    }
+        
+                }
+         */
 
 
         return (
-            
-                <div className={gridName} height={h}>
 
-                    {c}
+            <div className={gridName} height={h}>
 
-                </div>            
+                {c}
+
+            </div>
         );
     }
 

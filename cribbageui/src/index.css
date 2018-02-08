@@ -2,12 +2,8 @@ body {
   transform:scale(1.0);
   transform-origin: top left;
   margin: 0px;
-  padding: 10px;
+  padding: 0px;
   font-family: 'Verdana';
-  background-image: url(./images/Cards/BackOfCard.svg) ;
-  background-clip: content-box;
-  
-  
   
 }
 
@@ -25,45 +21,5 @@ body {
   background-color: gray;
 }
 
-.cribbagePage
-{
-  display: grid;
-  grid-template-columns: 154px 929px 400px;
-  grid-template-rows: 685px 400px;
-  
-  
-}
 
-.firstCol
-{
-  grid-column: 1;
-  grid-row: 1;    
-  
-}
-
-.secondCol
-{
-  padding-left: 5px;
-  grid-column: 2;
-  grid-row: 1;
-  
-}
-
-.thirdCol
-{
-  grid-row: 1;
-  grid-column: 3;
-  padding-left: 5px;
-  
-}
-
-
-.secondRow
-{
-  padding-top: 5px;
-  grid-column: 1;
-  grid-row: 2;
-  
-  
-}
 
