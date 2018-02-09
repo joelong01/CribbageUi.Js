@@ -39,45 +39,20 @@ class CribGrid extends React.Component
 
     }
 
-    cribOwnerChanged(e, newOwner)
-    {
-        console.log("cribOwnerChanged to: " + newOwner);
-        this.setState({ cribOwner: newOwner }, function ()
-        {
-            var cmd = "translate(0px, ";
-
-            if (newOwner === "Player") 
-            {
-                cmd += "485px)";
-            }
-            else
-            {
-                cmd += "0px)";
-            }
-
-            this.cribDiv.style['transform'] = cmd;
-
-        });
-
-
-    }
-
+    
 
     render()
     {
         
         return (
-
-            <div className="cribDiv" ref={cribDiv => this.cribDiv = cribDiv}>
+            
                 <CardGrid
                     orientation={"facedown"}
                     cardCount={1} stacked={true} gridName={"crib"}
                     key={"crib"} cards={this.props.cards}
                     ref={cribGrid => this.cribGrid = cribGrid}
                 />
-            </div>
-
-
+            
         );
     }
 

@@ -10,7 +10,7 @@ const suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades'];
 const values = ['Ace', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven',
     'Eight', 'Nine', 'Ten', 'Jack', 'Queen', 'King'];
 
-ReactDOM.render(<CribbageGame />, document.getElementById('root'));
+ReactDOM.render(<CribbageGame cribOwner={"computer"} />, document.getElementById('root'));
 registerServiceWorker();
 function newFunction()
 {
