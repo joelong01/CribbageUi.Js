@@ -9,20 +9,25 @@ export class CardGrid extends React.Component
 {
     constructor(props)
     {
-        var cards = [];
+
         super(props);
 
         this.state =
             {
-                cards: [],
+                cardNames: [],
                 cardCount: 3,
                 stacked: false,
                 gridName: "uninitialized",
-                orientation: "facedown"
+                orientation: "facedown",
+                
+
             }
 
-            this.setCards = this.setCards.bind(this);
-            this.clear = this.clear.bind(this);
+        
+
+        this.setCards = this.setCards.bind(this);
+        this.clear = this.clear.bind(this);
+        this.cardFromName = this.cardFromName.bind(this);
     }
 
     componentDidMount() 
@@ -30,18 +35,26 @@ export class CardGrid extends React.Component
         this.setState({ cardCount: this.props.cardCount });
         this.setState({ stacked: this.props.stacked });
         this.setState({ gridName: this.props.gridName });
-        this.setState({ cards: this.props.cards });
+        this.setState({ cardNames: this.props.cardNames });
         this.setState({ orientation: this.props.orientation });
     }
 
-    setCards (cards)
+    setCards(cards)
     {
-        this.setState({ cards: cards });
+        this.setState({ cardNames: cards });
     }
 
     clear()
     {
-        this.setState({ cards: [] });
+        
+        this.setState({ cardNames: [] });
+    }
+
+    cardFromName(name)
+    {
+        return this.refs[name];
+
+
     }
 
     renderCard(name, orientation)
@@ -52,7 +65,7 @@ export class CardGrid extends React.Component
 
         return (
             <div className={divName} key={divName}>
-                <Card ref={name => this.name = name} cardOrientation={orientation} cardName={name} className={n} key={n} />
+                <Card ref={name} cardOrientation={orientation} cardName={name} className={n} key={n} />
             </div>
         );
     }
@@ -64,13 +77,14 @@ export class CardGrid extends React.Component
         let h = 225; // 4 for the padding
 
         let c = [];
-
-        for (let i = 0; i < this.state.cards.length; i++)
+        
+        for (let i = 0; i < this.state.cardNames.length; i++)
         {
-            let x = this.renderCard(this.state.cards[i], this.state.orientation);
+            let x = this.renderCard(this.state.cardNames[i], this.state.orientation);            
             c.push(x);
         }
 
+        
 
         return (
 
@@ -86,10 +100,3 @@ export class CardGrid extends React.Component
 
 }
 export default CardGrid;
-
-/* <Card ref={card1 => this.card1 = card1} cardName={"AceOfClubs"} />                    
-                    <Card ref={card2 => this.card2 = card2} cardName={"TwoOfClubs"} />
-                    <Card ref={card3 => this.card3 = card3} cardName={"ThreeOfClubs"} />
-                    <Card ref={card4 => this.card4 = card4} cardName={"FourOfClubs"} />
-                    <Card ref={card5 => this.card5 = card5} cardName={"FiveOfHearts"} />
-                    <Card ref={card6 => this.card6 = card6} cardName={"SixOfDiamonds"} /> */
