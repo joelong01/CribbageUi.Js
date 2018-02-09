@@ -5,11 +5,9 @@ import CardGrid from './controls/cardGrid';
 import CribbageBoard from './controls/CribbageBoard';
 import Menu from 'react-burger-menu/lib/menus/slide'
 import util from 'util';
-import {delay} from './helper_functions';
+import { delay } from './helper_functions';
 import "./game.css";
 import "./menu.css";
-
-
 
 export class CribbageGame extends Component
 {
@@ -31,7 +29,8 @@ export class CribbageGame extends Component
         this.toggleZoomWindow = this.toggleZoomWindow.bind(this);
         this.getNextCardXposition = this.getNextCardXposition.bind(this);
         this.closeMenuAndReset = this.closeMenuAndReset.bind(this);
-
+        this.getCardsFromServer = this.getCardsFromServer.bind(this);
+        this.onGetHand = this.onGetHand.bind(this);
     }
 
     componentDidMount() 
@@ -118,6 +117,7 @@ export class CribbageGame extends Component
 
     closeMenuAndReset()
     {
+        console.log("closeMenuAndReset");
         if (this.state.menuOpen)
         {
             this.setState({ menuOpen: false }, () =>
@@ -135,6 +135,7 @@ export class CribbageGame extends Component
 
     reset()
     {
+        console.log("reset");
         this.computerGrid.reset();
         this.playerGrid.reset();
         this.countedGrid.reset();
@@ -142,9 +143,47 @@ export class CribbageGame extends Component
         return 500;
     }
 
-    deal()
+    getCardsFromServer()
+    {
+       
+    
+    }
+
+    onGetHand()
+    {
+        console.log("getCardsFromServer");
+        let url = 'http://localhost:8080/api/getrandomhand';
+        fetch(url,
+            {
+                method: 'get'
+            }).then(function (response)
+            {
+                if (response.status >= 400)
+                {
+                    throw new Error("Bad response from server");
+                }
+
+                return response.json();
+            }).then(function(cardsAsJson)
+            {
+
+                var cards = cardsAsJson["RandomCards"];
+                this.refs.deckGrid.setCards(cards);
+                console.log(cards);
+                this.deal();
+                
+
+            }).catch(function (err)
+            {
+
+                console.log("error:" + err);
+            });
+    }
+
+    async deal()
     {
         this.closeMenuAndReset();
+
         var d = delay(1000);
         d.then(() =>
         {
@@ -193,7 +232,7 @@ export class CribbageGame extends Component
 
     }
 
-    
+
 
     // This keeps your state in sync with the opening/closing of the menu
     // via the default means, e.g. clicking the X, pressing the ESC key etc.
@@ -261,6 +300,7 @@ export class CribbageGame extends Component
                         <legend> Test Buttons </legend>
                         <button onClick={this.deal} className="menu-item--large" href="">Deal</button>
                         <button onClick={this.closeMenuAndReset} className="menu-item--large" href="">Reset</button>
+                        <button onClick={this.onGetHand} className="menu-item--large" href="">GetHand</button>
                     </fieldset>
                     <fieldset>
                         <legend> Options </legend>

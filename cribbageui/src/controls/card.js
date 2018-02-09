@@ -60,7 +60,7 @@ export default class Card extends React.Component
 
     setOrientation(o)
     {
-        util.log("[%s] from %s to %s", this.state.cardName, this.state.cardOrientation, o);
+     //   util.log("[%s] from %s to %s", this.state.cardName, this.state.cardOrientation, o);
 
         if (this.state.cardOrientation === o)
             return;
