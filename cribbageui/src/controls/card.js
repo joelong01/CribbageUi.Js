@@ -3,6 +3,8 @@
 import React, { Component } from 'react';
 import cardImages from './deck';
 import './card.css';
+import util from 'util';
+import './../helper_functions';
 
 export default class Card extends React.Component
 {
@@ -13,17 +15,22 @@ export default class Card extends React.Component
         this.state =
             {
                 cardOrientation: "facedown",
-                cardName: "ErrorCard"
+                cardName: "ErrorCard",
+                location: "deck",
+                owner: "shared"
             }
 
         this.translate = this.translate.bind(this);
         this.setCard = this.setCard.bind(this);
         this.handleClick = this.handleClick.bind(this);
-
+        this.updateCardInfo = this.updateCardInfo.bind(this);
 
     }
+
     componentDidMount()
     {
+        this.setState({ location: this.props.location });
+        this.setState({ owner: this.props.owner });
         this.setState({ cardName: this.props.cardName }, () =>
         {
             this.setOrientation(this.props.cardOrientation);
@@ -31,17 +38,40 @@ export default class Card extends React.Component
 
 
     }
+
+    updateCardInfo(loc, own)
+    {
+        if (loc !== "undefined")
+        {
+            this.setState({ location: loc }, () => 
+            {
+
+            });
+        }
+        if (own !== "undefined")
+        {
+            this.setState({ owner: own }, () => 
+            {
+
+            });
+        }
+    }
+
+
     setOrientation(o)
     {
-       if (this.state.cardOrientation === o)
+        util.log("[%s] from %s to %s", this.state.cardName, this.state.cardOrientation, o);
+
+        if (this.state.cardOrientation === o)
             return;
-            
+    
         if (o === "facedown" && this.state.cardOrientation !== "facedown")
         {
 
             this.setState({ cardOrientation: "facedown" }, () => 
             {
                 this.myCard.classList.toggle('flip');
+                
             });
 
         }
@@ -69,9 +99,10 @@ export default class Card extends React.Component
         }
     }
 
-    translate(x, y)
+    translate(x, y, deg)
     {
-        var cmd = "translate(" + x + "px, " + y + "px)";
+        var cmd = util.format("translate(%spx, %spx) rotate(%sdeg)", x, y, deg);
+        util.log("[%s] old: %s new transform: %s", this.state.cardName, this.myCard.style['transform'], cmd);      
         this.myCard.style['transform'] = cmd;
     }
     setCard(cName)

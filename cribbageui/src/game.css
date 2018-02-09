@@ -32,6 +32,7 @@
     transition-timing-function: ease-in-out;
     transition-duration: 0.5s;
     transition-property: transform;	
+    z-index: 2;
 
 }
 
@@ -44,6 +45,7 @@
     border: 1px solid black;
     border-radius: 5px;
     background: rgb(102, 39, 39);
+    z-index: 1;
 
 }
 
@@ -77,6 +79,7 @@
     margin-left: 1013px;
     min-width: 168px;
     width: 168px;
+    z-index: 3;
 }
 
 .cribbageBoard

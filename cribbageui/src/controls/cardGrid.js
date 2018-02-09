@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import cardImages, { cardFiles, cardNames } from './deck';
 import Card from "./card";
 import './cardGrid.css';
+import {delay} from '../helper_functions';
 
 export class CardGrid extends React.Component
 {
@@ -19,14 +20,14 @@ export class CardGrid extends React.Component
                 stacked: false,
                 gridName: "uninitialized",
                 orientation: "facedown",
-                
+
 
             }
 
-        
+
 
         this.setCards = this.setCards.bind(this);
-        this.clear = this.clear.bind(this);
+        this.reset = this.reset.bind(this);
         this.cardFromName = this.cardFromName.bind(this);
     }
 
@@ -44,10 +45,39 @@ export class CardGrid extends React.Component
         this.setState({ cardNames: cards });
     }
 
-    clear()
+    reset()
     {
-        
+        if (this.state.gridName === "deck")
+        {
+            this.state.cardNames.forEach((name) =>
+            {
+                let card = this.cardFromName(name);
+                card.setOrientation("facedown");
+                card.translate(0, 0, 0);
+                delay(500).then(() =>
+                {
+                    card.updateCardInfo("deck", "shared");
+                });
+            });
+
+            return; // leave cards in deck
+        }
+       /*  this.state.cardNames.forEach((name) =>
+        {
+            let card = this.cardFromName(name);
+            card.setOrientation("facedown");
+            card.translate(0, 0, 0);
+            delay(500).then(() =>
+            {
+                card.updateCardInfo("deck", "shared");
+            });
+
+        });
+
+
+        this.setState({ cardCount: 0 });
         this.setState({ cardNames: [] });
+        this.setState({ orientation: "facedown" }); */
     }
 
     cardFromName(name)
@@ -77,14 +107,14 @@ export class CardGrid extends React.Component
         let h = 225; // 4 for the padding
 
         let c = [];
-        
+
         for (let i = 0; i < this.state.cardNames.length; i++)
         {
-            let x = this.renderCard(this.state.cardNames[i], this.state.orientation);            
+            let x = this.renderCard(this.state.cardNames[i], this.state.orientation);
             c.push(x);
         }
 
-        
+
 
         return (
 

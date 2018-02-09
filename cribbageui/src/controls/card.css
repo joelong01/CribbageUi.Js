@@ -3,9 +3,11 @@
 {  
   perspective: 500px;
   transition-duration: 0.5s;
-  transition-property: transform;	
-  transform: translate(0px, 0px);
+  transition-property: transform;
+  transform: translate(0px, 0px) rotate(0deg); 
   transition-timing-function: ease-in-out;
+  
+  
   
 }
 [class$='_card'],  [class$='_flipper'], [class$='_faceup'],[class$='_facedown']
@@ -29,6 +31,8 @@
   transform: rotateY(180deg);
   
 }
+
+
 
 [class$='_flipper']
 {

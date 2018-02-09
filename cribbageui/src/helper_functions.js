@@ -80,6 +80,15 @@ export const printCanvasInfo =  (hdc, name, left, top, width, height) =>
         hdc.fillText("[" + left +"," + top + "," +  width + "," + height + "]" , 10, top+60);
      
 };
- 
+
+// Return a promise which resolves after the specified interval
+export function delay(interval)
+{
+    return new Promise(function (resolve)
+    {
+        setTimeout(resolve, interval);
+    });
+};
+
 export default roundRect;
 
