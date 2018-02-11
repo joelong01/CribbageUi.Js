@@ -23,12 +23,13 @@ export default class Card extends React.Component
         this.translate = this.translate.bind(this);
         this.setCard = this.setCard.bind(this);
         this.handleClick = this.handleClick.bind(this);
-        this.updateCardInfo = this.updateCardInfo.bind(this);
+        
 
     }
 
     componentDidMount()
     {
+        console.log("card did mount %s %s", this.props.cardName, this.props.cardOrientation);
         this.setState({ location: this.props.location });
         this.setState({ owner: this.props.owner });
         this.setState({ cardName: this.props.cardName }, () =>
@@ -39,71 +40,122 @@ export default class Card extends React.Component
 
     }
 
-    updateCardInfo(loc, own)
+    setStateAsync = async (key, value) =>
     {
-        if (loc !== "undefined")
+        var newState = {};
+        newState[key] = value;
+        return new Promise((resolve, reject) =>
         {
-            this.setState({ location: loc }, () => 
+            this.setState(newState, () => 
             {
-
+                resolve();
             });
-        }
-        if (own !== "undefined")
+
+        });
+    }
+
+    updateCardInfoAsync = async (loc, own) =>
+    {
+
+        var newState = {};
+        newState["location"] = loc;
+        newState["owner"] = own;
+        return new Promise((resolve, reject) =>
         {
-            this.setState({ owner: own }, () => 
+            this.setState(newState, () => 
             {
-
+                resolve();
             });
-        }
+
+        });
+        
     }
 
 
     setOrientation(o)
     {
-     //   util.log("[%s] from %s to %s", this.state.cardName, this.state.cardOrientation, o);
+        util.log("[%s] from %s to %s", this.state.cardName, this.state.cardOrientation, o);
 
         if (this.state.cardOrientation === o)
             return;
-    
-        if (o === "facedown" && this.state.cardOrientation !== "facedown")
-        {
 
-            this.setState({ cardOrientation: "facedown" }, () => 
-            {
-                this.myCard.classList.toggle('flip');
-                
-            });
+        var deg = 0;
 
-        }
-        else if (this.state.cardOrientation !== "faceup")
+
+        if (o === "faceup")
+            deg = 180;
+
+        var cmd = util.format("rotateY(%sdeg)", deg);
+
+        this.setState({ cardOrientation: o }, () => 
         {
-            this.setState({ cardOrientation: "faceup" }, () => 
-            {
-                this.myCard.classList.toggle('flip');
-            }
-            );
-        }
+            this.myFlipper.style['transform'] = cmd;
+        });
 
     }
 
-    handleClick()
+    setOrientationAsync = async (o) =>
     {
+
+        if (this.state.cardOrientation === o)
+            return;
+
+        await this.setStateAsync("cardOrientation", o);
+        var div = this.myFlipper;
+        return new Promise((resolve_func, reject_func) =>
+        {
+
+            div.addEventListener("transitionend", function endAnimationAndResolvePromise() 
+            {
+                resolve_func();
+                div.removeEventListener("transitionend", endAnimationAndResolvePromise);
+            });
+
+            var cmd = util.format("rotateY(%sdeg)", o === "faceup" ? 180 : 0);
+            div.style['transform'] = cmd;
+
+        });
+    }
+
+
+
+    handleClick = async () =>
+    {
+
         if (this.state.cardOrientation === "facedown")
         {
-            this.setOrientation("faceup");
+            await this.setOrientationAsync("faceup");
         }
         else
         {
-            this.setOrientation("facedown");
-
+            await this.setOrientationAsync("facedown");
         }
+    }
+
+    animateAsync = async (x, y, deg) =>
+    {
+        var div = this.myCard;
+        return new Promise((resolve_func, reject_func) =>
+        {
+            div.addEventListener("transitionend", function endAnimationAndResolvePromise() 
+            {
+                resolve_func();
+                div.removeEventListener("transitionend", endAnimationAndResolvePromise);
+            });
+
+            var cmd = util.format("translate(%spx, %spx) rotate(%sdeg)", x, y, deg);
+            this.myCard.style['transform'] = cmd;            
+
+        });
+
     }
 
     translate(x, y, deg)
     {
         var cmd = util.format("translate(%spx, %spx) rotate(%sdeg)", x, y, deg);
-        util.log("[%s] old: %s new transform: %s", this.state.cardName, this.myCard.style['transform'], cmd);      
+        //  util.log("[%s] old: %s new transform: %s", this.state.cardName, this.myCard.style['transform'], cmd);
         this.myCard.style['transform'] = cmd;
+
     }
     setCard(cName)
     {

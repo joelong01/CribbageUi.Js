@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import cardImages, { cardFiles, cardNames } from './deck';
 import Card from "./card";
 import './cardGrid.css';
-import {delay} from '../helper_functions';
+import { delay, wait } from '../helper_functions';
 
 export class CardGrid extends React.Component
 {
@@ -24,9 +24,6 @@ export class CardGrid extends React.Component
 
             }
 
-
-
-        this.setCards = this.setCards.bind(this);
         this.reset = this.reset.bind(this);
         this.cardFromName = this.cardFromName.bind(this);
     }
@@ -40,44 +37,79 @@ export class CardGrid extends React.Component
         this.setState({ orientation: this.props.orientation });
     }
 
-    setCards(cards)
-    {
-        this.setState({ cardNames: cards });
-    }
 
-    reset()
+
+
+    setCardsAsync = async (cards) =>
     {
-        if (this.state.gridName === "deck")
+        return new Promise((resolve, reject) =>
         {
-            this.state.cardNames.forEach((name) =>
+            this.setState({ cardNames: cards }, async () =>             
             {
-                let card = this.cardFromName(name);
-                card.setOrientation("facedown");
-                card.translate(0, 0, 0);
-                delay(500).then(() =>
+                this.state.cardNames.forEach(async (name) =>
                 {
-                    card.updateCardInfo("deck", "shared");
-                });
-            });
+                    let card = this.cardFromName(name);
+                    await card.setOrientationAsync("facedown");
+                    card.translate(0, 0, 0);
+                    await card.updateCardInfoAsync("deck", "shared");
 
-            return; // leave cards in deck
-        }
-       /*  this.state.cardNames.forEach((name) =>
-        {
-            let card = this.cardFromName(name);
-            card.setOrientation("facedown");
-            card.translate(0, 0, 0);
-            delay(500).then(() =>
-            {
-                card.updateCardInfo("deck", "shared");
+                });
+                
+                resolve();
             });
 
         });
 
+    }
 
-        this.setState({ cardCount: 0 });
-        this.setState({ cardNames: [] });
-        this.setState({ orientation: "facedown" }); */
+    setStateAsync = async (key, value) =>
+    {
+        var newState = {};
+        newState[key] = value;
+        return new Promise((resolve, reject) =>
+        {
+            this.setState(newState, () => 
+            {
+                resolve();
+            });
+
+        });
+    }
+
+    reset = async () =>
+    {
+        var promises = [];
+        if (this.state.gridName === "deck")
+        {
+            this.state.cardNames.forEach(async (name) =>
+            {
+                let card = this.cardFromName(name);
+                promises.push(card.setOrientationAsync("facedown"));
+                promises.push(card.animateAsync(0, 0, 0));                
+                promises.push(card.updateCardInfoAsync("deck", "shared"));
+
+            });
+
+            await Promise.all(promises);
+
+            return; // leave cards in deck
+        }
+        /*  this.state.cardNames.forEach((name) =>
+         {
+             let card = this.cardFromName(name);
+             card.setOrientation("facedown");
+             card.translate(0, 0, 0);
+             delay(500).then(() =>
+             {
+                 card.updateCardInfo("deck", "shared");
+             });
+ 
+         });
+ 
+ 
+         this.setState({ cardCount: 0 });
+         this.setState({ cardNames: [] });
+         this.setState({ orientation: "facedown" }); */
     }
 
     cardFromName(name)

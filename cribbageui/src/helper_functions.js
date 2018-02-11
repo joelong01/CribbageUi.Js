@@ -15,7 +15,7 @@ import { Shape } from 'react-konva';
  * @param {Boolean} fill Whether to fill the rectangle. Defaults to false.
  * @param {Boolean} stroke Whether to stroke the rectangle. Defaults to true.
  */
-export const roundRect =  (ctx, x, y, width, height, radius, fill, stroke) =>
+export const roundRect = (ctx, x, y, width, height, radius, fill, stroke) =>
 {
     if (typeof stroke === "undefined")
     {
@@ -48,47 +48,100 @@ export const roundRect =  (ctx, x, y, width, height, radius, fill, stroke) =>
 
 export function MyRoundRect(x, y, width, height, radius, fillColor, strokeColor)
 {
-    return(
-    <Shape fill={fillColor} stroke={strokeColor} draggable
-        sceneFunc = 
-        {
-            function (ctx)
+    return (
+        <Shape fill={fillColor} stroke={strokeColor} draggable
+            sceneFunc=
             {
-                ctx.beginPath();
-                ctx.moveTo(x + radius, y);
-                ctx.lineTo(x + width - radius, y);
-                ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-                ctx.lineTo(x + width, y + height - radius);
-                ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-                ctx.lineTo(x + radius, y + height);
-                ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-                ctx.lineTo(x, y + radius);
-                ctx.quadraticCurveTo(x, y, x + radius, y);
-                ctx.closePath();
-                
+                function (ctx)
+                {
+                    ctx.beginPath();
+                    ctx.moveTo(x + radius, y);
+                    ctx.lineTo(x + width - radius, y);
+                    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+                    ctx.lineTo(x + width, y + height - radius);
+                    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                    ctx.lineTo(x + radius, y + height);
+                    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+                    ctx.lineTo(x, y + radius);
+                    ctx.quadraticCurveTo(x, y, x + radius, y);
+                    ctx.closePath();
+
+                }
             }
-        }
-    />);
+        />);
 }
 
 
-export const printCanvasInfo =  (hdc, name, left, top, width, height) =>
+export const printCanvasInfo = (hdc, name, left, top, width, height) =>
 {
-        hdc.font = "12px Courier New";
-        hdc.fillStyle = 'rgba(255,255,255,1)';
-        hdc.fillText(name + "[l,t,w,h]", 10, top+40);
-        hdc.fillText("[" + left +"," + top + "," +  width + "," + height + "]" , 10, top+60);
-     
+    hdc.font = "12px Courier New";
+    hdc.fillStyle = 'rgba(255,255,255,1)';
+    hdc.fillText(name + "[l,t,w,h]", 10, top + 40);
+    hdc.fillText("[" + left + "," + top + "," + width + "," + height + "]", 10, top + 60);
+
 };
 
 // Return a promise which resolves after the specified interval
-export function delay(interval)
+export var delay = (interval) =>
 {
-    return new Promise(function (resolve)
+    return new Promise((resolve) =>
     {
-        setTimeout(resolve, interval);
+        return window.setTimeout(() =>
+        {
+            //do some stuff
+        }, interval );
+
     });
-};
+    
+}
+
+export var wait = (ms) =>
+{
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve(console.log(`waited for ${ms}ms`));
+        }, ms);
+    });
+}
+
+export var setStateAsync = (obj, k, v) =>
+{
+    
+    var newState = {};
+    var keys = [];
+    var values = [];
+    if (Array.isArray(k))
+    {
+        keys = k;
+        values = v;
+
+    }
+    else
+    {
+        keys.push(k);
+        values.push(v);
+    }
+
+    keys.forEach( (key, index) =>
+    {
+        newState[key] = values[index];
+    });
+
+    if (keys.length === 0)
+    {
+        throw Error("bad key/value pair in setStateAsync");
+    }
+
+    return new Promise((resolve, reject) =>
+    {
+        obj.setState(newState, () => 
+        {
+            resolve();
+        });
+
+    });
+
+}
 
 export default roundRect;
 
