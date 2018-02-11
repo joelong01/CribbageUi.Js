@@ -29,8 +29,7 @@ export default class Card extends React.Component
 
     componentDidMount()
     {
-        console.log("card did mount %s %s", this.props.cardName, this.props.cardOrientation);
-        this.setState({ location: this.props.location });
+       this.setState({ location: this.props.location });
         this.setState({ owner: this.props.owner });
         this.setState({ cardName: this.props.cardName }, () =>
         {
@@ -74,7 +73,6 @@ export default class Card extends React.Component
 
     setOrientation(o)
     {
-        util.log("[%s] from %s to %s", this.state.cardName, this.state.cardOrientation, o);
 
         if (this.state.cardOrientation === o)
             return;

@@ -5,7 +5,7 @@ import CardGrid from './controls/cardGrid';
 import CribbageBoard from './controls/CribbageBoard';
 import Menu from 'react-burger-menu/lib/menus/slide'
 import util from 'util';
-import { wait, setStateAsync } from './helper_functions';
+import { setStateAsync } from './helper_functions';
 import "./game.css";
 import "./menu.css";
 
@@ -185,7 +185,6 @@ export class CribbageGame extends Component
             let yPos = animationTopCoordinates[sendCardTo];
             xPos = xPos - 1013;
             yPos = yPos - 545;
-            util.log("%s:%s translate(%spx, %sps)", sendCardTo, cardName, xPos, yPos);
             promises.push(card.animateAsync(xPos, yPos, 360));
             await card.updateCardInfoAsync(sendCardTo, sendCardTo);
             if (sendCardTo === dealer)
