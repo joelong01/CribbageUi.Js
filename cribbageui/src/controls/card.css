@@ -2,9 +2,9 @@
 [class$='_card']
 {  
   perspective: 500px;
-  transition-duration: 0.5s;
+  transition-duration: 1.0s;
   transition-property: transform;
-    transform: translate(0px, 0px) rotate(0deg);
+  transform: translate(0px, 0px) rotate(0deg);
   transition-timing-function: ease-in-out;
   
   
@@ -41,6 +41,9 @@
   transform: rotateY(0deg);
   position: relative;
   fill: transparent;
+  border: 1px solid black;
+  border-radius: 5px;
+  
  
 }
 
@@ -50,7 +53,7 @@
   backface-visibility: hidden;
   position: absolute;
   border: 1px solid black;
-  border-radius: 0.5em;
+  border-radius: 5px;
   
 }
 
@@ -67,6 +70,7 @@
 {  
   z-index: 2;
   transform: rotateY(0deg);  
+  
   
 }
 

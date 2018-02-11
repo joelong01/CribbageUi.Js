@@ -92,24 +92,9 @@ export class CardGrid extends React.Component
 
             await Promise.all(promises);
 
-            return; // leave cards in deck
+            await this.setStateAsync("cards", [])
         }
-        /*  this.state.cardNames.forEach((name) =>
-         {
-             let card = this.cardFromName(name);
-             card.setOrientation("facedown");
-             card.translate(0, 0, 0);
-             delay(500).then(() =>
-             {
-                 card.updateCardInfo("deck", "shared");
-             });
- 
-         });
- 
- 
-         this.setState({ cardCount: 0 });
-         this.setState({ cardNames: [] });
-         this.setState({ orientation: "facedown" }); */
+
     }
 
     cardFromName(name)
