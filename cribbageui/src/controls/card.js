@@ -6,7 +6,7 @@ import './card.css';
 import util from 'util';
 import './../helper_functions';
 
-export default class Card extends React.Component
+export class Card extends React.Component
 {
     constructor(props)
     {
@@ -14,7 +14,7 @@ export default class Card extends React.Component
 
         this.state =
             {
-                cardOrientation: "facedown",
+                orientation: "facedown",
                 cardName: "ErrorCard",
                 location: "deck",
                 owner: "shared"
@@ -29,11 +29,12 @@ export default class Card extends React.Component
 
     componentDidMount()
     {
-       this.setState({ location: this.props.location });
+        util.log("card: %s loc:%s owner:%s orienation:%s", this.props.cardName, this.props.location, this.props.owner, this.props.orientation);
+        this.setState({ location: this.props.location });
         this.setState({ owner: this.props.owner });
         this.setState({ cardName: this.props.cardName }, () =>
         {
-            this.setOrientation(this.props.cardOrientation);
+            this.setOrientation(this.props.orientation);
         });
 
 
@@ -74,7 +75,7 @@ export default class Card extends React.Component
     setOrientation(o)
     {
 
-        if (this.state.cardOrientation === o)
+        if (this.state.orientation === o)
             return;
 
         var deg = 0;
@@ -85,7 +86,7 @@ export default class Card extends React.Component
 
         var cmd = util.format("rotateY(%sdeg)", deg);
 
-        this.setState({ cardOrientation: o }, () => 
+        this.setState({ orientation: o }, () => 
         {
             this.myFlipper.style['transform'] = cmd;
         });
@@ -95,10 +96,10 @@ export default class Card extends React.Component
     setOrientationAsync = async (o) =>
     {
 
-        if (this.state.cardOrientation === o)
+        if (this.state.orientation === o)
             return;
 
-        await this.setStateAsync("cardOrientation", o);
+        await this.setStateAsync("orientation", o);
         var div = this.myFlipper;
         return new Promise((resolve_func, reject_func) =>
         {
@@ -120,7 +121,7 @@ export default class Card extends React.Component
     handleClick = async () =>
     {
 
-        if (this.state.cardOrientation === "facedown")
+        if (this.state.orientation === "facedown")
         {
             await this.setOrientationAsync("faceup");
         }
@@ -137,12 +138,28 @@ export default class Card extends React.Component
         {
             div.addEventListener("transitionend", function endAnimationAndResolvePromise() 
             {
-                resolve_func();
-                div.removeEventListener("transitionend", endAnimationAndResolvePromise);
+                try
+                {
+                    resolve_func();
+                    div.removeEventListener("transitionend", endAnimationAndResolvePromise);
+                }
+                catch(e)
+                {
+                    util.log("error in animate async: %s", e);
+                    div.removeEventListener("transitionend", endAnimationAndResolvePromise);
+                    reject_func();
+                }
             });
 
+            try
+            {
             var cmd = util.format("translate(%spx, %spx) rotate(%sdeg)", x, y, deg);
             this.myCard.style['transform'] = cmd;            
+            }
+            catch (e)
+            {
+                util.log("error in animate async setting animation: %s", e);
+            }
 
         });
 
@@ -185,3 +202,5 @@ export default class Card extends React.Component
         );
     }
 }
+
+export default Card;

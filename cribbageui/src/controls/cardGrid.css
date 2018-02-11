@@ -53,6 +53,11 @@
 
 [class$='_card'],  [class$='_flipper'], [class$='_faceup'],[class$='_facedown']
 {  
-  margin: 0px;
+  margin: 0px; 
+  padding: 0px;
    
+}
+[class$='_facedown']
+{
+  margin-left: -1px;
 }

@@ -36,6 +36,13 @@
 
 }
 
+[class^="CARDDIV_"]
+{
+    position: absolute;
+    margin-left: 1022px;
+    margin-top: 550px;
+    z-index: 10;
+}
 
 .DIV_computer, .DIV_player, .DIV_counted, .DIV_deck
 {
