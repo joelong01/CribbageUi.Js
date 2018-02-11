@@ -5,7 +5,7 @@ import CardGrid from './controls/cardGrid';
 import CribbageBoard from './controls/CribbageBoard';
 import Menu from 'react-burger-menu/lib/menus/slide'
 import util from 'util';
-import { delay } from './helper_functions';
+import { wait, setStateAsync } from './helper_functions';
 import "./game.css";
 import "./menu.css";
 
@@ -16,29 +16,28 @@ export class CribbageGame extends Component
         super(props);
         this.state =
             {
-                cribOwner: "computer",
+                cribOwner: "computer", // aka "dealer"
                 doZoomWindow: false,
-                menuOpen: false
+                menuOpen: false,
+                cards: []
             }
 
         this.showSettings = this.showSettings.bind(this);
         this.renderMenu = this.renderMenu.bind(this);
-        this.deal = this.deal.bind(this);
-        this.reset = this.reset.bind(this);
         this.handleChooseCribPlayer = this.handleChooseCribPlayer.bind(this);
         this.toggleZoomWindow = this.toggleZoomWindow.bind(this);
         this.getNextCardXposition = this.getNextCardXposition.bind(this);
         this.closeMenuAndReset = this.closeMenuAndReset.bind(this);
-        this.getCardsFromServer = this.getCardsFromServer.bind(this);
-        this.onGetHand = this.onGetHand.bind(this);
+
+
     }
 
     componentDidMount() 
     {
         window.addEventListener('resize', this.handleResize);
-
         this.setState({ cribOwner: this.props.cribOwner });
         this.setState({ menuOpen: this.props.menuOpen });
+        this.setState({ cards: this.props.Cards });
     }
 
     componentWillUnmount()
@@ -115,123 +114,115 @@ export class CribbageGame extends Component
         });
     }
 
-    closeMenuAndReset()
+    closeMenuAndReset = async () =>
     {
         console.log("closeMenuAndReset");
-        if (this.state.menuOpen)
+        await this.closeMenuAsync();
+        return this.onReset();
+    }
+
+
+
+    onReset = async () =>
+    {
+        await this.closeMenuAsync();
+        await this.computerGrid.reset();
+        await this.playerGrid.reset();
+        await this.countedGrid.reset();
+        await this.deckGrid.reset();
+        return 500; //milliseconds
+    }
+
+
+    onGetHandAsync = async () =>
+    {
+        try
         {
-            this.setState({ menuOpen: false }, () =>
+            await this.closeMenuAsync();
+            let url = 'http://localhost:8080/api/getrandomhand';
+            let res = await fetch(url);
+            let jcards = await res.json();
+            util.log("RandomCards (json): %s", jcards);
+            let cards = jcards["RandomCards"];
+            util.log("RandomCards: %s", cards);
+            await setStateAsync(this, "cards", cards);
+            await this.deckGrid.setCardsAsync(cards);
+            cards.forEach(async (card, index) =>
             {
-                return this.reset();
+                let cardObj = this.deckGrid.cardFromName(card);
+                await cardObj.setOrientationAsync("facedown");
             });
         }
-        else
+        catch (e)
         {
-            return this.reset();
+            console.log(e);
         }
 
-
     }
 
-    reset()
+
+    onDeal = async () =>
     {
-        console.log("reset");
-        this.computerGrid.reset();
-        this.playerGrid.reset();
-        this.countedGrid.reset();
-        this.deckGrid.reset();
-        return 500;
-    }
-
-    getCardsFromServer()
-    {
-       
-    
-    }
-
-    onGetHand()
-    {
-        console.log("getCardsFromServer");
-        let url = 'http://localhost:8080/api/getrandomhand';
-        fetch(url,
-            {
-                method: 'get'
-            }).then(function (response)
-            {
-                if (response.status >= 400)
-                {
-                    throw new Error("Bad response from server");
-                }
-
-                return response.json();
-            }).then(function(cardsAsJson)
-            {
-
-                var cards = cardsAsJson["RandomCards"];
-                this.refs.deckGrid.setCards(cards);
-                console.log(cards);
-                this.deal();
-                
-
-            }).catch(function (err)
-            {
-
-                console.log("error:" + err);
-            });
-    }
-
-    async deal()
-    {
-        this.closeMenuAndReset();
-
-        var d = delay(1000);
-        d.then(() =>
+        await this.closeMenuAsync();
+        var deckGrid = this.deckGrid;
+        var cards = this.state.cards;
+        var cardObjs = [];
+        util.log("deckGrid.cards.count: %s", this.deckGrid.state.cardNames.length);
+        var animationTopCoordinates = [];
+        animationTopCoordinates["computer"] = 305;
+        animationTopCoordinates["counted"] = 545;
+        animationTopCoordinates["player"] = 785;
+        let dealer = "player";
+        let nonDealer = "computer";
+        let sendCardTo = nonDealer;
+        let promises = [];
+        for (let i = 0; i < 12; i++)
         {
-            var animationTopCoordinates = [];
-            animationTopCoordinates["computer"] = 305;
-            animationTopCoordinates["counted"] = 545;
-            animationTopCoordinates["player"] = 785;
-            let dealer = "player";
-            let nonDealer = "computer";
-            let sendCardTo = nonDealer;
-            for (let i = 0; i < 12; i++)
-            {
-                let cardName = this.deckGrid.state.cardNames[i];
-                let card = this.deckGrid.cardFromName(cardName);
-                let xPos = this.getNextCardXposition(sendCardTo, 154, Math.floor(i / 2));
-                let yPos = animationTopCoordinates[sendCardTo];
-                xPos = xPos - 1013;
-                yPos = yPos - 545;
-                util.log("%s:%s translate(%spx, %sps)", sendCardTo, cardName, xPos, yPos);
-                card.translate(xPos, yPos, 360);
-                card.updateCardInfo(sendCardTo, sendCardTo);
-                if (sendCardTo === dealer)
-                    sendCardTo = nonDealer;
-                else
-                    sendCardTo = dealer;
+            let cardName = cards[i];
+            let card = deckGrid.cardFromName(cardName);
+            cardObjs.push(card);
+            let xPos = 154 * Math.floor(i / 2) + 234;
+            let yPos = animationTopCoordinates[sendCardTo];
+            xPos = xPos - 1013;
+            yPos = yPos - 545;
+            util.log("%s:%s translate(%spx, %sps)", sendCardTo, cardName, xPos, yPos);
+            promises.push(card.animateAsync(xPos, yPos, 360));
+            await card.updateCardInfoAsync(sendCardTo, sendCardTo);
+            if (sendCardTo === dealer)
+                sendCardTo = nonDealer;
+            else
+                sendCardTo = dealer;
 
+        }
+
+        await Promise.all(promises);
+        promises = [];
+        
+        cardObjs.forEach((card, index) =>
+        {
+            var or = "facedown";
+            switch (card.state.owner)                
+            {
+                case "player":
+                    or = "faceup";
+                    break;
+                case "computer":
+                    or = "facedown";
+                    break;
+                case "shared":
+                    or = "facedown";
+                    break;
+                default:
+                    or= "facedown";
+                    break;
             }
 
-            return delay(1000); // ms to wait for the flip
-
-        }).then(() =>            
-        {
-            for (let i = 0; i < 12; i++)
-            {
-                let cardName = this.deckGrid.state.cardNames[i];
-                let card = this.deckGrid.cardFromName(cardName);
-                if (card.state.owner === "player")
-                {
-                    card.setOrientation("faceup");
-                }
-            }
-
+            promises.push (card.setOrientationAsync(or));
         });
 
-
-
+        await Promise.all(promises);
+        console.log("finished dealing");
     }
-
 
 
     // This keeps your state in sync with the opening/closing of the menu
@@ -242,9 +233,9 @@ export class CribbageGame extends Component
     }
 
     // This can be used to close the menu, e.g. when a user clicks a menu item
-    closeMenu()
+    closeMenuAsync = async () =>
     {
-        this.setState({ menuOpen: false })
+        await setStateAsync(this, "menuOpen", false);
     }
 
     // This can be used to toggle the menu, e.g. when using a custom icon
@@ -268,10 +259,10 @@ export class CribbageGame extends Component
             <Menu className="burgerMenu" isOpen={this.state.menuOpen}
                 onStateChange={(state) => this.handleStateChange(state)}
                 pageWrapId={"page-wrap"} outerContainerId={"outer-container"}
-                ref={burgerMenu => this.burgerMenu = burgerMenu}>
+                ref={burgerMenu => this.burgerMenu = burgerMenu} >
                 <div className="Menu_LayoutRoot">
                     <div className="Menu_buttonDiv">
-                        <button onClick={this.showSettings} className="menu-item--large" href="">Change Cards</button>
+                        <button onClick={this.showSettings.bind(this)} className="menu-item--large" href="">Change Cards</button>
                     </div>
                     <fieldset>
                         <legend> Crib Owner </legend>
@@ -298,9 +289,9 @@ export class CribbageGame extends Component
                     </fieldset>
                     <fieldset className="Menu_TestButtons"  >
                         <legend> Test Buttons </legend>
-                        <button onClick={this.deal} className="menu-item--large" href="">Deal</button>
-                        <button onClick={this.closeMenuAndReset} className="menu-item--large" href="">Reset</button>
-                        <button onClick={this.onGetHand} className="menu-item--large" href="">GetHand</button>
+                        <button onClick={this.onReset.bind(this)} className="menu-item--large" href="">Reset</button>
+                        <button onClick={this.onDeal.bind(this)} className="menu-item--large" href="mnu_onGetHand">Deal</button>
+                        <button onClick={this.onGetHandAsync.bind(this)} className="menu-item--large" href="mnu_onGetHand">GetHandAsync</button>
                     </fieldset>
                     <fieldset>
                         <legend> Options </legend>
@@ -310,7 +301,7 @@ export class CribbageGame extends Component
                         </label>
                     </fieldset>
                 </div>
-            </Menu>
+            </Menu >
         );
     }
 
@@ -345,16 +336,14 @@ export class CribbageGame extends Component
                         <div className="DIV_deck">
                             <CardGrid
                                 cardCount={1} stacked={true} gridName={"deck"}
-                                key={"deck"} cardNames={['KingOfHearts', 'AceOfClubs', 'TwoOfClubs', 'ThreeOfClubs', 'FourOfClubs', "FiveOfClubs", "SixOfClubs",
-                                    'ThreeOfSpades', "FourOfSpades", "FiveOfSpades", 'SixOfSpades', 'FiveOfHearts', 'SixOfHearts']}
-                                orientation={"facedown"}
+                                key={"deck"} cardNames={this.state.cards}
                                 ref={deckGrid => this.deckGrid = deckGrid}
                             />
                         </div>
                         <div className="DIV_counted">
                             <CardGrid
                                 cardCount={6} stacked={false} gridName={"counted"}
-                                key={"counted"} cardNames={[]}
+                                key={"counted"} cardNames={["AceOfSpades"]}
                                 ref={countedGrid => this.countedGrid = countedGrid}
                                 orientation={"faceup"}
                             />
