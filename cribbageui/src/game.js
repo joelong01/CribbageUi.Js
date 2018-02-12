@@ -140,8 +140,8 @@ export class CribbageGame extends Component
             await this.closeMenuAsync();
             let url = 'http://localhost:8080/api/getrandomhand/true'; // computer's crib
             let res = await fetch(url);
-            let jcards = await res.json();
-            var cardList = this.buildCardObj(jcards, true);
+            let jObj = await res.json();
+            let cardList = jObj["RandomCards"];
             await setStateAsync(this, "cardDataObjs", cardList);
 
         }
@@ -152,41 +152,7 @@ export class CribbageGame extends Component
 
     }
 
-    buildCardObj = (jcards, computerDeals) =>
-    {
-        var cardObj = {};
-        var cardList = [];
-        var dealerValue = computerDeals ? "computer" : "player";
-        var nonDealerValue = !computerDeals ? "computer" : "player";
 
-        var allCards = jcards["allCards"];
-
-        for (let i = 0; i < 12; i++)
-        {
-
-            cardObj =
-                {
-                    "name": allCards[i],
-                    "orientation": "facedown",
-                    "location": "deck",
-                    "owner": i % 2 === 0 ? nonDealerValue : dealerValue
-                }
-
-            cardList.push(cardObj);
-        }
-
-        cardObj =
-            {
-                "name": jcards["sharedCard"],
-                "orientation": "facedown",
-                "location": "deck",
-                "owner": "shared"
-            }
-
-        cardList.push(cardObj);
-
-        return cardList;
-    }
 
     flipCards = async (names, orientation) =>
     {
@@ -231,10 +197,13 @@ export class CribbageGame extends Component
         let marginTopAdj = 3;
         this.state.cardDataObjs.forEach(async (card, index) =>
         {
-            if (card.owner === "shared") return; // return is js' continue
-            let cardUiElement = this.refs[card.name];
-            util.log("%s and %s", cardUiElement.state.cardName, card.name);
-            let xPos = cardWidthPlusGap * Math.floor(index / 2) + marginLeft;
+            if (card.owner === "shared") 
+            {
+                util.log ("shared card %s index %s", card.name, index);
+                return; // return is js' continue
+            }
+            let cardUiElement = this.refs[card.name];            
+            let xPos = cardWidthPlusGap * Math.floor((index - 1) / 2) + marginLeft; // (index - 1) becuase the first 
             let yPos = animationTopCoordinates[card.owner] + marginTopAdj;
             if (toDeck)
             {
@@ -340,20 +309,20 @@ export class CribbageGame extends Component
     {
         let n = "main_" + card.name;
         let divName = "CARDDIV_" + card.name;
-        var myRef = card.Name;
+
         return (
-                
-                <div className={divName} key={divName} ref={divName}>
-                    <Card ref={myRef}
-                        cardName={card.name}
-                        orientation={card.orientation}
-                        owner={card.owner}
-                        location={"deck"}
-                        className={n}
-                        />
-                </div>
-                
-            
+
+            <div className={divName} key={divName} ref={divName}>
+                <Card ref={card.name}
+                    cardName={card.name}
+                    orientation={card.orientation}
+                    owner={card.owner}
+                    location={"deck"}
+                    className={n}
+                />
+            </div>
+
+
         );
     }
 
@@ -375,7 +344,7 @@ export class CribbageGame extends Component
 
         var cardsList = this.renderCards(this.state.cardDataObjs);
 
-        return (            
+        return (
             <div className="outer-container" width={340}>
                 {this.renderMenu()}
                 <main className="page-wrap">
@@ -427,7 +396,7 @@ export class CribbageGame extends Component
                     </div>
                 </main>
             </div >
-           
+
         );
     }
 

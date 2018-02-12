@@ -54,8 +54,8 @@ const propTypes =
         location:  PropTypes.string.isRequired,
         owner:  PropTypes.string.isRequired,
         // Injected by React DnD:
-        isDragging: PropTypes.bool.isRequired,
-        connectDragSource: PropTypes.func.isRequired
+       /*  isDragging: PropTypes.bool.isRequired,
+        connectDragSource: PropTypes.func.isRequired */
     };
 
 
@@ -247,7 +247,8 @@ export class Card extends React.Component
 
         const opacity = isDragging ? 0.5 : 1;
         
-        return connectDragSource(            
+   //     return connectDragSource(            
+       return (
                 <div className={cardClassName} ref={myCard => this.myCard = myCard}
                     onClick={this.handleClick}
                     style={{ opacity: opacity }}>
