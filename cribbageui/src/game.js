@@ -9,6 +9,11 @@ import { Card } from './controls/card';
 import "./game.css";
 import "./menu.css";
 
+import HTML5Backend from 'react-dnd-html5-backend';
+import { DragDropContext } from 'react-dnd';
+import DragDropContextProvider from 'react-dnd/lib/DragDropContextProvider';
+
+
 
 export class CribbageGame extends Component
 {
@@ -335,17 +340,20 @@ export class CribbageGame extends Component
     {
         let n = "main_" + card.name;
         let divName = "CARDDIV_" + card.name;
+        var myRef = card.Name;
         return (
-
-            <div className={divName} key={divName} ref={divName}>
-                <Card ref={card.name}
-                    cardName={card.name}
-                    orientation={card.orientation}
-                    owner={card.owner}
-                    className={n}
-                    key={n} />
-            </div>
-
+                
+                <div className={divName} key={divName} ref={divName}>
+                    <Card ref={myRef}
+                        cardName={card.name}
+                        orientation={card.orientation}
+                        owner={card.owner}
+                        location={"deck"}
+                        className={n}
+                        />
+                </div>
+                
+            
         );
     }
 
@@ -367,8 +375,7 @@ export class CribbageGame extends Component
 
         var cardsList = this.renderCards(this.state.cardDataObjs);
 
-        return (
-
+        return (            
             <div className="outer-container" width={340}>
                 {this.renderMenu()}
                 <main className="page-wrap">
@@ -420,9 +427,11 @@ export class CribbageGame extends Component
                     </div>
                 </main>
             </div >
+           
         );
     }
 
 }
 
-export default CribbageGame;
+export default DragDropContext(HTML5Backend)(CribbageGame);
+//export default CribbageGame;
