@@ -4,7 +4,7 @@ import CardGrid from './controls/cardGrid';
 import CribbageBoard from './controls/CribbageBoard';
 import Menu from 'react-burger-menu/lib/menus/slide'
 import util from 'util';
-import { setStateAsync } from './helper_functions';
+import { setStateAsync, wait } from './helper_functions';
 import { Card } from './controls/card';
 import "./game.css";
 import "./menu.css";
@@ -137,13 +137,14 @@ export class CribbageGame extends Component
     {
         try
         {
-            await this.closeMenuAsync();
+            await this.onReset();
             let url = 'http://localhost:8080/api/getrandomhand/true'; // computer's crib
             let res = await fetch(url);
             let jObj = await res.json();
             let cardList = jObj["RandomCards"];
             await setStateAsync(this, "cardDataObjs", cardList);
-
+            await wait(500);
+            await this.onDeal();
         }
         catch (e)
         {
@@ -181,40 +182,158 @@ export class CribbageGame extends Component
 
     }
 
+    animateComputerCribCards = async () =>
+    {
+        await this.closeMenuAsync();
+        let url = 'http://localhost:8080/api/getcribcards/'; // computer's crib
+        this.state.cardDataObjs.forEach((card, index) =>
+        {
+            if (card.owner === "computer")
+            {
+                url += card.name;
+                url += ",";
+            }
+        });
 
+        url = url.slice(0, -1); // take off the last ","
+        if (this.state.cribOwner === "computer")
+            url += "/true";
+        else
+            url += "/false";
+
+        let res = await fetch(url);
+        let cribcards = await res.json();
+        util.log("crib cards: %s", cribcards);
+        let pos = {};
+        let promises = [];
+        cribcards.forEach(async (card, index) => 
+        {
+            card.location = "counted";
+            card.owner = this.state.cribOwner;
+            let cardUiElement = this.refs[card.name];
+            await cardUiElement.updateCardInfoAsync("counted", this.state.cribOwner);
+            pos = this.getCardPosition("counted", index);
+            let p = cardUiElement.animateAsync(pos["xPos"], pos["yPos"], 360);
+            promises.push(p);
+        });
+
+        await Promise.all(promises);
+        await this.redoCardLayout("computer");
+
+    }
+
+    animateCardsToCrib = async () =>
+    {
+        await this.closeMenuAsync();
+        let promises = [];
+        this.state.cardDataObjs.forEach(async (card, index) =>
+        {
+            let cardUiElement = this.refs[card.name];
+            if (cardUiElement.state.location === "counted")
+            {
+                let pos = {};
+                pos = this.getCardPosition("crib", 0);
+                promises.push(cardUiElement.updateCardInfoAsync("crib", cardUiElement.state.owner));
+                promises.push(cardUiElement.animateAsync(pos["xPos"], pos["yPos"], 360));
+            }
+        });
+
+        await Promise.all(promises);
+    }
+
+    redoCardLayout = async (gridName) =>
+    {
+        let cardCount = 0;
+        let promises = [];
+        this.state.cardDataObjs.forEach((card, index) =>
+        {
+            let cardUiElement = this.refs[card.name];
+            if (cardUiElement.state.location === gridName)
+            {
+                let pos = {};
+                pos = this.getCardPosition(gridName, cardCount++);
+                promises.push(cardUiElement.animateAsync(pos["xPos"], pos["yPos"], 360));
+            }
+        });
+
+        await Promise.all(promises);
+    }
+
+    getCardPosition(gridName, index)
+    {
+        var animationTopCoordinates = [];
+        animationTopCoordinates["computer"] = 308;
+        animationTopCoordinates["crib"] = 308;
+        animationTopCoordinates["counted"] = 550;
+        animationTopCoordinates["player"] = 788;
+        animationTopCoordinates["deck"] = 550;
+        let cardWidthPlusGap = 157;
+        let marginLeft = 236;
+        if (gridName === "crib") marginLeft = 57;
+        let xPos = cardWidthPlusGap * index + marginLeft;
+        let yPos = animationTopCoordinates[gridName]
+        if (gridName === "deck")
+        {
+            xPos = 1022;
+            yPos = 550;
+        }
+
+        xPos = xPos - 1022; // this are in game.css as margin-left and margin-top
+        yPos = yPos - 550;
+
+        let pos = {};
+        pos["xPos"] = xPos;
+        pos["yPos"] = yPos;
+        return pos;
+    }
+
+    getCurrentTransformValues = (card) =>
+    {
+        let xform = card.getTransform();
+        // parse out the various xform numbers
+        // "translate(100px, 20px) rotate(360deg)"
+        let t1 = xform.split("(");
+        //
+        // t1[0] = "translate"
+        //  
+
+    }
 
     animateCardsToOwner = async (toDeck, spin) =>
     {
-        var animationTopCoordinates = [];
-        animationTopCoordinates["computer"] = 305;
-        animationTopCoordinates["counted"] = 545;
-        animationTopCoordinates["player"] = 785;
-        animationTopCoordinates["deck"] = 550;
-        let degrees = spin ? 360 : 0;
-        var dealPromises = [];
-        let cardWidthPlusGap = 157;
-        let marginLeft = 236;
-        let marginTopAdj = 3;
+        let nPlayer = 0;
+        let nComputer = 0;
+        let dealPromises = [];
         this.state.cardDataObjs.forEach(async (card, index) =>
         {
-            if (card.owner === "shared") 
+            let cardUiElement = this.refs[card.name];
+            let pos = {};
+            let owner = card.owner;
+            if (toDeck) owner = "deck";
+            switch (owner)
             {
-                util.log ("shared card %s index %s", card.name, index);
-                return; // return is js' continue
+                case "shared":
+                    return;
+                case "player":
+                    pos = this.getCardPosition("player", nPlayer);
+                    nPlayer++;
+                    break;
+                case "computer":
+                    pos = this.getCardPosition("computer", nComputer);
+                    nComputer++;
+                    break;
+                case "crib":
+                case "deck":
+                    pos = this.getCardPosition(owner, 0);
+                    break;
+                default:
+                    return;
             }
-            let cardUiElement = this.refs[card.name];            
-            let xPos = cardWidthPlusGap * Math.floor((index - 1) / 2) + marginLeft; // (index - 1) becuase the first 
-            let yPos = animationTopCoordinates[card.owner] + marginTopAdj;
-            if (toDeck)
-            {
-                xPos = 1022;
-                yPos = 550;
-                degrees = 0;
-            }
-            xPos = xPos - 1022; // this are in game.css as margin-left and margin-top
-            yPos = yPos - 550;
+
+
+
             dealPromises.push(cardUiElement.updateCardInfoAsync(card.owner, card.owner));
-            dealPromises.push(cardUiElement.animateAsync(xPos, yPos, degrees));
+            dealPromises.push(cardUiElement.animateAsync(pos["xPos"], pos["yPos"], spin ? 360 : 0));
 
 
         });
@@ -292,6 +411,8 @@ export class CribbageGame extends Component
                         <button onClick={this.onReset.bind(this)} className="menu-item--large" >Reset</button>
                         <button onClick={this.onDeal.bind(this)} className="menu-item--large" ref="mnu_onGetHand">Deal</button>
                         <button onClick={this.onGetHandAsync.bind(this)} className="menu-item--large" ref="mnu_onGetHand">GetHandAsync</button>
+                        <button onClick={this.animateComputerCribCards.bind(this)} className="menu-item--large" ref="mnu_animateComputerCribCards">Crib Cards</button>
+                        <button onClick={this.animateCardsToCrib.bind(this)} className="menu-item--large" ref="mnu_animateCardsToCrib">Move Cards to Crib</button>
                     </fieldset>
                     <fieldset>
                         <legend> Options </legend>

@@ -23,9 +23,10 @@
 .DIV_crib
 {
     background: rgb(102, 39, 39);    
-    width: 170px;
+    width: 168px;
     vertical-align: top;
-    margin-top:  305px;
+    margin-left:50px;
+    margin-top:305px;
     transition-duration: 0.5s;
     transition-property: transform;	
     transform: translate(0px, 0px);
