@@ -5,6 +5,59 @@ import cardImages from './deck';
 import './card.css';
 import util from 'util';
 import './../helper_functions';
+import { DragSource } from 'react-dnd';
+import {HTML5Backend} from 'react-dnd-html5-backend';
+
+var PropTypes = require('prop-types');
+
+
+
+const cardSource =
+    {
+        beginDrag(props)
+        {
+            console.log("beginDrag %s", props);
+            return { cardName: props.cardName };
+        } ,
+        isDragging(props, monitor)
+        {
+            util.log("dragging %s", props.cardName);
+            return props.cardName === monitor.getItem().cardName;
+        },
+        endDrag(props, monitor)
+        {
+            util.log ("end drag");
+            const item = monitor.getItem();
+            const dropResult = monitor.getDropResult();
+            if (dropResult)
+            {
+                util.log("dropped %s", props.cardName);
+            }
+        },
+    }
+
+/**
+ * Specifies the props to inject into your component.
+ */
+function collect(connect, monitor) {
+    util.log("collect called");
+	return {
+		connectDragSource: connect.dragSource(),		
+		isDragging: monitor.isDragging(),
+	}
+}
+
+const propTypes =
+    {
+        cardName: PropTypes.string.isRequired,
+        orientation:  PropTypes.string.isRequired,        
+        location:  PropTypes.string.isRequired,
+        owner:  PropTypes.string.isRequired,
+        // Injected by React DnD:
+        isDragging: PropTypes.bool.isRequired,
+        connectDragSource: PropTypes.func.isRequired
+    };
+
 
 export class Card extends React.Component
 {
@@ -23,7 +76,7 @@ export class Card extends React.Component
         this.translate = this.translate.bind(this);
         this.setCard = this.setCard.bind(this);
         this.handleClick = this.handleClick.bind(this);
-        
+
 
     }
 
@@ -68,7 +121,7 @@ export class Card extends React.Component
             });
 
         });
-        
+
     }
 
 
@@ -143,7 +196,7 @@ export class Card extends React.Component
                     resolve_func();
                     div.removeEventListener("transitionend", endAnimationAndResolvePromise);
                 }
-                catch(e)
+                catch (e)
                 {
                     util.log("error in animate async: %s", e);
                     div.removeEventListener("transitionend", endAnimationAndResolvePromise);
@@ -153,8 +206,8 @@ export class Card extends React.Component
 
             try
             {
-            var cmd = util.format("translate(%spx, %spx) rotate(%sdeg)", x, y, deg);
-            this.myCard.style['transform'] = cmd;            
+                var cmd = util.format("translate(%spx, %spx) rotate(%sdeg)", x, y, deg);
+                this.myCard.style['transform'] = cmd;
             }
             catch (e)
             {
@@ -176,31 +229,50 @@ export class Card extends React.Component
     {
         this.setState({ cardName: cName });
     }
+
+
     render()
     {
+
+
         let cardClassName = this.state.cardName + "_card";
         let faceupName = this.state.cardName + "_faceup";
         let facedownName = this.state.cardName + "_facedown";
         let faceupImage = cardImages[this.state.cardName];
         let facedownImage = cardImages["BackOfCard"];
         let flipperName = this.state.cardName + "_flipper";
-        return (
-            <div className={cardClassName} ref={myCard => this.myCard = myCard} onClick={this.handleClick} >
-                <div className={flipperName} ref={myFlipper => this.myFlipper = myFlipper} >
-                    <img className={faceupName}
-                        alt={require("../images/Cards/error.png")}
-                        srcSet={faceupImage}
-                        ref={faceupCard => this.faceupCard = faceupCard}
-                    />
-                    <img className={facedownName}
-                        alt={require("../images/Cards/error.png")}
-                        srcSet={facedownImage}
-                        ref={facedownCard => this.facedownCard = facedownCard}
-                    />
-                </div>
-            </div>
+        util.log("render props: %s", this.props);
+        
+        const {cardName, orientation, location, owner, isDragging, connectDragSource} = this.props;
+
+        const opacity = isDragging ? 0.5 : 1;
+        
+        return connectDragSource(            
+                <div className={cardClassName} ref={myCard => this.myCard = myCard}
+                    onClick={this.handleClick}
+                    style={{ opacity: opacity }}>
+
+                    <div className={flipperName} ref={myFlipper => this.myFlipper = myFlipper} >
+                        <img className={faceupName}
+                            alt={require("../images/Cards/error.png")}
+                            srcSet={faceupImage}
+                            ref={faceupCard => this.faceupCard = faceupCard}
+                        />
+                        <img className={facedownName}
+                            alt={require("../images/Cards/error.png")}
+                            srcSet={facedownImage}
+                            ref={facedownCard => this.facedownCard = facedownCard}
+                        />
+                    </div>
+                </div>            
         );
     }
 }
 
-export default Card;
+Card.propTypes = propTypes;
+export const ItemTypes =
+    {
+        CARD: 'card'
+    };
+
+export default DragSource(ItemTypes.CARD, cardSource, collect)(Card);
