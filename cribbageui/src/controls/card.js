@@ -217,7 +217,10 @@ export class Card extends React.Component
         });
 
     }
-
+    getTransform = () =>
+    {
+        return this.myCard.style['transform'];
+    }
     translate(x, y, deg)
     {
         var cmd = util.format("translate(%spx, %spx) rotate(%sdeg)", x, y, deg);
