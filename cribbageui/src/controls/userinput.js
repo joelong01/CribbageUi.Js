@@ -53,7 +53,6 @@ class ControlCanvas extends React.Component
     handleOptionChange(changeEvent)
     {
         this.setState({cribOwner: changeEvent.target.value});
-        console.log("handleOptionChange new owner: " + changeEvent.target.value);
         this.props.cribOwnerChanged(this, changeEvent.target.value);
     }
    
