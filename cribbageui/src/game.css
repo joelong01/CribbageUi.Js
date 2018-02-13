@@ -34,7 +34,14 @@
     transition-duration: 0.5s;
     transition-property: transform;	
     z-index: 2;
+    border-radius: 5px;
+    border: 1px black solid;
 
+}
+
+.menu-item--large
+{
+    position: relative;
 }
 
 [class^="CARDDIV_"]
