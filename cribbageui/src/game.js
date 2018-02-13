@@ -25,7 +25,8 @@ export class CribbageGame extends Component
                 cribOwner: "computer", // aka "dealer"
                 doZoomWindow: false,
                 menuOpen: false,
-                cardDataObjs: []
+                cardDataObjs: [],
+                sharedCardName: null
             }
 
 
@@ -110,7 +111,7 @@ export class CribbageGame extends Component
 
             this.myCribDiv.style['transform'] = cmd;
 
-            this.redoCardLayoutNoWait("crib");
+            this.redoCardLayout("crib");
             
 
 
@@ -130,9 +131,9 @@ export class CribbageGame extends Component
         try
         {
             await this.closeMenuAsync();
-            this.flipCards(["player", "computer", "shared"], "facedown");
+            this.flipCards(["player", "computer", "shared", "counted"], "facedown");
             await this.setAllCardsOwner("deck");
-            this.redoCardLayoutNoWait("deck");
+            this.redoCardLayout("deck");
 
         }
         catch (e)
@@ -161,7 +162,7 @@ export class CribbageGame extends Component
             await this.onDeal();
             await wait(0);
             cardList = jObj["ComputerCribCards"];
-            await this.animateCribCards(cardList);
+            await this.animateComputerCribCards(cardList);
         }
         catch (error)
         {
@@ -196,8 +197,8 @@ export class CribbageGame extends Component
             await cardUiElement.setStateAsync("location", card.owner);
         });
 
-        let computerPromises = this.redoCardLayout("computer");
-        let playerPromises = this.redoCardLayout("player");
+        let computerPromises = this.redoCardLayoutAsync("computer");
+        let playerPromises = this.redoCardLayoutAsync("player");
         let allP = [];
         for (let i = 0; i < computerPromises.length; i++)
         {
@@ -236,9 +237,9 @@ export class CribbageGame extends Component
 
         let res = await fetch(url);
         let cribcards = await res.json();
-        await this.animateCribCards(cribcards);
+        await this.animateComputerCribCards(cribcards);
     }
-    animateCribCards = async (cribCards) =>
+    animateComputerCribCards = async (cribCards) =>
     {
 
         let pos = {};
@@ -247,11 +248,72 @@ export class CribbageGame extends Component
         {
             let cardUiElement = this.refs[card.name];
             await cardUiElement.updateCardInfoAsync("counted", this.state.cribOwner);
-
+            
         });
 
-        this.redoCardLayoutNoWait("counted");
-        this.redoCardLayoutNoWait("computer");
+        this.redoCardLayout("counted");
+        this.redoCardLayout("computer");
+
+    }
+
+    onAnimateCribCardsToOwner = async () =>
+    {
+        await this.animateCribCardsToOwner();
+    }
+
+    animateCribCardsToOwner = async () =>
+    {
+        this.closeMenuAsync();
+        this.flipCards(["player", "computer"], "facedown");
+
+        let promises = [];
+        let newLoc = "";
+        this.state.cardDataObjs.forEach((card, index) =>
+        {
+            let cardUiElement = this.refs[card.name];
+            
+            if (cardUiElement.state.location === "crib")
+            {
+                newLoc = this.state.cribOwner;
+            }
+            else
+            {
+                newLoc = "deck";
+            }
+
+           promises.push(cardUiElement.setStateAsync("location", newLoc ));                             
+            
+        });
+
+        await Promise.all(promises);
+
+        promises = [];
+        promises = this.redoCardLayoutAsync("deck");
+        await Promise.all(promises);
+
+        promises = [];
+        promises = this.redoCardLayoutAsync(this.state.cribOwner);
+        await Promise.all(promises);
+
+        this.flipCards([this.state.cribOwner], "faceup");
+
+
+
+    }
+
+    showSharedCard = () =>
+    {
+        this.state.cardDataObjs.forEach((card, index) =>
+        {
+           if (card.owner === "shared")
+           {
+                let cardUiElement = this.refs[card.name];
+                cardUiElement.setState({orientation: "faceup"});
+                let divName = "CARDDIV_" + cardUiElement.state.cardName;
+                let div = this.refs[divName];
+                div.style["z-index"]= 99;
+           }
+        });
 
     }
 
@@ -269,10 +331,14 @@ export class CribbageGame extends Component
         });
 
         await Promise.all(promises);
-        await Promise.all(this.redoCardLayout("crib"));
+        await Promise.all(this.redoCardLayoutAsync("crib"));
+
+        this.showSharedCard();
     }
 
-    redoCardLayoutNoWait = (gridName) =>
+    
+
+    redoCardLayout = (gridName) =>
     {
         let cardCount = 0;
         let promises = [];
@@ -289,8 +355,9 @@ export class CribbageGame extends Component
 
     }
 
-    redoCardLayout = (gridName) =>
+    redoCardLayoutAsync = (gridName) =>
     {
+        util.log ("redoCardLayoutAsync %s:", gridName );
         let cardCount = 0;
         let promises = [];
         this.state.cardDataObjs.forEach((card, index) =>
@@ -316,7 +383,7 @@ export class CribbageGame extends Component
         animationTopCoordinates["player"] = 788;
         animationTopCoordinates["deck"] = 550;
 
-        util.log("inside getCardPosition. cribOwner: %s", this.state.cribOwner);
+//        util.log("inside getCardPosition. cribOwner: %s", this.state.cribOwner);
         if (this.state.cribOwner === "player")
         {
             animationTopCoordinates["crib"] = animationTopCoordinates["player"];
@@ -365,8 +432,8 @@ export class CribbageGame extends Component
         promises = [];
         try
         {
-            this.redoCardLayoutNoWait("counted");
-            this.redoCardLayoutNoWait("player");
+            this.redoCardLayout("counted");
+            this.redoCardLayout("player");
         }
         catch (e)
         {
@@ -461,6 +528,7 @@ export class CribbageGame extends Component
                             <button onClick={this.onGetHandAsync.bind(this)} className="menu-item--large" ref="mnu_onGetHand">GetHandAsync</button>
                             <button onClick={this.getComputerCribCards.bind(this)} className="menu-item--large" ref="mnu_animateComputerCribCards">Crib Cards</button>
                             <button onClick={this.animateCardsToCrib.bind(this)} className="menu-item--large" ref="mnu_animateCardsToCrib">Move Cards to Crib</button>
+                            <button onClick={this.onAnimateCribCardsToOwner.bind(this)} className="menu-item--large" ref="mnu_onAnimateCribCardsToOwner">Crib back to owner</button>                            
                         </div>
                     </fieldset>
                     <fieldset>
