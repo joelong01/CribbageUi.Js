@@ -145,6 +145,9 @@ export class CribbageGame extends Component
             await setStateAsync(this, "cardDataObjs", cardList);
             await wait(500);
             await this.onDeal();
+            await wait(500);
+            cardList = jObj["ComputerCribCards"];
+            await this.animateCribCards(cardList);
         }
         catch (e)
         {
@@ -174,15 +177,31 @@ export class CribbageGame extends Component
     {
         await this.closeMenuAsync();
 
-        let dealPromisis = await this.animateCardsToOwner(false, true);
-        await Promise.all(dealPromisis);
+        this.state.cardDataObjs.forEach(async (card, index) =>
+        {
+            let cardUiElement = this.refs[card.name];            
+            await cardUiElement.setStateAsync("location", card.owner);     
+            util.log("setStateAsync for %s returned. location: %s", cardUiElement.state.cardName, cardUiElement.state.location);
+        });
+
+        let computerPromises = this.redoCardLayout("computer");
+        let playerPromises = this.redoCardLayout("player");
+        let allP = [];
+        for (let i = 0; i < computerPromises.length; i++)
+        {
+            allP.append(computerPromises[i]);
+            allP.append(playerPromises[i]);
+        }
+
+        await Promise.all(allP);
+        await wait(1000); /// ??? huh
         let flipPromises = [];
         flipPromises = await this.flipCards(["player"], "faceup");
         await Promise.all(flipPromises);
 
     }
 
-    animateComputerCribCards = async () =>
+    getComputerCribCards = async () =>
     {
         await this.closeMenuAsync();
         let url = 'http://localhost:8080/api/getcribcards/'; // computer's crib
@@ -203,10 +222,14 @@ export class CribbageGame extends Component
 
         let res = await fetch(url);
         let cribcards = await res.json();
-        util.log("crib cards: %s", cribcards);
+        await this.animateCribCards(cribcards);
+    }
+    animateCribCards = async (cribCards) =>
+    {
+        util.log("crib cards: %s", cribCards);
         let pos = {};
         let promises = [];
-        cribcards.forEach(async (card, index) => 
+        cribCards.forEach(async (card, index) => 
         {
             card.location = "counted";
             card.owner = this.state.cribOwner;
@@ -218,7 +241,7 @@ export class CribbageGame extends Component
         });
 
         await Promise.all(promises);
-        await this.redoCardLayout("computer");
+        await Promise.all(this.redoCardLayout("computer"));
 
     }
 
@@ -256,7 +279,8 @@ export class CribbageGame extends Component
             }
         });
 
-        await Promise.all(promises);
+        return promises;
+
     }
 
     getCardPosition(gridName, index)
@@ -287,16 +311,31 @@ export class CribbageGame extends Component
         return pos;
     }
 
-    getCurrentTransformValues = (card) =>
+    onClickCard = async (card) =>
     {
-        let xform = card.getTransform();
-        // parse out the various xform numbers
-        // "translate(100px, 20px) rotate(360deg)"
-        let t1 = xform.split("(");
-        //
-        // t1[0] = "translate"
-        //  
+        util.log("card clicked: %s", card.state.cardName);
+        let promises = [];
+        promises.push(card.setStateAsync("location", "counted"));
+        promises.push(card.setOrientationAsync("facedown"));
+        await Promise.all(promises);
+        util.log("finished setting loc and orientation");
+        promises = [];
+        try
+        {
+            promises = this.redoCardLayout("counted");
+            if (Array.isArray(promises) && promises.length > 0)
+            {
+                Promise.All(promises);
+                util.log("finished counted update");
+            }
 
+            await Promise.all(this.redoCardLayout("player"));
+            util.log("finished player update");
+        }
+        catch (e)
+        {
+            util.log("caught exception in callback: %s", e);
+        }
     }
 
     animateCardsToOwner = async (toDeck, spin) =>
@@ -411,7 +450,7 @@ export class CribbageGame extends Component
                         <button onClick={this.onReset.bind(this)} className="menu-item--large" >Reset</button>
                         <button onClick={this.onDeal.bind(this)} className="menu-item--large" ref="mnu_onGetHand">Deal</button>
                         <button onClick={this.onGetHandAsync.bind(this)} className="menu-item--large" ref="mnu_onGetHand">GetHandAsync</button>
-                        <button onClick={this.animateComputerCribCards.bind(this)} className="menu-item--large" ref="mnu_animateComputerCribCards">Crib Cards</button>
+                        <button onClick={this.getComputerCribCards.bind(this)} className="menu-item--large" ref="mnu_animateComputerCribCards">Crib Cards</button>
                         <button onClick={this.animateCardsToCrib.bind(this)} className="menu-item--large" ref="mnu_animateCardsToCrib">Move Cards to Crib</button>
                     </fieldset>
                     <fieldset>
@@ -440,6 +479,7 @@ export class CribbageGame extends Component
                     owner={card.owner}
                     location={"deck"}
                     className={n}
+                    cardClickedCallback={this.onClickCard}
                 />
             </div>
 
