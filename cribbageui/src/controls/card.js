@@ -70,7 +70,8 @@ export class Card extends React.Component
                 orientation: "facedown",
                 cardName: "ErrorCard",
                 location: "deck",
-                owner: "shared"
+                owner: "shared",
+                cardClickedCallback: null
             }
 
         this.translate = this.translate.bind(this);
@@ -82,13 +83,14 @@ export class Card extends React.Component
 
     componentDidMount()
     {
-        util.log("card: %s loc:%s owner:%s orienation:%s", this.props.cardName, this.props.location, this.props.owner, this.props.orientation);
+        
         this.setState({ location: this.props.location });
         this.setState({ owner: this.props.owner });
         this.setState({ cardName: this.props.cardName }, () =>
         {
             this.setOrientation(this.props.orientation);
         });
+        this.setState({cardClickedCallback: this.props.cardClickedCallback});
 
 
     }
@@ -173,15 +175,16 @@ export class Card extends React.Component
 
     handleClick = async () =>
     {
+        this.state.cardClickedCallback(this);
 
-        if (this.state.orientation === "facedown")
+        /* if (this.state.orientation === "facedown")
         {
             await this.setOrientationAsync("faceup");
         }
         else
         {
             await this.setOrientationAsync("facedown");
-        }
+        } */
     }
 
     animateAsync = async (x, y, deg) =>
