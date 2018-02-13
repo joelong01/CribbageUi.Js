@@ -105,8 +105,8 @@ export class Card extends React.Component
     {
         if (this.state.orientation !== nextState.orientation)
         {
-            console.log ("updating orientation for %s to %s", this.state.cardName, nextState.orientation);
-            var cmd = util.format("rotateY(%sdeg)", nextState.orientation === "faceup" ? 180 : 0);            
+            util.log("[%s]:  orientation to %s", this.state.cardName, nextState.orientation);
+            var cmd = util.format("rotateY(%sdeg)", nextState.orientation === "faceup" ? 180 : 0);
             this.myFlipper.style['transform'] = cmd;
             return false;
         }
@@ -118,10 +118,18 @@ export class Card extends React.Component
     {
         var newState = {};
         newState[key] = value;
+        util.log("[%s] setStateAsync [%s] = [%s]", this.state.cardName, key, value);
         return new Promise((resolve, reject) =>
         {
+            if (this.state[key] === value)
+            {
+                util.log("[%s] resolving as the same. %s = %s", this.state.cardName, this.state[key], value);
+                resolve();
+                return;
+            }
             this.setState(newState, () => 
             {
+                util.log("[%s] resolving state = %s", this.state.cardName, this.state[key]);
                 resolve();
             });
 
@@ -134,11 +142,12 @@ export class Card extends React.Component
         var newState = {};
         newState["location"] = loc;
         newState["owner"] = own;
+        util.log("[%s]: setting updateCardInfoAsync loc:%s own:%s", this.state.cardName, loc, own);
         return new Promise((resolve, reject) =>
         {
             this.setState(newState, () => 
             {
-                util.log("resolving updateCardInfoAsync");
+                util.log("[%s]: resolving updateCardInfoAsync loc:%s own:%s", this.state.cardName, this.state.location, this.state.owner);
                 resolve();
 
             });
@@ -154,7 +163,7 @@ export class Card extends React.Component
         if (this.state.orientation === newOrientation)
             return;
 
-        console.log("SetOrientation for %s to %s", this.state.cardName, newOrientation);
+        util.log("[%s]: SetOrientation to %s", this.state.cardName, newOrientation);
 
         this.setState({ orientation: newOrientation });
 
@@ -219,13 +228,13 @@ export class Card extends React.Component
             {
                 try
                 {
-                    util.log("resolving animateAsync");
+                    util.log("[%s] resolving animateAsync", this.state.cardName);
                     resolve_func();
                     div.removeEventListener("transitionend", endAnimationAndResolvePromise);
                 }
                 catch (e)
                 {
-                    util.log("error in animate async: %s", e);
+                    util.log("[%s] error in animate async: %s", this.state.cardName, e);
                     div.removeEventListener("transitionend", endAnimationAndResolvePromise);
                     reject_func();
                 }
@@ -243,14 +252,14 @@ export class Card extends React.Component
                 }
                 else
                 {
-                    util.log("xform is the same.  resolving promise");
+                    util.log("[%s] xform is the same.  resolving promise", this.state.cardName);
                     div.removeEventListener("transitionend", endAnimationAndResolvePromise);
                     resolve_func();
                 }
             }
             catch (e)
             {
-                util.log("error in animate async setting animation: %s", e);
+                util.log("[%s] error in animate async setting animation: %s", this.state.cardName, e);
             }
 
         });
@@ -263,7 +272,6 @@ export class Card extends React.Component
     translate(x, y, deg)
     {
         var cmd = util.format("translate(%spx, %spx) rotate(%sdeg)", x, y, deg);
-        //  util.log("[%s] old: %s new transform: %s", this.state.cardName, this.myCard.style['transform'], cmd);
         this.myCard.style['transform'] = cmd;
 
     }
@@ -272,6 +280,7 @@ export class Card extends React.Component
         this.setState({ cardName: cName });
     }
 
+    
 
     render()
     {
