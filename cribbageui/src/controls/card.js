@@ -89,7 +89,7 @@ export class Card extends React.Component
         this.setState({ owner: this.props.owner });
         this.setState({ cardName: this.props.cardName }, () =>
         {
-            this.setOrientation(this.props.orientation);
+            this.setState({ orientation: this.props.orientation });
         });
         this.setState({ cardClickedCallback: this.props.cardClickedCallback });
 
@@ -112,102 +112,32 @@ export class Card extends React.Component
         }
 
         return true;
+       
+       /*  if (this.state.cardName !== nextState.cardName || nextProps.cardName !== this.state.cardName)
+            return true;
+
+        util.log("returning false from shouldComponentUpdate.")    
+        return false; */
     }
 
-    setStateAsync = async (key, value) =>
+    setStateAsync = async (newState) =>
     {
-        var newState = {};
-        newState[key] = value;
-        util.log("[%s] setStateAsync [%s] = [%s]", this.state.cardName, key, value);
+
         return new Promise((resolve, reject) =>
         {
-            if (this.state[key] === value)
-            {
-                util.log("[%s] resolving as the same. %s = %s", this.state.cardName, this.state[key], value);
-                resolve();
-                return;
-            }
             this.setState(newState, () => 
             {
-                util.log("[%s] resolving state = %s", this.state.cardName, this.state[key]);
                 resolve();
             });
 
         });
     }
-
-    updateCardInfoAsync = async (loc, own) =>
-    {
-
-        var newState = {};
-        newState["location"] = loc;
-        newState["owner"] = own;
-        util.log("[%s]: setting updateCardInfoAsync loc:%s own:%s", this.state.cardName, loc, own);
-        return new Promise((resolve, reject) =>
-        {
-            this.setState(newState, () => 
-            {
-                util.log("[%s]: resolving updateCardInfoAsync loc:%s own:%s", this.state.cardName, this.state.location, this.state.owner);
-                resolve();
-
-            });
-
-        });
-
-    }
-
-
-    setOrientation(newOrientation)
-    {
-
-        if (this.state.orientation === newOrientation)
-            return;
-
-        util.log("[%s]: SetOrientation to %s", this.state.cardName, newOrientation);
-
-        this.setState({ orientation: newOrientation });
-
-    }
-
-    setOrientationAsync = async (o) =>
-    {
-        this.setOrientation(o);
-        return wait(0);
-
-        /* if (this.state.orientation === o)
-            return;
-
-        await this.setStateAsync("orientation", o); */
-        /*  var div = this.myFlipper;
-         return new Promise((resolve_func, reject_func) =>
-         {
- 
-             div.addEventListener("transitionend", function endAnimationAndResolvePromise() 
-             {
-                 resolve_func();
-                 div.removeEventListener("transitionend", endAnimationAndResolvePromise);
-             });
- 
-             var cmd = util.format("rotateY(%sdeg)", o === "faceup" ? 180 : 0);
-             div.style['transform'] = cmd;
- 
-         }); */
-    }
-
 
 
     handleClick = async () =>
     {
         this.state.cardClickedCallback(this);
-
-        /* if (this.state.orientation === "facedown")
-        {
-            await this.setOrientationAsync("faceup");
-        }
-        else
-        {
-            await this.setOrientationAsync("facedown");
-        } */
+        
     }
 
     animate = (x, y, deg) =>
@@ -280,7 +210,7 @@ export class Card extends React.Component
         this.setState({ cardName: cName });
     }
 
-    
+
 
     render()
     {

@@ -194,7 +194,7 @@ export class CribbageGame extends Component
         this.state.cardDataObjs.forEach(async (card, index) =>
         {
             let cardUiElement = this.refs[card.name];
-            await cardUiElement.setStateAsync("location", card.owner);
+            await cardUiElement.setStateAsync({location: card.owner});
         });
 
         let computerPromises = this.redoCardLayoutAsync("computer");
@@ -247,7 +247,7 @@ export class CribbageGame extends Component
         await cribCards.forEach(async (card, index) => 
         {
             let cardUiElement = this.refs[card.name];
-            await cardUiElement.updateCardInfoAsync("counted", this.state.cribOwner);
+            await cardUiElement.setStateAsync({location: "counted", owner: this.state.cribOwner});
             
         });
 
@@ -268,6 +268,7 @@ export class CribbageGame extends Component
 
         let promises = [];
         let newLoc = "";
+        let orientation = "";
         this.state.cardDataObjs.forEach((card, index) =>
         {
             let cardUiElement = this.refs[card.name];
@@ -275,13 +276,15 @@ export class CribbageGame extends Component
             if (cardUiElement.state.location === "crib")
             {
                 newLoc = this.state.cribOwner;
+                orientation = "faceup";
             }
             else
             {
+                orientation = "facedown";
                 newLoc = "deck";
             }
 
-           promises.push(cardUiElement.setStateAsync("location", newLoc ));                             
+           promises.push(cardUiElement.setStateAsync({location: newLoc , orientation: orientation}));                             
             
         });
 
@@ -295,7 +298,7 @@ export class CribbageGame extends Component
         promises = this.redoCardLayoutAsync(this.state.cribOwner);
         await Promise.all(promises);
 
-        this.flipCards([this.state.cribOwner], "faceup");
+        // this.flipCards([this.state.cribOwner], "faceup");
 
 
 
@@ -326,7 +329,8 @@ export class CribbageGame extends Component
             let cardUiElement = this.refs[card.name];
             if (cardUiElement.state.location === "counted")
             {
-                promises.push(cardUiElement.updateCardInfoAsync("crib", cardUiElement.state.owner));
+                promises.push(cardUiElement.setStateAsync( {location: "crib", 
+                                                            owner: cardUiElement.state.owner}));
             }
         });
 
@@ -425,8 +429,10 @@ export class CribbageGame extends Component
     {
 
         let promises = [];
-        promises.push(card.setStateAsync("location", "counted"));
-        promises.push(card.setOrientationAsync("facedown"));
+        promises.push(card.setStateAsync({
+                location: "counted",
+                orientation: "facedown"}));
+        
         await Promise.all(promises);
 
         promises = [];
@@ -449,7 +455,7 @@ export class CribbageGame extends Component
         await this.state.cardDataObjs.forEach( async (card, index) =>
         {
             let cardUiElement = this.refs[card.name];
-            await cardUiElement.setStateAsync("location", owner);            
+            await cardUiElement.setStateAsync({location: owner});            
         });
 
     }
