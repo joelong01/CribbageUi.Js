@@ -72,6 +72,9 @@ export class Card extends React.Component
                 cardName: "ErrorCard",
                 location: "deck",
                 owner: "shared",
+                value: 0,
+                countable: true,
+                countIndex: 0,
                 cardClickedCallback: null
             }
 
@@ -84,14 +87,17 @@ export class Card extends React.Component
 
     componentDidMount()
     {
+        this.setState({
+            value: this.props.value,
+            location: this.props.location,
+            owner: this.props.owner,
+            cardClickedCallback: this.props.cardClickedCallback,
+            cardName: this.props.cardName,            
+        }, () =>
+            {
+                this.setState({ orientation: this.props.orientation });
+            });
 
-        this.setState({ location: this.props.location });
-        this.setState({ owner: this.props.owner });
-        this.setState({ cardName: this.props.cardName }, () =>
-        {
-            this.setState({ orientation: this.props.orientation });
-        });
-        this.setState({ cardClickedCallback: this.props.cardClickedCallback });
 
 
     }
@@ -112,12 +118,12 @@ export class Card extends React.Component
         }
 
         return true;
-       
-       /*  if (this.state.cardName !== nextState.cardName || nextProps.cardName !== this.state.cardName)
-            return true;
 
-        util.log("returning false from shouldComponentUpdate.")    
-        return false; */
+        /*  if (this.state.cardName !== nextState.cardName || nextProps.cardName !== this.state.cardName)
+             return true;
+ 
+         util.log("returning false from shouldComponentUpdate.")    
+         return false; */
     }
 
     setStateAsync = async (newState) =>
@@ -134,10 +140,10 @@ export class Card extends React.Component
     }
 
 
-    handleClick = async () =>
+    handleClick = () =>
     {
         this.state.cardClickedCallback(this);
-        
+
     }
 
     animate = (x, y, deg) =>

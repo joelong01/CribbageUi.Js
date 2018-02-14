@@ -20,24 +20,7 @@
     margin-left: 180px;
 }
 
-.DIV_crib
-{
-    background: rgb(102, 39, 39);    
-    width: 168px;
-    vertical-align: top;
-    margin-left:50px;
-    margin-top:305px;
-    transition-duration: 0.5s;
-    transition-property: transform;	
-    transform: translate(0px, 0px);
-    transition-timing-function: ease-in-out;
-    transition-duration: 0.5s;
-    transition-property: transform;	
-    z-index: 2;
-    border-radius: 5px;
-    border: 1px black solid;
 
-}
 
 .menu-item--large
 {
@@ -53,15 +36,15 @@
     
 }
 
-.DIV_computer, .DIV_player, .DIV_counted, .DIV_deck
+.DIV_computer, .DIV_player, .DIV_counted, .DIV_deck, .DIV_crib
 {
-        
-    width: 950px;
-    min-width: 950px;
+    height: 235px;      
+    width: 950px;    
     border: 1px solid black;
     border-radius: 5px;
     background: rgb(102, 39, 39);
     z-index: 1;
+    
 
 }
 
@@ -89,13 +72,27 @@
 
 .DIV_deck
 {
-    
-    
+        
     margin-top: 545px;
-    margin-left: 1013px;
-    min-width: 168px;
+    margin-left: 1013px;    
     width: 168px;
     z-index: 3;
+}
+
+.DIV_crib
+{
+    
+    width: 168px;    
+    margin-left:50px;
+    margin-top:305px;
+    transition-duration: 0.5s;
+    transition-property: transform;	
+    transform: translate(0px, 0px);
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.5s;
+    transition-property: transform;	
+    
+    
 }
 
 .cribbageBoard
