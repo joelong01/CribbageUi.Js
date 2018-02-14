@@ -140,7 +140,7 @@ export class Card extends React.Component
     }
 
 
-    handleClick = async () =>
+    handleClick = () =>
     {
         this.state.cardClickedCallback(this);
 
