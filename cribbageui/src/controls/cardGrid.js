@@ -49,7 +49,7 @@ export class CardGrid extends React.Component
                 this.state.cardNames.forEach(async (name) =>
                 {
                     let card = this.cardFromName(name);
-                    await card.setOrientationAsync("facedown");
+                    await card.setStateAsync({orientation: "facedown"});
                     card.translate(0, 0, 0);
                     await card.updateCardInfoAsync("deck", "shared");
 
