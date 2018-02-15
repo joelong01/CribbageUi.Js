@@ -266,8 +266,9 @@ export class CribbageGame extends Component
 
         let res = await fetch(url);
         let jObj = await res.json();
-        let cardCounted = jObj["countedCard"];
-        let card = this.refs[cardCounted.cardName];
+        let serverCard = jObj["countedCard"];
+        let card = this.refs[serverCard.name];
+        util.log("[%s] returned from service to be counted", card.cardName);
         await this.animateCardToCounted(card, "faceup", "computer");
         return parseInt(jObj.Scoring.Score, 10);
     }
@@ -282,6 +283,9 @@ export class CribbageGame extends Component
     getCountedScore = async (countedCard, count) => // card is a UI card!
     {
 
+        ///scorecountedcards/:playedcard/:currentCount
+        // '/scorecountedcards/:playedcard/:currentCount/:countedcards/'
+
         let url = "http://localhost:8080/api/scorecountedcards/";
 
 
@@ -290,20 +294,31 @@ export class CribbageGame extends Component
         url += "/";
         url += count;
 
+        url += "/";
 
+        let countedCards = this.cardsAtLocation("counted");
 
-        this.cardsAtLocation("counted").forEach((card) => // UI Card for counted only!!
+        countedCards.forEach((card) => // UI Card !!
 
         {
-            if (card.state.orientation === "faceup")
+            if (card.state.orientation === "faceup"  && card.cardName !== countedCard.cardName)
             {
-                url += "/";
+                
                 url += card.state.cardName;
+                url += ",";
             }
 
         });
 
+        if (countedCards.length > 1)
+        {
+            url = url.slice(0, -1);
+            url += "/";
+        }
 
+
+      
+        util.log ("getCountedScore URL: %s", url);
         let res = await fetch(url);
         let jObj = await res.json();
         let score = parseInt(jObj["Score"], 10);
@@ -741,7 +756,6 @@ export class CribbageGame extends Component
 
     redoCardLayoutAsync = (gridName) =>
     {
-        util.log("redoCardLayoutAsync %s:", gridName);
         let cardCount = 0;
         let promises = [];
         if (gridName === "counted" && (this.state.gameState === "ComputerCountCards" ||
@@ -781,7 +795,6 @@ export class CribbageGame extends Component
         animationTopCoordinates["player"] = 788;
         animationTopCoordinates["deck"] = 550;
 
-        //        util.log("inside getCardPosition. cribOwner: %s", this.state.cribOwner);
         if (this.state.cribOwner === "player")
         {
             animationTopCoordinates["crib"] = animationTopCoordinates["player"];
@@ -802,8 +815,7 @@ export class CribbageGame extends Component
 
         let xPos = cardWidthPlusGap * index + marginLeft;
         let yPos = animationTopCoordinates[gridName]
-        util.log("yPos is %s", yPos);
-
+        
         if (gridName === "deck")
         {
             xPos = 1022;
