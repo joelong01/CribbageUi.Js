@@ -75,7 +75,8 @@ export class Card extends React.Component
                 value: 0,
                 countable: true,
                 countIndex: 0,
-                cardClickedCallback: null
+                cardClickedCallback: null, 
+                
             }
 
         this.translate = this.translate.bind(this);
