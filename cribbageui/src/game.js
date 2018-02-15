@@ -27,6 +27,7 @@ export class CribbageGame extends Component
                 doZoomWindow: false,
                 menuOpen: false,
                 cardDataObjs: [],
+                cards: [],
                 sharedCard: null,
                 gameState: "starting",
                 waitForUserCallback: null,
@@ -35,7 +36,8 @@ export class CribbageGame extends Component
                 userFrontScore: 0,
                 userBackScore: 0,
                 computerFrontScore: 0,
-                computerBackScore: 0
+                computerBackScore: 0,
+                countedCards: []
 
 
 
@@ -112,7 +114,7 @@ export class CribbageGame extends Component
         let nextState = "";
         while (true)
         {
-            util.log ("state: %s", this.state.gameState);
+            util.log("state: %s", this.state.gameState);
             switch (this.state.gameState)
             {
                 case "Start":
@@ -122,8 +124,9 @@ export class CribbageGame extends Component
                     break;
                 case "Deal":
                     PlayerTurn = (Dealer === "computer") ? "player" : "computer";
-                    util.log("Dealer: %s", Dealer);                    
+                    util.log("Dealer: %s", Dealer);
                     CurrentCount = 0;
+                    await this.setStateAsync({ countedCards: [] });
                     await this.onGetHandAsync();
                     await this.setGameState("PlayerSelectsCribCards");
                     break;
@@ -136,14 +139,15 @@ export class CribbageGame extends Component
                     nextState = (this.state.cribOwner === "computer") ? "playerCount" : "computerCount";
                     if (this.state.hisNibs)
                     {
-                        this.addScore(Dealer, 1);
+                        await this.addScore(Dealer, 1);
                     }
                     await this.setGameState("Count");
                     break;
                 case "Count":
+                    await this.setStateAsync({ countedCards: [] });
                     await this.setStateAsync({ currentCount: 0 });
                     nextState = (PlayerTurn === "player") ? "CountPlayer" : "CountComputer";
-                    util.log ("Count nextState=%s", nextState);
+                    util.log("Count nextState=%s", nextState);
                     await this.setGameState(nextState);
                     break;
                 case "CountPlayer":
@@ -152,23 +156,67 @@ export class CribbageGame extends Component
                         let canPlay = await this.canPlay();
                         util.log("returned from canPlay Player:%s Computer: %s", canPlay.playerCanPlay, canPlay.computerCanPlay);
                         PlayerTurn = "player";
-                        
+
                         if (canPlay.playerCanPlay)
                         {
                             let score = await this.doCountForPlayer();
-                            this.addScore("player", score);
+                            await this.addScore("player", score);
                         }
 
-                        await this.setGameState("CountComputer");
+                        canPlay = await this.canPlay();
+                        nextState = "CountComputer";
+                        if (!canPlay.computerCanPlay && !canPlay.playerCanPlay)
+                        {
+                            if (this.cardsAtLocation("player").length === 0 &&
+                                this.cardsAtLocation("computer").length === 0)
+                            {
+                                await this.setGameState("CountingEnded");
+                            }
+                            var goPlayer = await this.scoreGo();
+                            nextState = (goPlayer === "computer") ? "CountPlayer" : "CountComputer";
+                        }
+
+                        await this.setGameState(nextState);
                         break;
                     }
                 case "CountComputer":
-                    let canPlay = await this.canPlay();
-                    return;
+                    {
+                        PlayerTurn = "computer";
+
+                        let canPlay = await this.canPlay();
+                        if (canPlay.computerCanPlay)
+                        {
+                            let score = await this.getComputerCountCard();
+                            await this.addScore("computer", score);
+                        }
+                        canPlay = await this.canPlay();
+
+                        nextState = "CountPlayer";
+
+                        if (!canPlay.computerCanPlay && canPlay.playerCanPlay)
+                        {
+                            //_gameView.AddMessage("Computer can't play.  Go again.");
+                        }
+
+                        if (canPlay.computerCanPlay === false && canPlay.playerCanPlay === false)
+                        {
+                            if (this.cardsAtLocation("player").length === 0 && this.cardsAtLocation("computer").length === 0)
+                            {
+                                nextState = "CountingEnded";
+                            }
+                            else
+                            {
+                                goPlayer = await this.scoreGo();
+                                nextState = (goPlayer === "computer") ? "CountPlayer" : "CountComputer";
+                            }
+                        }
+
+                        await this.setGameState(nextState);
+                    }
                     break;
                 case "EndOfTurn":
                     Dealer = this.toggleDealer(Dealer);
-                    await this.setStateAsync ({ cribOwner: Dealer, nextState: "Deal"});
+                    await this.setStateAsync({ cribOwner: Dealer, nextState: "Deal" });
                     break;
                 default:
                     break;
@@ -176,44 +224,89 @@ export class CribbageGame extends Component
         }
     }
 
+    scoreGo = async () =>
+    {
+        var lastCardPlayed = this.state.countedCards.slice(-1);
+        await this.addScore(lastCardPlayed.owner, 1);
+        this.flipCards(["counted"], "facedown");
+        return lastCardPlayed.owner;
+
+
+    }
+    cardArrayToCardNameCsv = (cards) =>
+    {
+        let csv = "";
+        for (let card of cards)
+        {
+            csv += card.state.cardName;
+            csv += ",";
+        }
+        if (csv !== "")
+            return csv.slice(0, -1);
+        else
+            return csv;
+    }
+    getComputerCountCard = async () =>
+    {
+        // /getnextcountedcard/:cardsleft/:currentCount/:countedcards
+        let url = "http://localhost:8080/api/getnextcountedcard/";
+
+        let csv = this.cardArrayToCardNameCsv(this.cardsAtLocation("computer"));
+        url += csv;
+
+        url += "/";
+        url += this.state.currentCount;
+
+        url += "/";
+        csv = this.cardArrayToCardNameCsv(this.state.countedCards);
+
+        url += csv;
+
+        util.log("getComputerCountCard url: %s", url);
+
+        let res = await fetch(url);
+        let jObj = await res.json();
+        let cardCounted = jObj["countedCard"];
+        let card = this.refs[cardCounted.cardName];
+        await this.animateCardToCounted(card, "faceup", "computer");
+        return parseInt(jObj.Scoring.Score, 10);
+    }
+
     doCountForPlayer = async () =>
     {
         let countedCard = await this.getCountCard();
         let count = this.state.currentCount + countedCard.state.value;
+        await this.setStateAsync({ currentCount: count });
+        return await this.getCountedScore(countedCard, count);
+    }
+    getCountedScore = async (countedCard, count) => // card is a UI card!
+    {
 
         let url = "http://localhost:8080/api/scorecountedcards/";
-        url += countedCard.cardName;
+
+
+
+        url += countedCard.state.cardName;
         url += "/";
         url += count;
 
-        let countedCards = [];
-        this.state.cardDataObjs.forEach((dataCard) =>
+
+
+        this.cardsAtLocation("counted").forEach((card) => // UI Card for counted only!!
+
         {
-            let card = this.refs[dataCard.name];
-            if (card.state.location === "counted" && card.state.orientation === "faceup")
+            if (card.state.orientation === "faceup")
             {
-                if (countedCard.state.cardName !== card.state.cardName)
-                {
-                    countedCards.push(card);
-                }
+                url += "/";
+                url += card.state.cardName;
             }
 
         });
 
-        countedCards.sort((card1, card2) =>
-        {
-            return card2.state.countIndex - card1.state.countIndex;
-        });
-
-        countedCards.forEach((card) =>
-        {
-            url += "/";
-            url += card.state.cardName;
-        });
 
         let res = await fetch(url);
         let jObj = await res.json();
-        let score = JSON.parseInt(jObj["Score"]);
+        let score = parseInt(jObj["Score"], 10);
         return score;
     }
 
@@ -224,7 +317,7 @@ export class CribbageGame extends Component
 
             var endUserPickCards = (card) =>
             {
-                util.log ("resolving getCountCard card:%s ", card.cardName);
+                util.log("resolving getCountCard card:%s ", card.state.cardName);
                 resolve_func(card);
             }
 
@@ -236,9 +329,8 @@ export class CribbageGame extends Component
     canPlay = async () =>
     {
         var retObj = { playerCanPlay: false, computerCanPlay: false };
-        for (let dataCard of this.state.cardDataObjs)        
+        for (let card of this.state.cards)        
         {
-            let card = this.refs[dataCard.name];
             if (card.state.owner === "computer")
             {
                 if (card.state.value + this.state.currentCount < 31)
@@ -398,11 +490,21 @@ export class CribbageGame extends Component
             let jObj = await res.json();
             let cardList = jObj["RandomCards"];
             await setStateAsync(this, "sharedCard", jObj["SharedCard"]);
-            await setStateAsync(this, "cardDataObjs", cardList);
-            await setStateAsync(this, "hisNibs", jObj["HisNibs"]);
-           await wait(0);
+            await setStateAsync(this, "cardDataObjs", cardList); // this causes the cards to render
+            this.forceUpdate();
+            let uiCardList = [];
+            for (let cardData of cardList)
+            {
+                let uiCard = this.refs[cardData.name];
+                uiCardList.push(uiCard);
+            }
+
+
+            await this.setStateAsync({ cards: uiCardList, hisNibs: jObj["HisNibs"] });
+            this.dumpCardState("after initial set of cards");
+            await wait(0);
             await this.onDeal();
-            await wait (0);
+            await wait(0);
             cardList = jObj["ComputerCribCards"];
             await this.animateComputerCribCards(cardList);
         }
@@ -418,12 +520,11 @@ export class CribbageGame extends Component
     flipCards = (names, orientation) =>
     {
 
-        this.state.cardDataObjs.forEach((card, index) =>
+        this.state.cards.forEach((card, index) =>
         {
-            if (names.includes(card.owner))
+            if (names.includes(card.state.owner))
             {
-                let cardUiElement = this.refs[card.name];
-                cardUiElement.setState({ orientation: orientation });
+                card.setState({ orientation: orientation });
             }
         });
 
@@ -433,12 +534,11 @@ export class CribbageGame extends Component
     {
         await this.closeMenuAsync();
         this.dumpCardState("before deal loop");
-        for (let card of this.state.cardDataObjs)                
+        for (let card of this.state.cards)                
         {
-            let cardUiElement = this.refs[card.name];
-            if (card.owner === "shared") continue;
+            if (card.state.owner === "shared") continue;
 
-            await cardUiElement.setStateAsync({ location: card.owner });
+            await card.setStateAsync({ location: card.state.owner });
         };
         this.dumpCardState("after deal loop");
         let computerPromises = this.redoCardLayoutAsync("computer");
@@ -456,7 +556,7 @@ export class CribbageGame extends Component
 
         this.flipCards(["player"], "faceup");
 
-        
+
 
     }
 
@@ -464,11 +564,11 @@ export class CribbageGame extends Component
     {
         await this.closeMenuAsync();
         let url = 'http://localhost:8080/api/getcribcards/'; // computer's crib
-        this.state.cardDataObjs.forEach((card, index) =>
+        this.state.cards.forEach((card, index) =>
         {
-            if (card.owner === "computer")
+            if (card.state.owner === "computer")
             {
-                url += card.name;
+                url += card.state.cardName;
                 url += ",";
             }
         });
@@ -483,14 +583,14 @@ export class CribbageGame extends Component
         let cribcards = await res.json();
         await this.animateComputerCribCards(cribcards);
     }
-    animateComputerCribCards = async (cribCards) =>
+    animateComputerCribCards = async (cribCards) => // these are *server cards* -- not UI cards
     {
 
         let pos = {};
 
         for (let card of cribCards)    
         {
-            let cardUiElement = this.refs[card.name];
+            let cardUiElement = this.refs[card.name]; // convert to UI cards
             await cardUiElement.setStateAsync({ location: "counted", owner: this.state.cribOwner });
 
         };
@@ -512,18 +612,18 @@ export class CribbageGame extends Component
         let promises = [];
         let newLoc = "";
         let orientation = "";
-        this.state.cardDataObjs.forEach((card, index) =>
+        this.state.cards.forEach((card, index) =>
         {
-            let cardUiElement = this.refs[card.name];
 
-            if (cardUiElement.state.location === "crib")
+
+            if (card.state.location === "crib")
             {
                 newLoc = this.state.cribOwner;
                 orientation = "faceup";
             }
             else
             {
-                if (cardUiElement.state.owner === "shared")
+                if (card.state.owner === "shared")
                 {
                     orientation = "faceup";
                     newLoc = "deck";
@@ -537,7 +637,7 @@ export class CribbageGame extends Component
             }
 
 
-            promises.push(cardUiElement.setStateAsync({ location: newLoc, orientation: orientation }));
+            promises.push(card.setStateAsync({ location: newLoc, orientation: orientation }));
 
         });
 
@@ -551,10 +651,9 @@ export class CribbageGame extends Component
     dumpCardState = (msg) => 
     {
         util.log("msg: %s", msg);
-        this.state.cardDataObjs.forEach((card, index) =>
+        this.state.cards.forEach((card, index) =>
         {
-            let c = this.refs[card.name];
-            util.log("\t [%s] owner:%s location:%s orientation:%s", c.state.cardName, c.state.owner, c.state.location, c.state.orientation);
+            util.log("\t [%s] owner:%s location:%s orientation:%s", card.state.cardName, card.state.owner, card.state.location, card.state.orientation);
         });
     }
 
@@ -570,13 +669,12 @@ export class CribbageGame extends Component
 
     showSharedCard = () =>
     {
-        this.state.cardDataObjs.forEach((card, index) =>
+        this.state.cards.forEach((card, index) =>
         {
-            if (card.owner === "shared")
+            if (card.state.owner === "shared")
             {
-                let cardUiElement = this.refs[card.name];
-                cardUiElement.setState({ orientation: "faceup" });
-                let divName = "CARDDIV_" + cardUiElement.state.cardName;
+                card.setState({ orientation: "faceup" });
+                let divName = "CARDDIV_" + card.state.cardName;
                 let div = this.refs[divName];
                 div.style["z-index"] = 99;
             }
@@ -588,14 +686,13 @@ export class CribbageGame extends Component
     {
         await this.closeMenuAsync();
         let promises = [];
-        for (let card of this.state.cardDataObjs)    
+        for (let card of this.state.cards)    
         {
-            let cardUiElement = this.refs[card.name];
-            if (cardUiElement.state.location === "counted")
+            if (card.state.location === "counted")
             {
-                promises.push(cardUiElement.setStateAsync({
+                promises.push(card.setStateAsync({
                     location: "crib",
-                    owner: cardUiElement.state.owner,
+                    owner: card.state.owner,
                     orientation: "facedown"
                 }));
             }
@@ -612,15 +709,31 @@ export class CribbageGame extends Component
     redoCardLayout = (gridName) =>
     {
         let cardCount = 0;
-        let promises = [];
-        this.state.cardDataObjs.forEach((card, index) =>
+        //
+        //  counted grids are special during the counting phase as order matters
+        //
+        if (gridName === "counted" && (this.state.gameState === "ComputerCountCards" ||
+            this.state.gameState === "PlayerCountCards"))
         {
-            let cardUiElement = this.refs[card.name];
-            if (cardUiElement.state.location === gridName)
+            this.state.countedCards.forEach((card) =>
+            {
+
+                let pos = {};
+                pos = this.getCardPosition(gridName, cardCount++);
+                card.animate(pos["xPos"], pos["yPos"], 360);
+
+            });
+
+            return;
+        }
+
+        this.state.cards.forEach((card, index) =>
+        {
+            if (card.state.location === gridName)
             {
                 let pos = {};
                 pos = this.getCardPosition(gridName, cardCount++);
-                cardUiElement.animate(pos["xPos"], pos["yPos"], 360);
+                card.animate(pos["xPos"], pos["yPos"], 360);
             }
         });
 
@@ -631,15 +744,28 @@ export class CribbageGame extends Component
         util.log("redoCardLayoutAsync %s:", gridName);
         let cardCount = 0;
         let promises = [];
-
-        this.state.cardDataObjs.forEach((card, index) =>
+        if (gridName === "counted" && (this.state.gameState === "ComputerCountCards" ||
+            this.state.gameState === "PlayerCountCards"))
         {
-            let cardUiElement = this.refs[card.name];
-            if (cardUiElement.state.location === gridName)
+            this.state.countedCards.forEach((card) =>
+            {
+
+                let pos = {};
+                pos = this.getCardPosition(gridName, cardCount++);
+                promises.push(card.animate(pos["xPos"], pos["yPos"], 360));
+
+            });
+
+            return promises;
+        }
+
+        this.state.cards.forEach((card, index) =>
+        {
+            if (card.state.location === gridName)
             {
                 let pos = {};
                 pos = this.getCardPosition(gridName, cardCount++);
-                promises.push(cardUiElement.animateAsync(pos["xPos"], pos["yPos"], (gridName === "deck") ? 0 : 360));
+                promises.push(card.animateAsync(pos["xPos"], pos["yPos"], (gridName === "deck") ? 0 : 360));
             }
         });
 
@@ -693,18 +819,23 @@ export class CribbageGame extends Component
         return pos;
     }
 
+
+
     cardsAtLocation = (location) =>
     {
-        let count = 0;
-        this.state.cardDataObjs.forEach((dataObj) =>
+        if (location === "counted" && (this.state.gameState === "ComputerCountCards" ||
+            this.state.gameState === "PlayerCountCards"))
+            return this.state.countedCards;
+
+        let cards = [];
+        this.state.cards.forEach((card) =>
         {
-            let card = this.refs[dataObj.name];
             if (card.state.location === location)
-                count++;
+                cards.push(card);
 
         });
 
-        return count;
+        return cards;
     }
 
     animateCardToCounted = async (card, orientation, owner) =>
@@ -716,6 +847,7 @@ export class CribbageGame extends Component
                 owner: owner
             });
 
+        this.state.countedCards.push(card);
 
         try
         {
@@ -731,12 +863,12 @@ export class CribbageGame extends Component
 
     onClickCard = async (card) =>
     {
-        util.log ("[%s].clicked.  countable:%s state:%s", card.state.cardName, card.state.countable, this.state.gameState);
+        util.log("[%s].clicked.  countable:%s state:%s", card.state.cardName, card.state.countable, this.state.gameState);
         if (this.state.gameState === "PlayerSelectsCribCards")
         {
             await this.animateCardToCounted(card, "faceup", this.state.cribOwner);
 
-            if (this.cardsAtLocation("counted") === 4)
+            if (this.cardsAtLocation("counted").length === 4)
             {
                 this.state.waitForUserCallback();
             }
@@ -762,10 +894,9 @@ export class CribbageGame extends Component
     setAllCardsLocation = async (location) =>
     {
         let promises = [];
-        for (let card of this.state.cardDataObjs)        
+        for (let card of this.state.cards)        
         {
-            let cardUiElement = this.refs[card.name];
-            promises.push(cardUiElement.setStateAsync({ location: location }));
+            promises.push(card.setStateAsync({ location: location }));
         };
 
         await Promise.all(promises);
@@ -899,7 +1030,7 @@ export class CribbageGame extends Component
     {
 
 
-        var cardsList = this.renderCards(this.state.cardDataObjs);
+        var cardsList = this.renderCards(this.state.cardDataObjs); // this is the only place we should be using cardDataObjs
 
         return (
             <div className="outer-container" width={340}>
