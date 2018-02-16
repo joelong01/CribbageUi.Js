@@ -1,18 +1,17 @@
 /*eslint no-unused-vars: off*/
 import React, { Component } from 'react';
-import CardGrid from './controls/cardGrid';
 import CribbageBoard from './controls/CribbageBoard';
+import CountCtrl from './controls/countCtrl';
 import Menu from 'react-burger-menu/lib/menus/slide'
 import util from 'util';
 import { setStateAsync, wait } from './helper_functions';
 import { Card } from './controls/card';
 import "./game.css";
 import "./menu.css";
-
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
 import DragDropContextProvider from 'react-dnd/lib/DragDropContextProvider';
-import { Rect } from 'react-konva';
+
 
 const allGridNames = ["deck", "player", "computer", "crib", "counted"];
 
@@ -37,7 +36,8 @@ export class CribbageGame extends Component
                 sharedCard: null,
                 gameState: "starting",
                 waitForUserCallback: null,
-                hisNibs: false,
+               
+                 hisNibs: false,
                 currentCount: 0,
                 userFrontScore: 0,
                 userBackScore: 0,
@@ -486,12 +486,27 @@ export class CribbageGame extends Component
             await this.closeMenuAsync();
             this.flipCards(allGridNames, "facedown");
             await this.setAllCardsLocation("deck");
-            this.redoCardLayout("deck");
-            allGridNames.forEach ((grid) => 
-            {
-                this.state.cardsInGrid[grid] = [];
-            });
+            let promises=[];
+            promises = await this.redoCardLayoutAsync("deck");
+            await Promise.all(promises);
+            let resetCards = {};
+            allGridNames.map (grid => resetCards[grid] = []);
+            await this.setStateAsync({cardsInGrid: resetCards,
+                                      cards: [], 
+                                      cardDataObjs: [], 
+                                      sharedCard: null,
+                                      gameState: "starting",
+                                      hisNibs: false,
+                                      currentCount: 0,
+                                      userFrontScore: 0,
+                                      userBackScore: 0,
+                                      computerFrontScore: 0,
+                                      computerBackScore: 0,
+                                      countedCards: []});
 
+            await this.setStateAsync({});
+            
+            this.dumpCardState("in Reset");
         }
         catch (e)
         {
@@ -599,8 +614,8 @@ export class CribbageGame extends Component
         let self = this;
         for (let grid of grids)
         {
-            util.log ("grid: %s", grid);            
-            let cards = self.state.cardsInGrid[grid];            
+            util.log("grid: %s", grid);
+            let cards = self.state.cardsInGrid[grid];
             cards.forEach((card, index) =>
             {
                 let pos = {};
@@ -616,24 +631,24 @@ export class CribbageGame extends Component
     {
         try
         {
-        await this.closeMenuAsync();
-        this.dumpCardState("before deal loop");
-        for (let card of this.state.cards)                
-        {
-            if (card.state.owner === "shared") continue;
-            await this.moveCardToGridAsync(card, card.state.location, card.state.owner);
+            await this.closeMenuAsync();
+            this.dumpCardState("before deal loop");
+            for (let card of this.state.cards)                
+            {
+                if (card.state.owner === "shared") continue;
+                await this.moveCardToGridAsync(card, card.state.location, card.state.owner);
 
-        };        
-        let promises = await this.redoGridLayoutAsync(["computer", "player"]);        
-        await Promise.all(promises);
-        this.flipCards(["player"], "faceup");
+            };
+            let promises = await this.redoGridLayoutAsync(["computer", "player"]);
+            await Promise.all(promises);
+            this.flipCards(["player"], "faceup");
         }
-        catch(e)
+        catch (e)
         {
-            util.log ("error in Deal. %s", e.message);
+            util.log("error in Deal. %s", e.message);
         }
 
-        util.log ("returning from deal");
+        util.log("returning from deal");
 
 
     }
@@ -729,10 +744,18 @@ export class CribbageGame extends Component
     dumpCardState = (msg) => 
     {
         util.log("msg: %s", msg);
-        this.state.cards.forEach((card, index) =>
+        for (let grid of allGridNames)
+        {
+            for (let card of this.state.cardsInGrid[grid])
+            {
+                util.log("\t [%s] grid: %s owner:%s location:%s orientation:%s",
+                    card.state.cardName, grid, card.state.owner, card.state.location, card.state.orientation);
+            }
+        }
+        /* this.state.cards.forEach((card, index) =>
         {
             util.log("\t [%s] owner:%s location:%s orientation:%s", card.state.cardName, card.state.owner, card.state.location, card.state.orientation);
-        });
+        }); */
     }
 
     doFullLayout = () =>
@@ -1117,6 +1140,7 @@ export class CribbageGame extends Component
                             {<CribbageBoard />}
                         </div>
                         <div className="DIV_crib" ref={myCribDiv => this.myCribDiv = myCribDiv} />
+                        <CountCtrl count = {0}/>
                         <div className="DIV_computer" />
                         <div className="DIV_deck" />
                         <div className="DIV_counted" />
