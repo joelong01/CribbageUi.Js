@@ -14,20 +14,26 @@ import { DragDropContext } from 'react-dnd';
 import DragDropContextProvider from 'react-dnd/lib/DragDropContextProvider';
 import { Rect } from 'react-konva';
 
-
+const allGridNames = ["deck", "player", "computer", "crib", "counted"];
 
 export class CribbageGame extends Component
 {
     constructor(props)
     {
         super(props);
+        let gridList = {}
+        allGridNames.forEach((grid) =>
+        {
+            gridList[grid] = [];
+        });
         this.state =
             {
                 cribOwner: "computer", // aka "dealer"
                 doZoomWindow: false,
                 menuOpen: false,
-                cardDataObjs: [],
-                cards: [],
+                cardDataObjs: [],   // the cards returned from the service
+                cards: [],          // an array of all the UI cards
+                cardsInGrid: gridList,     // a map of grid -> cards
                 sharedCard: null,
                 gameState: "starting",
                 waitForUserCallback: null,
@@ -301,9 +307,9 @@ export class CribbageGame extends Component
         countedCards.forEach((card) => // UI Card !!
 
         {
-            if (card.state.orientation === "faceup"  && card.cardName !== countedCard.cardName)
+            if (card.state.orientation === "faceup" && card.cardName !== countedCard.cardName)
             {
-                
+
                 url += card.state.cardName;
                 url += ",";
             }
@@ -317,8 +323,8 @@ export class CribbageGame extends Component
         }
 
 
-      
-        util.log ("getCountedScore URL: %s", url);
+
+        util.log("getCountedScore URL: %s", url);
         let res = await fetch(url);
         let jObj = await res.json();
         let score = parseInt(jObj["Score"], 10);
@@ -478,9 +484,13 @@ export class CribbageGame extends Component
         try
         {
             await this.closeMenuAsync();
-            this.flipCards(["player", "computer", "shared", "counted"], "facedown");
+            this.flipCards(allGridNames, "facedown");
             await this.setAllCardsLocation("deck");
             this.redoCardLayout("deck");
+            allGridNames.forEach ((grid) => 
+            {
+                this.state.cardsInGrid[grid] = [];
+            });
 
         }
         catch (e)
@@ -506,12 +516,13 @@ export class CribbageGame extends Component
             let cardList = jObj["RandomCards"];
             await setStateAsync(this, "sharedCard", jObj["SharedCard"]);
             await setStateAsync(this, "cardDataObjs", cardList); // this causes the cards to render
-            this.forceUpdate();
+
             let uiCardList = [];
             for (let cardData of cardList)
             {
                 let uiCard = this.refs[cardData.name];
                 uiCardList.push(uiCard);
+                this.state.cardsInGrid[uiCard.state.location].push(uiCard);
             }
 
 
@@ -545,32 +556,84 @@ export class CribbageGame extends Component
 
     }
 
+    moveCardToGrid = (card, from, to) =>
+    {
+        let index = from.indexOf(card);
+        if (index === -1)
+        {
+            alert(util.format("you asked to move %s from %s to %s and it isn't in %s", card, from, to, from));
+            return;
+        }
+
+        from.splice(index, 1);
+        to.push(card);
+        card.setState({ location: to });
+
+    }
+
+    moveCardToGridAsync = async (card, from, to) =>
+    {
+        util.log("[%s]: moving from %s to %s", card.state.cardName, from, to);
+        let cardsFrom = this.state.cardsInGrid[from];
+        let index = cardsFrom.indexOf(card);
+        if (index === -1)
+        {
+            alert(util.format("you asked to move %s from %s to %s and it isn't in %s", card.state.cardName, from, to, from));
+            return;
+        }
+
+        cardsFrom.splice(index, 1);
+        this.state.cardsInGrid[to].push(card);
+        return card.setStateAsync({ location: to });
+
+    }
+
+    redoGridLayout = (grids) =>
+    {
+        grids.map(grid => this.redoCardLayout(grid));
+    }
+
+    redoGridLayoutAsync = async (grids) => // grids is an array for grid names
+    {
+        let promises = [];
+        let self = this;
+        for (let grid of grids)
+        {
+            util.log ("grid: %s", grid);            
+            let cards = self.state.cardsInGrid[grid];            
+            cards.forEach((card, index) =>
+            {
+                let pos = {};
+                pos = self.getCardPosition(grid, index);
+                promises.push(card.animateAsync(pos["xPos"], pos["yPos"], 360));
+            });
+        }
+
+        return promises;
+    }
+
     onDeal = async () =>
     {
+        try
+        {
         await this.closeMenuAsync();
         this.dumpCardState("before deal loop");
         for (let card of this.state.cards)                
         {
             if (card.state.owner === "shared") continue;
+            await this.moveCardToGridAsync(card, card.state.location, card.state.owner);
 
-            await card.setStateAsync({ location: card.state.owner });
-        };
-        this.dumpCardState("after deal loop");
-        let computerPromises = this.redoCardLayoutAsync("computer");
-        let playerPromises = this.redoCardLayoutAsync("player");
-        let allP = [];
-        for (let i = 0; i < computerPromises.length; i++)
+        };        
+        let promises = await this.redoGridLayoutAsync(["computer", "player"]);        
+        await Promise.all(promises);
+        this.flipCards(["player"], "faceup");
+        }
+        catch(e)
         {
-            allP.push(computerPromises[i]);
-            allP.push(playerPromises[i]);
+            util.log ("error in Deal. %s", e.message);
         }
 
-        await Promise.all(allP);
-        await wait(5); /// ??? huh
-
-
-        this.flipCards(["player"], "faceup");
-
+        util.log ("returning from deal");
 
 
     }
@@ -815,7 +878,7 @@ export class CribbageGame extends Component
 
         let xPos = cardWidthPlusGap * index + marginLeft;
         let yPos = animationTopCoordinates[gridName]
-        
+
         if (gridName === "deck")
         {
             xPos = 1022;

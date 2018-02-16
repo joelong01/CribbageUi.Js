@@ -95,6 +95,8 @@ export var delay = (interval) =>
     
 }
 
+
+
 export var wait = (ms) =>
 {
     return new Promise((resolve, reject) => {
