@@ -8,6 +8,7 @@ import { wait } from './../helper_functions';
 import { DragSource } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
+
 var PropTypes = require('prop-types');
 
 
@@ -75,8 +76,8 @@ export class Card extends React.Component
                 value: 0,
                 countable: true,
                 countIndex: 0,
-                cardClickedCallback: null, 
-                
+                cardClickedCallback: null,
+
             }
 
         this.translate = this.translate.bind(this);
@@ -93,7 +94,7 @@ export class Card extends React.Component
             location: this.props.location,
             owner: this.props.owner,
             cardClickedCallback: this.props.cardClickedCallback,
-            cardName: this.props.cardName,            
+            cardName: this.props.cardName,
         }, () =>
             {
                 this.setState({ orientation: this.props.orientation });
@@ -159,12 +160,15 @@ export class Card extends React.Component
     animateAsync = async (x, y, deg) =>
     {
         var div = this.myCard;
+        var myTimeout;
         return new Promise((resolve_func, reject_func) =>
         {
             var endAnimationAndResolvePromise = () =>
             {
                 try
                 {
+                   
+                    clearTimeout(myTimeout);
                     util.log("[%s] resolving animateAsync", this.state.cardName);
                     resolve_func();
                     div.removeEventListener("transitionend", endAnimationAndResolvePromise);
@@ -193,6 +197,15 @@ export class Card extends React.Component
                     div.removeEventListener("transitionend", endAnimationAndResolvePromise);
                     resolve_func();
                 }
+
+                //
+                //  if the animation ends too soon, the event won't fire.  resolve it by timer then.
+                myTimeout = setTimeout(() =>
+                {                                
+                    util.log ("timeout hit in card.  resolving promise");
+                    endAnimationAndResolvePromise();
+
+                }, 2000);
             }
             catch (e)
             {
