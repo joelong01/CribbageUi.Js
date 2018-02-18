@@ -74,8 +74,7 @@ export class Card extends React.Component
                 location: "deck",
                 owner: "shared",
                 value: 0,
-                countable: true,
-                countIndex: 0,
+                countable: true,                
                 cardClickedCallback: null,
 
             }
@@ -128,7 +127,7 @@ export class Card extends React.Component
          return false; */
     }
 
-    setStateAsync = async (newState) =>
+    setStateAsync = (newState) =>
     {
 
         return new Promise((resolve, reject) =>
@@ -250,9 +249,7 @@ export class Card extends React.Component
         //     return connectDragSource(            
         return (
             <div className={cardClassName} ref={myCard => this.myCard = myCard}
-                onClick={this.handleClick}
-                style={{ opacity: opacity }}>
-
+                onClick={this.handleClick} opacity = {this.state.countable ? 1 : 0.5}>              
                 <div className={flipperName} ref={myFlipper => this.myFlipper = myFlipper} >
                     <img className={faceupName}
                         alt={require("../images/Cards/error.png")}
