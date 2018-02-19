@@ -75,8 +75,8 @@ export class Card extends React.Component
                 owner: "shared",
                 value: 0,
                 countable: true,
-                countIndex: 0,
                 cardClickedCallback: null,
+
 
             }
 
@@ -113,9 +113,10 @@ export class Card extends React.Component
     {
         if (this.state.orientation !== nextState.orientation)
         {
-            util.log("[%s]:  orientation to %s", this.state.cardName, nextState.orientation);
+            //util.log("[%s]:  orientation to %s", this.state.cardName, nextState.orientation);
             var cmd = util.format("rotateY(%sdeg)", nextState.orientation === "faceup" ? 180 : 0);
             this.myFlipper.style['transform'] = cmd;
+
             return false;
         }
 
@@ -128,7 +129,7 @@ export class Card extends React.Component
          return false; */
     }
 
-    setStateAsync = async (newState) =>
+    setStateAsync = (newState) =>
     {
 
         return new Promise((resolve, reject) =>
@@ -141,6 +142,65 @@ export class Card extends React.Component
         });
     }
 
+    setOrientationAsync = async (orientation) =>
+    {
+        var div = this.myFlipper;
+        var myTimeout;
+        return new Promise((resolve, reject) =>
+        {
+            this.setStateAsync
+                ({
+                    orientation: orientation
+                });
+
+            var endAnimationAndResolvePromise = () =>
+            {
+                try
+                {
+
+                    clearTimeout(myTimeout);
+                    util.log("[%s] resolving animateAsync", this.state.cardName);
+                    resolve();
+                    div.removeEventListener("transitionend", endAnimationAndResolvePromise);
+                }
+                catch (e)
+                {
+                    util.log("[%s] error in setOrientationAsync: %s", this.state.cardName, e);
+                    div.removeEventListener("transitionend", endAnimationAndResolvePromise);
+                    reject();
+                }
+
+            }
+
+            div.addEventListener("transitionend", endAnimationAndResolvePromise);
+            try
+            {
+                var cmd = util.format("rotateY(%sdeg)", orientation === "faceup" ? 180 : 0);
+                if (cmd !== div.style['tranfrom'])
+                {
+                    div.style['transform'] = cmd;
+                }
+                else
+                {
+                    util.log("[%s] orientation is already [%s]. resolving promise. ", this.state.cardName, orientation);
+                    div.removeEventListener("transitionend", endAnimationAndResolvePromise);
+                    resolve();
+                }
+                myTimeout = setTimeout(() =>
+                {
+                    util.log("[%s] timeout hit in flip.  resolving promise", this.state.cardName);
+                    endAnimationAndResolvePromise();
+
+
+                }, 1500);
+            }
+            catch (e)
+            {
+                util.log("[%s] error in setOrientationAsync setting animation: %s", this.state.cardName, e);
+            }
+
+        });
+    }
 
     handleClick = () =>
     {
@@ -167,9 +227,9 @@ export class Card extends React.Component
             {
                 try
                 {
-                   
+
                     clearTimeout(myTimeout);
-                    util.log("[%s] resolving animateAsync", this.state.cardName);
+                    //  util.log("[%s] resolving animateAsync", this.state.cardName);
                     resolve_func();
                     div.removeEventListener("transitionend", endAnimationAndResolvePromise);
                 }
@@ -187,9 +247,9 @@ export class Card extends React.Component
             try
             {
                 var cmd = util.format("translate(%spx, %spx) rotate(%sdeg)", x, y, deg);
-                if (cmd !== this.myCard.style['transform'])
+                if (cmd !== div.style['transform'])
                 {
-                    this.myCard.style['transform'] = cmd;
+                    div.style['transform'] = cmd;
                 }
                 else
                 {
@@ -201,8 +261,8 @@ export class Card extends React.Component
                 //
                 //  if the animation ends too soon, the event won't fire.  resolve it by timer then.
                 myTimeout = setTimeout(() =>
-                {                                
-                    util.log ("timeout hit in card.  resolving promise");
+                {
+                    util.log("[%s] timeout hit in AnimateAsync.  resolving promise", this.state.cardName);
                     endAnimationAndResolvePromise();
 
                 }, 2000);
@@ -250,9 +310,7 @@ export class Card extends React.Component
         //     return connectDragSource(            
         return (
             <div className={cardClassName} ref={myCard => this.myCard = myCard}
-                onClick={this.handleClick}
-                style={{ opacity: opacity }}>
-
+                onClick={this.handleClick} opacity={this.state.countable ? 1 : 0.5}>
                 <div className={flipperName} ref={myFlipper => this.myFlipper = myFlipper} >
                     <img className={faceupName}
                         alt={require("../images/Cards/error.png")}

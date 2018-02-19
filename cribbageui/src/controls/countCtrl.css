@@ -1,16 +1,35 @@
-.LayoutRoot_CountCtrl
+[class^="myCountControl"]
 {
+    opacity: 1;
+    visibility: visible;
     position: absolute;
-    height: 50px;
-    width: 168px;    
     margin-left:50px;
     margin-top:400px;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 50px;
     line-height: 50px;
-    z-index: 10;
+    z-index: 9999;
     background: blue;
     text-align: center;
     border: 1px solid black;
+    height: 50px;
+    width: 168px; 
+}
+
+.myCountControl_fadeOut
+{
     
+    opacity:0;
+    width:0;
+    height:0;
+    transition: width 0.5s 0.5s, height 0.5s 0.5s, opacity 0.5s;
+
+}
+.myCountControl_fadeIn
+{
+    opacity:1;
+    height: 50px;
+    width: 168px;    
+    transition: width 0.5s, height 0.5s, opacity 0.5s 0.5s; 
+
 }
