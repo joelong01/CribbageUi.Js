@@ -1,149 +1,83 @@
 /*eslint-disable no-unused-vars*/
 import React, { Component } from 'react';
-import { Shape } from 'react-konva';
+import util, { debuglog } from 'util';
 
-/**
- * Draws a rounded rectangle using the current state of the canvas.
- * If you omit the last three params, it will draw a rectangle
- * outline with a 5 pixel border radius
- * @param {CanvasRenderingContext2D} ctx
- * @param {Number} x The top left x coordinate
- * @param {Number} y The top left y coordinate
- * @param {Number} width The width of the rectangle
- * @param {Number} height The height of the rectangle
- * @param {Number} radius The corner radius. Defaults to 5;
- * @param {Boolean} fill Whether to fill the rectangle. Defaults to false.
- * @param {Boolean} stroke Whether to stroke the rectangle. Defaults to true.
- */
-export const roundRect = (ctx, x, y, width, height, radius, fill, stroke) =>
+export class StaticHelpers
 {
-    if (typeof stroke === "undefined")
-    {
-        stroke = true;
-    }
-    if (typeof radius === "undefined")
-    {
-        radius = 5;
-    }
-    ctx.beginPath();
-    ctx.moveTo(x + radius, y);
-    ctx.lineTo(x + width - radius, y);
-    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-    ctx.lineTo(x + width, y + height - radius);
-    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-    ctx.lineTo(x + radius, y + height);
-    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-    ctx.lineTo(x, y + radius);
-    ctx.quadraticCurveTo(x, y, x + radius, y);
-    ctx.closePath();
-    if (stroke)
-    {
-        ctx.stroke();
-    }
-    if (fill)
-    {
-        ctx.fill();
-    }
-}
 
-export function MyRoundRect(x, y, width, height, radius, fillColor, strokeColor)
-{
-    return (
-        <Shape fill={fillColor} stroke={strokeColor} draggable
-            sceneFunc=
+    static wait = (ms) =>
+    {
+        util.log ("waiting for %s ms", ms);
+        return new Promise((resolve, reject) =>
+        {
+            setTimeout(() =>
             {
-                function (ctx)
-                {
-                    ctx.beginPath();
-                    ctx.moveTo(x + radius, y);
-                    ctx.lineTo(x + width - radius, y);
-                    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-                    ctx.lineTo(x + width, y + height - radius);
-                    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-                    ctx.lineTo(x + radius, y + height);
-                    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-                    ctx.lineTo(x, y + radius);
-                    ctx.quadraticCurveTo(x, y, x + radius, y);
-                    ctx.closePath();
-
-                }
-            }
-        />);
-}
-
-
-export const printCanvasInfo = (hdc, name, left, top, width, height) =>
-{
-    hdc.font = "12px Courier New";
-    hdc.fillStyle = 'rgba(255,255,255,1)';
-    hdc.fillText(name + "[l,t,w,h]", 10, top + 40);
-    hdc.fillText("[" + left + "," + top + "," + width + "," + height + "]", 10, top + 60);
-
-};
-
-// Return a promise which resolves after the specified interval
-export var delay = (interval) =>
-{
-    return new Promise((resolve) =>
-    {
-        return window.setTimeout(() =>
-        {
-            //do some stuff
-        }, interval );
-
-    });
-    
-}
-
-
-
-export var wait = (ms) =>
-{
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            resolve(console.log(`waited for ${ms}ms`));
-        }, ms);
-    });
-}
-
-export var setStateAsync = (obj, k, v) =>
-{
-    
-    var newState = {};
-    var keys = [];
-    var values = [];
-    if (Array.isArray(k))
-    {
-        keys = k;
-        values = v;
-
-    }
-    else
-    {
-        keys.push(k);
-        values.push(v);
-    }
-
-    keys.forEach( (key, index) =>
-    {
-        newState[key] = values[index];
-    });
-
-    if (keys.length === 0)
-    {
-        throw Error("bad key/value pair in setStateAsync");
-    }
-
-    return new Promise((resolve, reject) =>
-    {
-        obj.setState(newState, () => 
-        {
-            resolve();
+                resolve();
+            }, ms);
         });
+    }
 
-    });
+    static dumpObject(msg, obj)
+    {
+        console.log("%s: %o", msg, obj);      
+    }
+
+
+    static animateAsync =  async (divToAnimate, animationString, timeoutMs) =>
+    {
+        
+        var myTimeout;
+        return new Promise((resolve_func, reject_func) =>
+        {
+            var endAnimationAndResolvePromise = () =>
+            {
+                try
+                {
+
+                    clearTimeout(myTimeout);                    
+                    resolve_func();
+                    divToAnimate.removeEventListener("transitionend", endAnimationAndResolvePromise);
+                }
+                catch (e)
+                {
+                    util.log("[%s] error in animate async: %s", animationString, e);
+                    divToAnimate.removeEventListener("transitionend", endAnimationAndResolvePromise);
+                    reject_func();
+                }
+            };
+
+            divToAnimate.addEventListener("transitionend", endAnimationAndResolvePromise);
+
+
+            try
+            {
+                if (animationString !== divToAnimate.style["transform"])
+                {
+                    divToAnimate.style["transform"] = animationString;
+                }
+                else
+                {
+                    divToAnimate.removeEventListener("transitionend", endAnimationAndResolvePromise);
+                    resolve_func();
+                }
+
+                myTimeout = setTimeout(() =>
+                {
+                    
+                    endAnimationAndResolvePromise();
+
+                }, timeoutMs);
+            }
+            catch (e)
+            {
+                util.log("error in animate async setting animation: %s", e);
+            }
+
+        });
+    }
 
 }
 
-export default roundRect;
+export default StaticHelpers;
+
 
