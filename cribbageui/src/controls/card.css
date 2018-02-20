@@ -2,7 +2,7 @@
 [class$='_card']
 {  
   perspective: 500px;
-  transition-duration: 1.0s;
+  transition-duration: 0.5s;
   transition-property: transform;
   transform: translate(0px, 0px) rotate(0deg);
   transition-timing-function: ease-in-out;
@@ -36,7 +36,7 @@
 
 [class$='_flipper']
 {
-  transition: 0.6s;
+  transition: 0.5s;
   transform-style: preserve-3d;
   transform: rotateY(0deg);
   position: relative;

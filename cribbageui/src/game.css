@@ -90,11 +90,11 @@
     transition-property: transform;	
     transform: translate(0px, 0px);
     transition-timing-function: ease-in-out;
-    transition-duration: 0.5s;
-    transition-property: transform;	
+    transition-duration: 0.5s;    
     
     
 }
+
 
 .cribbageBoard
 {
