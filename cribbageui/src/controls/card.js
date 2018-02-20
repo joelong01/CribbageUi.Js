@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import cardImages from './deck';
 import './card.css';
 import util from 'util';
-import { wait } from './../helper_functions';
+import { wait, StaticHelpers } from './../helper_functions';
 import { DragSource } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
@@ -142,64 +142,11 @@ export class Card extends React.Component
         });
     }
 
-    setOrientationAsync = async (orientation) =>
+    setOrientationAsync = (orientation) =>
     {
-        var div = this.myFlipper;
-        var myTimeout;
-        return new Promise((resolve, reject) =>
-        {
-            this.setStateAsync
-                ({
-                    orientation: orientation
-                });
-
-            var endAnimationAndResolvePromise = () =>
-            {
-                try
-                {
-
-                    clearTimeout(myTimeout);
-                    util.log("[%s] resolving animateAsync", this.state.cardName);
-                    resolve();
-                    div.removeEventListener("transitionend", endAnimationAndResolvePromise);
-                }
-                catch (e)
-                {
-                    util.log("[%s] error in setOrientationAsync: %s", this.state.cardName, e);
-                    div.removeEventListener("transitionend", endAnimationAndResolvePromise);
-                    reject();
-                }
-
-            }
-
-            div.addEventListener("transitionend", endAnimationAndResolvePromise);
-            try
-            {
-                var cmd = util.format("rotateY(%sdeg)", orientation === "faceup" ? 180 : 0);
-                if (cmd !== div.style['tranfrom'])
-                {
-                    div.style['transform'] = cmd;
-                }
-                else
-                {
-                    util.log("[%s] orientation is already [%s]. resolving promise. ", this.state.cardName, orientation);
-                    div.removeEventListener("transitionend", endAnimationAndResolvePromise);
-                    resolve();
-                }
-                myTimeout = setTimeout(() =>
-                {
-                    util.log("[%s] timeout hit in flip.  resolving promise", this.state.cardName);
-                    endAnimationAndResolvePromise();
-
-
-                }, 1500);
-            }
-            catch (e)
-            {
-                util.log("[%s] error in setOrientationAsync setting animation: %s", this.state.cardName, e);
-            }
-
-        });
+        var cmd = util.format("rotateY(%sdeg)", orientation === "faceup" ? 180 : 0);
+        this.setState({orientation: orientation});
+        return StaticHelpers.animateAsync(this.myFlipper, cmd, 1000);    
     }
 
     handleClick = () =>
@@ -209,7 +156,7 @@ export class Card extends React.Component
     }
 
     animate = (x, y, deg) =>
-    {
+    {        
         var cmd = util.format("translate(%spx, %spx) rotate(%sdeg)", x, y, deg);
         if (cmd !== this.myCard.style['transform'])
         {
@@ -217,63 +164,10 @@ export class Card extends React.Component
         }
     }
 
-    animateAsync = async (x, y, deg) =>
+    animateAsync = (x, y, deg) =>
     {
-        var div = this.myCard;
-        var myTimeout;
-        return new Promise((resolve_func, reject_func) =>
-        {
-            var endAnimationAndResolvePromise = () =>
-            {
-                try
-                {
-
-                    clearTimeout(myTimeout);
-                    //  util.log("[%s] resolving animateAsync", this.state.cardName);
-                    resolve_func();
-                    div.removeEventListener("transitionend", endAnimationAndResolvePromise);
-                }
-                catch (e)
-                {
-                    util.log("[%s] error in animate async: %s", this.state.cardName, e);
-                    div.removeEventListener("transitionend", endAnimationAndResolvePromise);
-                    reject_func();
-                }
-            };
-
-            div.addEventListener("transitionend", endAnimationAndResolvePromise);
-
-
-            try
-            {
-                var cmd = util.format("translate(%spx, %spx) rotate(%sdeg)", x, y, deg);
-                if (cmd !== div.style['transform'])
-                {
-                    div.style['transform'] = cmd;
-                }
-                else
-                {
-                    util.log("[%s] xform is the same.  resolving promise", this.state.cardName);
-                    div.removeEventListener("transitionend", endAnimationAndResolvePromise);
-                    resolve_func();
-                }
-
-                //
-                //  if the animation ends too soon, the event won't fire.  resolve it by timer then.
-                myTimeout = setTimeout(() =>
-                {
-                    util.log("[%s] timeout hit in AnimateAsync.  resolving promise", this.state.cardName);
-                    endAnimationAndResolvePromise();
-
-                }, 2000);
-            }
-            catch (e)
-            {
-                util.log("[%s] error in animate async setting animation: %s", this.state.cardName, e);
-            }
-
-        });
-
+        var cmd = util.format("translate(%spx, %spx) rotate(%sdeg)", x, y, deg);       
+        return StaticHelpers.animateAsync(this.myCard, cmd, 2000);        
     }
     getTransform = () =>
     {

@@ -3,26 +3,45 @@
     opacity: 1;
     visibility: visible;
     position: absolute;
-    margin-left:50px;
-    margin-top:400px;
+    margin-left:0px;
+    margin-top: 0px;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 50px;
     line-height: 50px;
-    z-index: 9999;
-    background: blue;
+    z-index: 101;
+    background: transparent;
     text-align: center;
-    border: 1px solid black;
+    height:100%;
+    width: 100%; 
+    background: slategray;
+    border: 1px black solid;
+    border-radius: 5px;
+    transition-timing-function: linear;
+
+}
+
+.CountCtrl_Root
+{
+    position: absolute;
+    transform: transform (0px, 481px);
+    transition: transform 0.5s;
+    opacity:1;
     height: 50px;
-    width: 168px; 
+    width: 168px;    
+    background: transparent;
+    margin-left:50px;
+    margin-top: 400px;
+    z-index: 500;
+   
 }
 
 .myCountControl_fadeOut
 {
     
     opacity:0;
-    width:0;
-    height:0;
-    transition: width 0.5s 0.5s, height 0.5s 0.5s, opacity 0.5s;
+    height: 0px;
+    width: 0px;    
+    transition: width 0.5s, height 0.5s, opacity 0.5s;
 
 }
 .myCountControl_fadeIn
@@ -30,6 +49,7 @@
     opacity:1;
     height: 50px;
     width: 168px;    
-    transition: width 0.5s, height 0.5s, opacity 0.5s 0.5s; 
-
+    transition: width 0.5s, height 0.5s, opacity 0.5s 0.5s;
 }
+
+

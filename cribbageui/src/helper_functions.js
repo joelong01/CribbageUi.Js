@@ -25,7 +25,6 @@ export class StaticHelpers
 
     static animateAsync =  async (divToAnimate, animationString, timeoutMs) =>
     {
-        
         var myTimeout;
         return new Promise((resolve_func, reject_func) =>
         {
@@ -33,7 +32,7 @@ export class StaticHelpers
             {
                 try
                 {
-
+                    util.log("resolving animation: %s", animationString);
                     clearTimeout(myTimeout);                    
                     resolve_func();
                     divToAnimate.removeEventListener("transitionend", endAnimationAndResolvePromise);
@@ -63,7 +62,7 @@ export class StaticHelpers
 
                 myTimeout = setTimeout(() =>
                 {
-                    
+                    util.log ("%s:%s timed out after %sms", divToAnimate, animationString, timeoutMs);
                     endAnimationAndResolvePromise();
 
                 }, timeoutMs);
