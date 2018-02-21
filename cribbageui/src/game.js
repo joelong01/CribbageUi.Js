@@ -795,10 +795,10 @@ export class CribbageGame extends Component
     getCardPosition(gridName, index)
     {
         var animationTopCoordinates = [];
-        animationTopCoordinates["computer"] = 308;
-        animationTopCoordinates["counted"] = 550;
-        animationTopCoordinates["player"] = 788;
-        animationTopCoordinates["deck"] = 550;
+        animationTopCoordinates["computer"] = 3;
+        animationTopCoordinates["counted"] = 245;
+        animationTopCoordinates["player"] = 483;
+        animationTopCoordinates["deck"] = 245;
 
         if (this.state.cribOwner === "player")
         {
@@ -826,11 +826,11 @@ export class CribbageGame extends Component
         if (gridName === "deck")
         {
             xPos = 1022;
-            yPos = 550;
+            yPos = 245;
         }
 
         xPos = xPos - 1022; // this are in game.css as margin-left and margin-top
-        yPos = yPos - 550;
+        yPos = yPos - 245;
 
         let pos = {};
         pos["xPos"] = xPos;
