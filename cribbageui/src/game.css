@@ -31,9 +31,15 @@
 {
     position: absolute;
     margin-left: 1022px;
-    margin-top: 550px;
+    margin-top: 245px;
     z-index: 10;
     
+}
+
+.cribbageBoard
+{
+    transform: scale(1.31, 1.31);
+    transform-origin: left top;
 }
 
 .DIV_computer, .DIV_player, .DIV_counted, .DIV_deck, .DIV_crib
@@ -50,7 +56,7 @@
 
 .DIV_computer
 {
-    margin-top: 305px;
+    margin-top: 0px;
     margin-left: 230px;    
     
 }
@@ -59,21 +65,21 @@
 {
     width: 725px;
     min-width: 725px;    
-    margin-top: 545px;
+    margin-top: 240px;
     margin-left: 230px;
 }
 
 .DIV_player
 {
     
-    margin-top: 785px;
+    margin-top: 480px;
     margin-left: 230px;
 }
 
 .DIV_deck
 {
         
-    margin-top: 545px;
+    margin-top: 240px;
     margin-left: 1013px;    
     width: 168px;
     z-index: 3;
@@ -85,7 +91,7 @@
     
     width: 168px;    
     margin-left:50px;
-    margin-top:305px;
+    margin-top:0px;
     transition-duration: 0.5s;
     transition-property: transform;	
     transform: translate(0px, 0px);
@@ -98,15 +104,17 @@
 
 .cribbageBoard
 {
-    width: 950px;    
-    height: 300px;
-    background: wheat;
+    position: absolute;
+    width: 150;    
+    height: 550px;
+    background: transparent;
     opacity: 1.0;
-    margin-left: 100px;
+    margin-left: 1010px;
+    margin-top: 0px;
     padding: 0px;
     overflow: hidden;
     border-radius: 10px;
-    margin-left: 50px;    
+      
 }
 
 

@@ -4,7 +4,7 @@
     visibility: visible;
     position: absolute;
     margin-left:50px;
-    margin-top:20px;
+    margin-top:360px;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 16px;
     line-height: 50px;
@@ -12,13 +12,14 @@
     background: slategray;
     text-align: center;
     border: 1px solid black;
+    border-radius: 5px;
     height: 50px;
     width: 168px; 
 }
 
 .ScoreControl_computer
 {
-    margin-top: 100px;
+    margin-top: 300px;
 }
 
 
