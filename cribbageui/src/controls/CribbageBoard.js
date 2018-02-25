@@ -10,7 +10,7 @@ export class CribbageBoard extends React.Component
     render()
     {
         return (
-            <img className="cribbageBoard" width={"150"} 
+            <img className="cribbageBoard" width={"250"} height={800}
                         alt={require("../images/Cards/error.png")}
                         srcSet={require("../images/board.svg")}                        
                         ref={myBoard => this.myBoard = myBoard}

@@ -2,6 +2,7 @@
 [class^="Menu_"]
 {
     margin: 10px;
+    
 }
 
 .Menu_LayoutRoot
@@ -42,7 +43,7 @@
 
 .bm-overlay 
 {
-    background: rgb(0, 0, 0);
+    background: rgb(0, 0, 0);    
 }
 
   /* General sidebar styles */
