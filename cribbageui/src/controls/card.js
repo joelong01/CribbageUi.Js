@@ -73,6 +73,7 @@ export class Card extends React.Component
                 cardName: "ErrorCard",
                 location: "deck",
                 owner: "shared",
+                selected: false,
                 value: 0,
                 countable: true,
                 cardClickedCallback: null,
@@ -95,12 +96,16 @@ export class Card extends React.Component
             owner: this.props.owner,
             cardClickedCallback: this.props.cardClickedCallback,
             cardName: this.props.cardName,
+            selected: this.props.selected
         }, () =>
             {
                 this.setState({ orientation: this.props.orientation });
             });
 
-
+            if (this.props.selected === false)
+            {
+                this.mySelectSvg.style['opacity'] = 0;
+            }
 
     }
 
@@ -145,8 +150,8 @@ export class Card extends React.Component
     setOrientationAsync = (orientation) =>
     {
         var cmd = util.format("rotateY(%sdeg)", orientation === "faceup" ? 180 : 0);
-        this.setState({orientation: orientation});
-        return StaticHelpers.animateAsync(this.myFlipper, cmd, 1000);    
+        this.setState({ orientation: orientation });
+        return StaticHelpers.animateAsync(this.myFlipper, cmd, 1000);
     }
 
     handleClick = () =>
@@ -156,7 +161,7 @@ export class Card extends React.Component
     }
 
     animate = (x, y, deg) =>
-    {        
+    {
         var cmd = util.format("translate(%spx, %spx) rotate(%sdeg)", x, y, deg);
         if (cmd !== this.myCard.style['transform'])
         {
@@ -166,8 +171,8 @@ export class Card extends React.Component
 
     animateAsync = (x, y, deg) =>
     {
-        var cmd = util.format("translate(%spx, %spx) rotate(%sdeg)", x, y, deg);       
-        return StaticHelpers.animateAsync(this.myCard, cmd, 2000);        
+        var cmd = util.format("translate(%spx, %spx) rotate(%sdeg)", x, y, deg);
+        return StaticHelpers.animateAsync(this.myCard, cmd, 2000);
     }
     getTransform = () =>
     {
@@ -179,12 +184,21 @@ export class Card extends React.Component
         this.myCard.style['transform'] = cmd;
 
     }
-    setCard(cName)
+    setCard = (cName) =>
     {
         this.setState({ cardName: cName });
     }
 
+    select = async (isSelected) =>
+    {
+        await this.setStateAsync({ selected: isSelected });
+        this.mySelectSvg.style['opacity'] = isSelected ? 1 : 0;
+    }
 
+    isSelected = () =>
+    {
+        return this.state.selected;
+    }
 
     render()
     {
@@ -196,11 +210,12 @@ export class Card extends React.Component
         let faceupImage = cardImages[this.state.cardName];
         let facedownImage = cardImages["BackOfCard"];
         let flipperName = this.state.cardName + "_flipper";
+        let selectedName = this.state.cardName + "_selected";
 
-        const { cardName, orientation, location, owner, isDragging, connectDragSource } = this.props;
+        const { cardName, orientation, location, owner, isDragging, connectDragSource, selected } = this.props;
 
         const opacity = isDragging ? 0.5 : 1;
-
+        console.log("[%s].selected = %s", this.props.cardName, this.props.selected);
         //     return connectDragSource(            
         return (
             <div className={cardClassName} ref={myCard => this.myCard = myCard}
@@ -215,6 +230,14 @@ export class Card extends React.Component
                         alt={require("../images/Cards/error.png")}
                         srcSet={facedownImage}
                         ref={facedownCard => this.facedownCard = facedownCard}
+                    />
+                </div>
+                <div className={selectedName} 
+                    ref={mySelectSvg => this.mySelectSvg = mySelectSvg}>
+                    <img
+                        alt={require("../images/Cards/error.png")}
+                        srcSet={require("../images/selectCard.svg")}
+
                     />
                 </div>
             </div>

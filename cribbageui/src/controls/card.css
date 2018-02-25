@@ -10,7 +10,7 @@
   
   
 }
-[class$='_card'],  [class$='_flipper'], [class$='_faceup'],[class$='_facedown']
+[class$='_card'],  [class$='_flipper'], [class$='_faceup'],[class$='_facedown'], [class$='_selected']
 {
   width: 150px;
   height: 225px;
@@ -74,3 +74,15 @@
   
 }
 
+[class$='_selected']
+{
+  z-index: 1;
+  margin-left: 0px;
+  position: absolute;
+  border: 4px darkgray solid;
+  border-radius: 3px;
+  width: 150px;
+  height: 225px;
+  box-sizing: border-box;
+
+}

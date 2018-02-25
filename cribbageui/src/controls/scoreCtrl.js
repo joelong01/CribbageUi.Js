@@ -22,27 +22,29 @@ export class ScoreCtrl extends Component
 
     componentDidMount() 
     {
-        
-        this.setState({ 
-            frontScore: this.props.frontScore, 
+
+        this.setState({
+            frontScore: this.props.frontScore,
             backScore: this.props.backScore,
-            player: this.props.player });
+            player: this.props.player
+        });
 
     }
 
     render()
     {
 
-       
+        let frontName = "peg_front_" + this.props.player;
+
         return (
-
-            <div className= {"ScoreControl_" + this.props.player}
+            <div className={"Score_LayoutRoot"}>
+                <div className={"ScoreControl_" + this.props.player}
                     ref={myScoreCtrl => this.myScoreCtrl = myScoreCtrl}>
-                <span>
-                  {this.props.player}: {this.props.backScore} - {this.props.frontScore}
-                </span>
+                    <span>
+                        {this.props.player}: {this.props.backScore} - {this.props.frontScore}
+                    </span>
+                </div>                       
             </div>
-
         );
     }
 
