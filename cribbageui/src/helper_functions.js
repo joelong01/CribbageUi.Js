@@ -7,7 +7,7 @@ export class StaticHelpers
 
     static wait = (ms) =>
     {
-        util.log ("waiting for %s ms", ms);
+     //   util.log ("waiting for %s ms", ms);
         return new Promise((resolve, reject) =>
         {
             setTimeout(() =>
@@ -32,7 +32,7 @@ export class StaticHelpers
             {
                 try
                 {
-                    util.log("resolving animation: %s", animationString);
+                    //util.log("resolving animation: %s", animationString);
                     clearTimeout(myTimeout);                    
                     resolve_func();
                     divToAnimate.removeEventListener("transitionend", endAnimationAndResolvePromise);
@@ -62,7 +62,7 @@ export class StaticHelpers
 
                 myTimeout = setTimeout(() =>
                 {
-                    util.log ("%s:%s timed out after %sms", divToAnimate, animationString, timeoutMs);
+                   // util.log ("%s:%s timed out after %sms", divToAnimate, animationString, timeoutMs);
                     endAnimationAndResolvePromise();
 
                 }, timeoutMs);
