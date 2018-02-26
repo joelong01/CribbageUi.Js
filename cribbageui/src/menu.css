@@ -54,3 +54,31 @@
     font-size: 1.15em;
     
 }
+
+.menuItemGlyph
+{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 24px;
+    font-size: 22;
+    overflow: hidden;
+    float: left;
+    
+}
+.burgerItemButton
+{
+    overflow: hidden;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 24px;    
+}
+
+.menuItemDiv
+{
+    margin-left: 10px;
+    margin-bottom: 10px;
+    margin-top: 0px;
+    position: reletive;
+}

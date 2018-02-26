@@ -102,10 +102,10 @@ export class Card extends React.Component
                 this.setState({ orientation: this.props.orientation });
             });
 
-            if (this.props.selected === false)
-            {
-                this.mySelectSvg.style['opacity'] = 0;
-            }
+        if (this.props.selected === false)
+        {
+            this.mySelectSvg.style['opacity'] = 0;
+        }
 
     }
 
@@ -189,6 +189,11 @@ export class Card extends React.Component
         this.setState({ cardName: cName });
     }
 
+    translateSpeed = (ms) =>
+    {
+        this.myCard.style['transition'] = ms + "ms";
+    }
+
     select = async (isSelected) =>
     {
         await this.setStateAsync({ selected: isSelected });
@@ -215,7 +220,7 @@ export class Card extends React.Component
         const { cardName, orientation, location, owner, isDragging, connectDragSource, selected } = this.props;
 
         const opacity = isDragging ? 0.5 : 1;
-        console.log("[%s].selected = %s", this.props.cardName, this.props.selected);
+        //        console.log("[%s].selected = %s", this.props.cardName, this.props.selected);
         //     return connectDragSource(            
         return (
             <div className={cardClassName} ref={myCard => this.myCard = myCard}
@@ -232,7 +237,7 @@ export class Card extends React.Component
                         ref={facedownCard => this.facedownCard = facedownCard}
                     />
                 </div>
-                <div className={selectedName} 
+                <div className={selectedName}
                     ref={mySelectSvg => this.mySelectSvg = mySelectSvg}>
                     <img
                         alt={require("../images/Cards/error.png")}
@@ -242,6 +247,27 @@ export class Card extends React.Component
                 </div>
             </div>
         );
+    }
+}
+
+Card.prototype.toString = function cardToString() 
+{
+    if (this !== null)
+    {
+        try
+        {
+            var s = "[" + this.state.cardName + "] owner:" + this.state.owner + " location:" + this.state.location;            
+            return s;
+        }
+        catch (e)
+        {
+            console.log("%o", e);
+        }
+
+    }
+    else
+    {
+        return "card is null!";
     }
 }
 

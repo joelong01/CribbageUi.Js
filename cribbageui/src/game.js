@@ -308,9 +308,12 @@ export class CribbageGame extends Component
         //  you can't use Array.slice() to pick off the last element of the array
         //  here because it does a "shallow copy"
         //
-        let length = this.state.cardsInGrid.counted.length;
-        var lastCardPlayed = this.state.cardsInGrid.counted[length - 1];
-        await this.addScore(lastCardPlayed.state.owner, 1);
+        if (this.state.currentCount !== 31)
+        {
+            let length = this.state.cardsInGrid.counted.length;
+            var lastCardPlayed = this.state.cardsInGrid.counted[length - 1];
+            await this.addScore(lastCardPlayed.state.owner, 1);
+        }
 
         await Promise.all(this.flipAllCardsInGridAsync(["counted"], "facedown"));
         alert(lastCardPlayed.state.owner + " scored go!");
@@ -558,7 +561,7 @@ export class CribbageGame extends Component
             let promises = [];
             promises = this.redoCardLayoutAsync("deck");
             await Promise.all(promises);
-            await StaticHelpers.wait(500);
+            await StaticHelpers.wait(50);
             let resetCards = {};
             allGridNames.map(grid => resetCards[grid] = []);
             await this.setStateAsync({
@@ -698,9 +701,37 @@ export class CribbageGame extends Component
             util.log("error in Deal. %s", e.message);
         }
 
+        this.state.cardsInGrid['player'].sort((c1, c2) => 
+        {  
+            
+            let val1 = this.getOrdinalValue(c1);
+            let val2 = this.getOrdinalValue(c2);
 
+            return val1 - val2;
+        });
 
+        this.state.cardsInGrid['player'].map (card => card.translateSpeed(1500));
+        let promises = await this.redoGridLayoutAsync(["player"]);
+        await Promise.all(promises);
+        this.state.cardsInGrid['player'].map (card => card.translateSpeed(500));
+    }
 
+    getOrdinalValue = (card) =>
+    {        
+        let firstLetter = card.state.cardName.substring(0, 1);
+        switch (firstLetter)
+        {
+            case "J": 
+                return 11;
+            case "Q":
+                return 12;
+            case "K": 
+                return 13;
+            default:
+                
+        }
+
+        return card.state.value;
     }
 
     getComputerCribCards = async () =>
@@ -943,8 +974,18 @@ export class CribbageGame extends Component
                 pageWrapId={"page-wrap"} outerContainerId={"outer-container"}
                 ref={burgerMenu => this.burgerMenu = burgerMenu} >
                 <div className="Menu_LayoutRoot">
-                    <div className="Menu_buttonDiv">
-                        <button onClick={this.onNewGame.bind(this)} className="menu-item--large" >New Game</button>
+
+                    <div className="menuItemDiv">
+                        <div className="menuItemGlyph">
+                            +
+                        </div>
+                        <button className="burgerItemButton" onClick={this.onNewGame.bind(this)}>New Game</button>
+                    </div>
+                    <div className="menuItemDiv">
+                        <div className="menuItemGlyph">
+                            ?
+                        </div>
+                        <button className="burgerItemButton" onClick={this.getSuggestion.bind(this)}>Suggestion</button>
                     </div>
                     <fieldset>
                         <legend> Crib Owner </legend>
@@ -986,12 +1027,6 @@ export class CribbageGame extends Component
                             <button onClick={this.onAnimateCribCardsToOwner.bind(this)} className="menu-item--large" ref="mnu_onAnimateCribCardsToOwner">Crib back to owner</button>
                             <button onClick={this.onTestMoveToCounted.bind(this)} className="menu-item--large" ref="mnu_onTestMoveToCounted">Move Cards to Counted</button>
                             <button onClick={this.onTestSetScore.bind(this)} className="menu-item--large" ref="mnu_onTestSetScore">Test Set Score</button>
-                        </div>
-                        <div>
-                            <fieldset >
-                                <legend> Cribbage Commands </legend>
-                            <button onClick={this.getSuggestion.bind(this)} className="menu-item--large" ref="mnu_getSuggestion">Suggestion</button>
-                            </fieldset>
                         </div>
                     </fieldset>
                     <fieldset>
@@ -1061,8 +1096,6 @@ export class CribbageGame extends Component
                         />
                         <div className="DIV_crib" ref={myCribDiv => this.myCribDiv = myCribDiv} />
                         <CountCtrl ref={myCountCtrl => this.myCountCtrl = myCountCtrl} count={this.state.currentCount} visible={this.isCountState()} isComputerCrib={this.state.isComputerCrib} />
-                        <ScoreCtrl frontScore={this.state.computerFrontScore} backScore={this.state.computerBackScore} player={"computer"} />
-                        <ScoreCtrl frontScore={this.state.playerFrontScore} backScore={this.state.playerBackScore} player={"player"} />
                         <div className="DIV_computer" />
                         <div className="DIV_deck" />
                         <div className="DIV_counted" />
@@ -1199,6 +1232,7 @@ export class CribbageGame extends Component
 
     getSuggestion = async () =>
     {
+        await this.closeMenuAsync();
         if (this.state.gameState === "CountPlayer")
         {
             let countedCardObj = await CribbageServiceProxy.getComputerCountCardAsync(this.state.cardsInGrid["player"],
@@ -1221,7 +1255,7 @@ export class CribbageGame extends Component
             {
                 c.select(false);
             }
-            
+
             let cribcards = await CribbageServiceProxy.getCribCardsAsync(this.state.cardsInGrid["player"], this.state.cribOwner === "player");
             let card = this.refs[cribcards[0].name];
             if (card !== null)
@@ -1233,7 +1267,7 @@ export class CribbageGame extends Component
             {
                 card.select(true);
             }
-            
+
         }
 
     }
