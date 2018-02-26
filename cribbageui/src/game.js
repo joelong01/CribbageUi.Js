@@ -303,20 +303,20 @@ export class CribbageGame extends Component
 
     scoreGo = async () =>
     {
-
-        //
+//
         //  you can't use Array.slice() to pick off the last element of the array
         //  here because it does a "shallow copy"
         //
+        let length = this.state.cardsInGrid.counted.length;
+        var lastCardPlayed = this.state.cardsInGrid.counted[length - 1];
+
         if (this.state.currentCount !== 31)
         {
-            let length = this.state.cardsInGrid.counted.length;
-            var lastCardPlayed = this.state.cardsInGrid.counted[length - 1];
             await this.addScore(lastCardPlayed.state.owner, 1);
+            alert(lastCardPlayed.state.owner + " scored go!");
         }
 
-        await Promise.all(this.flipAllCardsInGridAsync(["counted"], "facedown"));
-        alert(lastCardPlayed.state.owner + " scored go!");
+        await Promise.all(this.flipAllCardsInGridAsync(["counted"], "facedown"));        
         await this.setStateAsync({ currentCount: 0 });
         return lastCardPlayed.state.owner;
 
