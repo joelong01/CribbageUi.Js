@@ -39,7 +39,7 @@
 {
     position: absolute;
     margin-left: 1022px;
-    margin-top: 245px;
+    margin-top: 340px;
     z-index: 10;
     
 }
@@ -47,7 +47,7 @@
 
 .DIV_computer, .DIV_player, .DIV_counted, .DIV_deck, .DIV_crib
 {
-    height: 235px;      
+    height: 270px;      
     width: 950px;    
     border: 1px solid black;
     border-radius: 5px;
@@ -68,21 +68,24 @@
 {
     width: 725px;
     min-width: 725px;    
-    margin-top: 240px;
+    margin-top: 305px;
     margin-left: 230px;
+    
+    
+    
 }
 
 .DIV_player
 {
     
-    margin-top: 480px;
+    margin-top: 615px;
     margin-left: 230px;
 }
 
 .DIV_deck
 {
-        
-    margin-top: 240px;
+    height: 235px;    
+    margin-top: 335px;
     margin-left: 1013px;    
     width: 168px;
     z-index: 3;
@@ -91,10 +94,10 @@
 
 .DIV_crib
 {
-    
+    height: 235px; 
     width: 168px;    
     margin-left:50px;
-    margin-top:0px;
+    margin-top: 0px;
     transition-duration: 0.5s;
     transition-property: transform;	
     transform: translate(0px, 0px);
@@ -104,6 +107,24 @@
     
 }
 
+.ScoreBrowser
+{
+    position: absolute;    
+    margin-top: 0px;
+    
+
+}
+
+.DIV_scoreBrowser
+{
+    position: absolute;
+    width: 950px;
+    margin-top: 900px;
+    margin-left: 230px;
+    height: 35px;
+    z-index: 1;
+   
+}
 
 .cribbageBoard
 {

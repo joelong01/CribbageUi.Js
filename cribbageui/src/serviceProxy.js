@@ -121,10 +121,19 @@ export class CribbageServiceProxy
             url += csv;
         }
         console.log("getCountedScoreAsync url: %s", url);
+        let returnObj = 
+        {
+            score: 0,
+            scoreInfo: []
+        };
+
         let res = await fetch(url);
         let jObj = await res.json();
-        let score = jObj["Score"];
-        return score;
+
+        returnObj.score = jObj["Score"];
+        returnObj.scoreInfo = jObj["ScoreInfo"];
+        console.log("getCountedScoreAsync returns: %o", returnObj);
+        return returnObj;
     }
 
     //
