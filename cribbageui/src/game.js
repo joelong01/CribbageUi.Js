@@ -52,7 +52,9 @@ export class CribbageGame extends Component
                 computerBackScore: 0,
                 playerBackScore: 0,
                 computerFrontScore: 0,
-                playerFrontScore: 0
+                playerFrontScore: 0,
+                scoreIndex: 0,
+                scoreList: []
 
             }
 
@@ -60,7 +62,7 @@ export class CribbageGame extends Component
         this.renderMenu = this.renderMenu.bind(this);
         this.handleChooseCribPlayer = this.handleChooseCribPlayer.bind(this);
         this.toggleZoomWindow = this.toggleZoomWindow.bind(this);
-        
+
         this.closeMenuAndReset = this.closeMenuAndReset.bind(this);
 
 
@@ -128,6 +130,7 @@ export class CribbageGame extends Component
         var CurrentCount = 0;
         let nextState = "";
         let loopCount = 0;
+
         while (true)
         {
             loopCount++;
@@ -138,6 +141,8 @@ export class CribbageGame extends Component
                     //
                     //  need a way to pick the dealer
                     await this.setStateAsync({ gameState: "Deal" });
+                    this.myScoreBrowser.showUpDownButtons(false);
+                    this.myScoreBrowser.showPrevNextButtons(false);
                     break;
                 case "Deal":
                     await this.animateCribToOwner(Dealer);
@@ -156,7 +161,8 @@ export class CribbageGame extends Component
                     nextState = (this.state.cribOwner === "computer") ? "playerCount" : "computerCount";
                     if (this.state.hisNibs)
                     {
-                        await this.addScore(Dealer, 1);
+                        let scoreObj = this.createScoreObject(2, "Nibs", [this.state.sharedCard]);
+                        await this.addScore(Dealer, scoreObj);
                     }
                     await this.setStateAsync({ gameState: "Count" });
                     break;
@@ -164,7 +170,8 @@ export class CribbageGame extends Component
                     await this.setStateAsync({ currentCount: 0 });
                     nextState = (PlayerTurn === "player") ? "CountPlayer" : "CountComputer";
                     await this.setStateAsync({ gameState: nextState });
-                    this.locateScoreBrowser("counted");
+                    this.setState({ scoreList: [] });
+                    this.myScoreBrowser.showPrevNextButtons(true);
                     break;
                 case "CountPlayer":
                     {
@@ -173,8 +180,10 @@ export class CribbageGame extends Component
 
                         if (canPlay.playerCanPlay)
                         {
-                            let score = await this.doCountForPlayer();
-                            await this.addScore("player", score);
+                            let scoreObj = await this.doCountForPlayer();
+                            console.log("do count for player");
+                            await this.addScore("player", scoreObj);
+
                         }
 
                         canPlay = await this.canPlay();
@@ -200,8 +209,8 @@ export class CribbageGame extends Component
                         let canPlay = await this.canPlay();
                         if (canPlay.computerCanPlay)
                         {
-                            let score = await this.doCountForComputer();
-                            await this.addScore("computer", score);
+                            let scoreObj = await this.doCountForComputer();
+                            await this.addScore("computer", scoreObj);
                         }
                         canPlay = await this.canPlay();
 
@@ -209,7 +218,7 @@ export class CribbageGame extends Component
 
                         if (!canPlay.computerCanPlay && canPlay.playerCanPlay)
                         {
-                            //_gameView.AddMessage("Computer can't play.  Go again.");
+                            this.myScoreBrowser.setScoreText("Computer can't play.  Play a card.");
                         }
 
                         if (canPlay.computerCanPlay === false && canPlay.playerCanPlay === false)
@@ -231,26 +240,25 @@ export class CribbageGame extends Component
                     }
                     break;
                 case "CountingEnded":
+                    await this.scoreLastCard();
                     await this.moveCountingCardsBackToOwner();
+                    this.myScoreBrowser.showPrevNextButtons(false);
                     nextState = Dealer === "computer" ? "ScorePlayerHand" : "ScoreComputerHand";
                     await this.setStateAsync({ gameState: nextState });
                     break;
                 case "ScorePlayerHand":
-                this.locateScoreBrowser("player");    
-                let score = await this.getScoreForHand("player", false);
+                    let score = await this.getScoreForHand("player", false);
                     await this.addScore("player", score);
                     nextState = Dealer === "computer" ? "ScoreComputerHand" : "ScorePlayerCrib";
                     await this.setStateAsync({ gameState: nextState });
                     break;
                 case "ScoreComputerHand":
-                    this.locateScoreBrowser("computer");
                     score = await this.getScoreForHand("computer", false);
                     await this.addScore("computer", score);
                     nextState = Dealer === "computer" ? "ScoreComputerCrib" : "ScorePlayerHand";
                     await this.setStateAsync({ gameState: nextState });
                     break;
                 case "ScoreComputerCrib":
-                    this.locateScoreBrowser("computer");
                     await this.moveCribCardsToOwner();
                     score = await this.getScoreForHand("computer", true);
                     await this.addScore("computer", score);
@@ -258,7 +266,6 @@ export class CribbageGame extends Component
                     await this.setStateAsync({ gameState: nextState });
                     break;
                 case "ScorePlayerCrib":
-                this.locateScoreBrowser("player");
                     await this.moveCribCardsToOwner();
                     score = await this.getScoreForHand("player", true);
                     await this.addScore("player", score);
@@ -309,6 +316,20 @@ export class CribbageGame extends Component
 
     }
 
+    scoreLastCard = async () =>
+    {
+        //
+        //  you can't use Array.slice() to pick off the last element of the array
+        //  here because it does a "shallow copy"
+        //
+        let length = this.state.cardsInGrid.counted.length;
+        var lastCardPlayed = this.state.cardsInGrid.counted[length - 1];
+        /*    await this.addScore(lastCardPlayed.state.owner, 1);
+           this.myScoreBrowser.setScoreText(util.format("%s scores 1 for last cards", lastCardPlayed.state.owner));
+           await this.myScoreBrowser.waitForContinue();
+           await this.setStateAsync({ currentCount: 0 }); */
+    }
+
     scoreGo = async () =>
     {
         //
@@ -320,8 +341,9 @@ export class CribbageGame extends Component
 
         if (this.state.currentCount !== 31)
         {
-            await this.addScore(lastCardPlayed.state.owner, 1);
-            alert(lastCardPlayed.state.owner + " scored go!");
+            let scoreObj = this.createScoreObject(1, "Go", [lastCardPlayed]);
+            await this.addScore(lastCardPlayed.state.owner, scoreObj);
+            this.myScoreBrowser.setScoreText("go!");
         }
 
         await Promise.all(this.flipAllCardsInGridAsync(["counted"], "facedown"));
@@ -362,7 +384,7 @@ export class CribbageGame extends Component
         let countedCardObj = await CribbageServiceProxy.getComputerCountCardAsync(this.state.cardsInGrid["computer"],
             this.getCountedCardsForThisRun(), this.state.currentCount);
 
-        let cardCtrl = this.refs[countedCardObj.name];
+        let cardCtrl = this.refs[countedCardObj.countedCard.name];
 
 
         await this.markAndMoveMultipleCardsAsync([cardCtrl], "computer", "counted");
@@ -374,8 +396,7 @@ export class CribbageGame extends Component
         util.log("finished %s to faceup", cardCtrl.state.cardName);
         let count = this.state.currentCount + cardCtrl.state.value;
         await this.setStateAsync({ currentCount: count });
-        let score = countedCardObj.score;
-        return score;
+        return countedCardObj.Scoring;
     }
 
     doCountForPlayer = async () =>
@@ -384,9 +405,9 @@ export class CribbageGame extends Component
         let countedCard = await this.getCountCard();
         let scoreObj = await CribbageServiceProxy.getCountedScoreAsync(countedCard, this.state.currentCount, this.getCountedCardsForThisRun());
         let count = this.state.currentCount + countedCard.state.value;
-        console.log("player scored: %s for playing %s", scoreObj.score, countedCard.state.cardName);
+        console.log("player scored: %s for playing %s", scoreObj.Score, countedCard.state.cardName);
         await this.setStateAsync({ currentCount: count });
-        return scoreObj.score;
+        return scoreObj;
     }
 
     getScoreForHand = async (player, isCrib) =>
@@ -445,11 +466,17 @@ export class CribbageGame extends Component
         return retObj;
     }
 
-    addScore = async (who, count) =>
+    addScore = async (who, scoreObject) =>    
     {
-        if (count === 0)
+        if (scoreObject.Score === null || scoreObject.Score === undefined)
+        {
+            debugger;
             return;
-        alert(util.format("adding %s to %s ", count, who));
+        }
+        if ((this.state.gameState === "CountComputer" || this.state.gameState === "CountPlayer") && scoreObject.Score === 0)
+            return; // no message for 0 score in counting
+
+
         if (who === "computer")
         {
             let frontScore = this.state.computerFrontScore;
@@ -458,9 +485,9 @@ export class CribbageGame extends Component
 
             await this.setStateAsync({
                 computerBackScore: frontScore,
-                computerFrontScore: (frontScore + count)
+                computerFrontScore: (frontScore + scoreObject.Score)
             });
-            this.setPegColor("computer", (frontScore + count), "red"); // turn it on
+            this.setPegColor("computer", (frontScore + scoreObject.Score), "red"); // turn it on
 
         }
         else
@@ -470,12 +497,51 @@ export class CribbageGame extends Component
             this.setPegColor("player", backScore, "black"); // turn it off
             await this.setStateAsync({
                 playerBackScore: frontScore,
-                playerFrontScore: (frontScore + count)
+                playerFrontScore: (frontScore + scoreObject.Score)
             });
-            this.setPegColor("player", (frontScore + count), "red"); // turn it on
-
+            this.setPegColor("player", (frontScore + scoreObject.Score), "red"); // turn it on
         }
+        try
+        {
+            if (scoreObject !== null && scoreObject.ScoreInfo.length > 0)
+            {
+                for (let score of scoreObject.ScoreInfo)
+                {
+                    this.state.scoreList.push(score);
+                }
+
+                if (scoreObject.Score > 0)
+                {
+                    this.myScoreBrowser.setScoreText((util.format("adding %s to %s for %s.  Hit the check to continue... ", scoreObject.ScoreInfo[0].Score, who, scoreObject.ScoreInfo[0].ScoreName)));
+                    await this.myScoreBrowser.waitForContinue();
+                    this.myScoreBrowser.setScoreText("");
+                }
+            }
+        }
+        catch (e)
+        {
+            console.log("exception in addScore: %o", e);
+        }
+
     }
+
+    createScoreObject = (score, name, cards) =>
+    {
+        let scoreInfo =
+            {
+                ScoreName: name,
+                Score: score,
+                Cards: cards
+            };
+        let scoreObj =
+            {
+                Score: score,
+                ScoreInfo: scoreInfo
+            };
+
+        return scoreObj;
+    }
+
     setStateAsync = (newState) =>
     {
         let key = Object.keys(newState)[0];
@@ -533,7 +599,7 @@ export class CribbageGame extends Component
 
         if (newOwner === "player") 
         {
-            cmd = "translate(0px, 481px)";
+            cmd = "translate(0px, 614px)";
 
         }
         else
@@ -928,7 +994,9 @@ export class CribbageGame extends Component
             if (!card.state.countable)
             {
 
-                alert(util.format("$s is not playable at this time, card.cardName"));
+
+                this.myScoreBrowser.setScoreText(util.format("$s is not playable at this time, card.cardName.  hit the check mark to continue..."));
+                await this.myScoreBrowser.waitForContinue();
                 return;
             }
 
@@ -1107,12 +1175,12 @@ export class CribbageGame extends Component
                         <div className="DIV_deck" />
                         <div className="DIV_counted" />
                         <div className="DIV_player" />
-                        <ScoreBrowser message={"Score: 15 for 2!"} 
-                                        ref={myScoreBrowser => this.myScoreBrowser = myScoreBrowser}
-                                        nextScoreCallback = {this.nextScoreCallback}
-                                        prevScoreCallback = {this.prevScoreCallback}
-                                        playerSetScoreCallback = {this.playerSetScoreCallback}
-                                        />
+                        <ScoreBrowser message={"Score: 15 for 2!"}
+                            ref={myScoreBrowser => this.myScoreBrowser = myScoreBrowser}
+                            nextScoreCallback={this.nextScoreCallback}
+                            prevScoreCallback={this.prevScoreCallback}
+                            playerSetScoreCallback={this.playerSetScoreCallback}
+                        />
 
                     </div>
                 </main>
@@ -1235,25 +1303,54 @@ export class CribbageGame extends Component
     {
         this.myScoreBrowser.showPrevNextButtons(false);
         this.myScoreBrowser.showUpDownButtons(true);
-       await this.myScoreBrowser.waitForContinue();
-       console.log ("returned from wait for continue. score: %s", this.myScoreBrowser.getScoreText());
-       this.myScoreBrowser.showUpDownButtons(false);
+        await this.myScoreBrowser.waitForContinue();
+        console.log("returned from wait for continue. score: %s", this.myScoreBrowser.getScoreText());
+        this.myScoreBrowser.showUpDownButtons(false);
     }
 
-   nextScoreCallback  = () =>
-   {
-        console.log("nextScoreCallback");
-   }
+    nextScoreCallback = async () =>
+    {
+        let index = this.state.scoreIndex + 1;
+        if (index > this.state.scoreList.length - 1)
+            index = this.state.scoreList.length - 1;
+        let scoreObj = this.state.scoreList[index];
+        if (scoreObj !== null)
+        {
+            await this.highlightCards(scoreObj);
+        }
 
-   prevScoreCallback = () =>
-   {
-    console.log("prevScoreCallback");
-   }
+        await this.setStateAsync({ scoreIndex: index });
+    }
 
-   playerSetScoreCallback = (score) =>
-   {
-    console.log("playerSetScoreCallback: score: %s", score);
-   }
+    highlightCards = async (scoreObj) =>
+    {
+        debugger;
+        await this.redoGridLayoutAsync("counted");
+        this.myScoreBrowser.setScoreText(util.format("%s for %s", scoreObj.ScoreName, scoreObj.Score));
+        for (let cdo of scoreObj.Cards)
+        {
+            let card = this.refs[cdo.name];
+            await card.bump();
+        }
+    }
+
+    prevScoreCallback = async () =>
+    {
+        let index = this.state.scoreIndex - 1;
+        if (index < 0) index = 0;
+        let scoreObj = this.state.scoreList[index];
+        if (scoreObj !== null)
+        {
+            await this.highlightCards(scoreObj);
+        }
+
+        await this.setStateAsync({ scoreIndex: index });
+    }
+
+    playerSetScoreCallback = (score) =>
+    {
+        console.log("playerSetScoreCallback: score: %s", score);
+    }
 
     onTestSetScore = () =>
     {

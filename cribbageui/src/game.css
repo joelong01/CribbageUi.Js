@@ -94,10 +94,10 @@
 
 .DIV_crib
 {
-    height: 235px; 
-    width: 168px;    
+    height: 238px; 
+    width: 166px;    
     margin-left:50px;
-    margin-top: 0px;
+    margin-top: 28px;
     transition-duration: 0.5s;
     transition-property: transform;	
     transform: translate(0px, 0px);
