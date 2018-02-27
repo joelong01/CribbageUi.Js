@@ -40,10 +40,18 @@ export class ScoreBrowser extends Component
     scoreBrowserLoaded = () =>
     {
         var buttonNames = ["nextButton", "prevButton", "btnHigherScore", "btnLowerScore", "btnContinue"];
-
+        var self = this;
         var svgDoc = this.scoreBrowser.contentDocument;
-        svgDoc.getElementById("nextButton").addEventListener('click', this.onNextScore);
-        svgDoc.getElementById("prevButton").addEventListener('click', this.onPrevScore);
+        svgDoc.getElementById("nextButton").addEventListener('click', () => 
+        {
+            self.state.nextScoreCallback();
+        });
+
+        svgDoc.getElementById("prevButton").addEventListener('click', () => 
+        {
+            self.state.prevScoreCallback();
+        });
+        
         svgDoc.getElementById("btnHigherScore").addEventListener('click', this.onUpScore);
         svgDoc.getElementById("btnLowerScore").addEventListener('click', this.onDownScore);
         this.setState({ txtScore: svgDoc.getElementById("txtScore") });
@@ -150,15 +158,7 @@ export class ScoreBrowser extends Component
         this.setScoreText(score);
     }
 
-    onNextScore = (e) =>
-    {
-        this.setScoreText("onNextScore %o", e);
-    }
-    onPrevScore = (e) =>
-    {
-        this.setScoreText("onPrevScore %o", e);
-    }
-
+  
     setScoreText = (score) =>
     {
         let scoreMsg = this.state.txtScore; // this gets rid of a React warning about setting state directly

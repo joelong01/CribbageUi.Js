@@ -27,7 +27,7 @@
     transition: transform 0.5s;
     opacity:1;
     height: 50px;
-    width: 168px;    
+    width: 166px;    
     background: transparent;
     margin-left:50px;
     margin-top: 100px;
@@ -48,7 +48,7 @@
 {
     opacity:1;
     height: 50px;
-    width: 168px;    
+    width: 166px;    
     transition: width 0.5s, height 0.5s, opacity 0.5s 0.5s;
 }
 

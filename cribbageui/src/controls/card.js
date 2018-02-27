@@ -77,6 +77,9 @@ export class Card extends React.Component
                 value: 0,
                 countable: true,
                 cardClickedCallback: null,
+                animateY: 0,
+                animateX: 0,
+                animateRotate: 0
 
 
             }
@@ -162,6 +165,7 @@ export class Card extends React.Component
 
     animate = (x, y, deg) =>
     {
+        this.setState({animateY: y, animateX: x, animateRotate: deg});
         var cmd = util.format("translate(%spx, %spx) rotate(%sdeg)", x, y, deg);
         if (cmd !== this.myCard.style['transform'])
         {
@@ -169,8 +173,19 @@ export class Card extends React.Component
         }
     }
 
+    bump = () =>
+    {
+        let y = this.state.animateY;
+        y -= 10; // bump UP
+        return this.animateAsync(this.state.animateX, y, this.state.animateRotate);
+
+
+
+    }
+
     animateAsync = (x, y, deg) =>
     {
+        this.setState({animateY: y, animateX: x, animateRotate: deg});
         var cmd = util.format("translate(%spx, %spx) rotate(%sdeg)", x, y, deg);
         return StaticHelpers.animateAsync(this.myCard, cmd, 2000);
     }
@@ -180,6 +195,7 @@ export class Card extends React.Component
     }
     translate(x, y, deg)
     {
+        this.setState({animateY: y, animateX: x, animateRotate: deg});
         var cmd = util.format("translate(%spx, %spx) rotate(%sdeg)", x, y, deg);
         this.myCard.style['transform'] = cmd;
 

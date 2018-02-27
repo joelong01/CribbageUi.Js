@@ -70,11 +70,7 @@ export class CribbageServiceProxy
     //  currentCount: the int value of the current count
     static getComputerCountCardAsync = async (hand, countedCards, currentCount) =>
     {
-        let returnObject =
-            {
-                name: "",
-                score: 0
-            };
+       
 
         //URL should look like /getnextcountedcard/:cardsleft/:currentCount/:countedcards
         let url = "http://localhost:8080/api/getnextcountedcard/";
@@ -91,11 +87,8 @@ export class CribbageServiceProxy
         url += csv;
         console.log("getComputerCountCardAsync url: %s", url);
         let res = await fetch(url);
-        let jobj = await res.json();
-        returnObject.name = jobj["countedCard"].name;
-        returnObject.score = jobj["Scoring"].Score;
-        StaticHelpers.dumpObject("getComputerCountCardAsync returning: ", returnObject);
-        return returnObject;
+        let jobj = await res.json();       
+        return jobj;
     }
 
     static getCountedScoreAsync = async (inCard, currentCount, countedCards) => // card is a UI card!
@@ -121,19 +114,11 @@ export class CribbageServiceProxy
             url += csv;
         }
         console.log("getCountedScoreAsync url: %s", url);
-        let returnObj = 
-        {
-            score: 0,
-            scoreInfo: []
-        };
-
+       
         let res = await fetch(url);
         let jObj = await res.json();
-
-        returnObj.score = jObj["Score"];
-        returnObj.scoreInfo = jObj["ScoreInfo"];
-        console.log("getCountedScoreAsync returns: %o", returnObj);
-        return returnObj;
+        console.log("jObj: %o", jObj);       
+        return jObj;       
     }
 
     //
@@ -162,10 +147,19 @@ export class CribbageServiceProxy
         url += "/";
         url += (isCrib) ? "true" : "false";
         util.log("getScoreForHandAsync url: %s", url);
+        let returnObj = 
+        {
+            Score: 0,
+            ScoreInfo: []
+        };
+
         let res = await fetch(url);
         let jObj = await res.json();
-        let score = parseInt(jObj["Score"], 10);
-        return score;
+
+        returnObj.score = jObj["Score"];
+        returnObj.scoreInfo = jObj["ScoreInfo"];
+        
+        return returnObj;
     }
 
     //
