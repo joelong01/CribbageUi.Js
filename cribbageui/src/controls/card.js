@@ -174,13 +174,11 @@ export class Card extends React.Component
     }
 
     bump = () =>
-    {
-        let y = this.state.animateY;
-        y -= 10; // bump UP
-        return this.animateAsync(this.state.animateX, y, this.state.animateRotate);
-
-
-
+    {        
+        let y = this.state.animateY;        
+        var cmd = util.format("translate(%spx, %spx) rotate(%sdeg)",this.state.animateX, this.state.animateY - 10, this.state.animateRotate);
+        return StaticHelpers.animateAsync(this.myCard, cmd, 500);
+        
     }
 
     animateAsync = (x, y, deg) =>

@@ -15,7 +15,9 @@ export class ScoreBrowser extends Component
                 nextScoreCallback: null,
                 prevScoreCallback: null,
                 playerSetScoreCallback: null,
-                txtScore: null
+                txtScore: null,
+                txtMsg: null,
+               
             }
 
     }
@@ -51,35 +53,40 @@ export class ScoreBrowser extends Component
         {
             self.state.prevScoreCallback();
         });
-        
+
         svgDoc.getElementById("btnHigherScore").addEventListener('click', this.onUpScore);
         svgDoc.getElementById("btnLowerScore").addEventListener('click', this.onDownScore);
-        this.setState({ txtScore: svgDoc.getElementById("txtScore") });
-
+       
         for (let name of buttonNames)
         {
             svgDoc.getElementById(name).addEventListener('mouseenter', this.onMouseEnter);
             svgDoc.getElementById(name).addEventListener('mouseleave', this.onMouseLeave);
         }
-        /*
-        svgDoc.getElementById("btnHigherScore").addEventListener('mouseenter', this.onMouseEnter)
-        svgDoc.getElementById("btnLowerScore").addEventListener('mouseenter', this.onMouseEnter)
-        svgDoc.getElementById("btnContinue").addEventListener('mouseenter', this.onMouseEnter)
-        svgDoc.getElementById("btnHigherScore").addEventListener('mouseleave', this.onMouseLeave)
-        svgDoc.getElementById("btnLowerScore").addEventListener('mouseleave', this.onMouseLeave)
-        svgDoc.getElementById("btnContinue").addEventListener('mouseleave', this.onMouseLeave)
-        */
+
+        this.setState({
+            txtScore: svgDoc.getElementById("txtScore"),
+            txtMsg: svgDoc.getElementById("txtMessage"),            
+        }, () => 
+        {
+            this.resetMessages();
+            this.showPrevNextButtons(false);
+            this.showUpDownButtons(false);
+            this.setMessage("Click the check below to the right to continue in this game.");
+            svgDoc.getElementById("txtScore").textContent = "Use the menu to start a new game";
+        });
+
+      
     }
 
     onMouseEnter = (e) =>
-    {        
+    {
         var svgDoc = this.scoreBrowser.contentDocument;
         let glyph = e.currentTarget.id + "_glyph";
         svgDoc.getElementById(glyph).style.fill = 'white';
     }
 
     onMouseLeave = (e) =>
-    {     
+    {
         var svgDoc = this.scoreBrowser.contentDocument;
         let glyph = e.currentTarget.id + "_glyph";
         svgDoc.getElementById(glyph).style.fill = 'black';
@@ -94,7 +101,7 @@ export class ScoreBrowser extends Component
             {
                 try
                 {
-                    svgDoc.getElementById("btnContinue").removeEventListener('click', onContinue);                   
+                    svgDoc.getElementById("btnContinue").removeEventListener('click', onContinue);
                     resolve_func();
 
                 }
@@ -123,13 +130,13 @@ export class ScoreBrowser extends Component
 
     showPrevNextButtons = (show) =>
     {
-       
+
         var svgDoc = this.scoreBrowser.contentDocument;
         svgDoc.getElementById("nextButton_glyph").style['opacity'] = show ? 1 : 0;
         svgDoc.getElementById("prevButton_glyph").style['opacity'] = show ? 1 : 0;
         svgDoc.getElementById("nextButton").style['opacity'] = show ? .01 : 0;
         svgDoc.getElementById("prevButton").style['opacity'] = show ? .01 : 0;
-    
+
     }
 
     onUpScore = () =>
@@ -142,7 +149,8 @@ export class ScoreBrowser extends Component
         if (score > 29)
             score = 29;
 
-        this.setScoreText(score);
+
+        scoreMsg.textContent = score;
     }
 
 
@@ -155,14 +163,30 @@ export class ScoreBrowser extends Component
         score--;
         if (score < 0)
             score = 0;
-        this.setScoreText(score);
+
+        scoreMsg.textContent = score;
     }
 
-  
-    setScoreText = (score) =>
+    resetMessages = () =>
     {
         let scoreMsg = this.state.txtScore; // this gets rid of a React warning about setting state directly
-        scoreMsg.textContent = score;
+        if (scoreMsg !== null)
+        {
+            scoreMsg.textContent = "";
+            this.setMessage("");
+        }
+    }
+
+    setScoreText = (n, m, score) =>
+    {
+        let scoreMsg = this.state.txtScore; // this gets rid of a React warning about setting state directly
+        scoreMsg.textContent = util.format("(%s of %s) Score: %s", n, m, score);
+    }
+
+    setMessage = (msg) =>
+    {
+        let txtMsg = this.state.txtMsg;
+        txtMsg.textContent = msg;
     }
 
     getScoreText = () =>

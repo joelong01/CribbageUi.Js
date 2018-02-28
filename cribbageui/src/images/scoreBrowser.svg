@@ -1,23 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg width="100%" height="100%" viewBox="0 0 950 35" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
-    <g id="background">
-        <g>
-            <rect x="0" y="0" width="950" height="35" style="fill:#6b8aa5;"/>
-            <path d="M950,35l-950,0l0,-35l950,0l0,35Zm-948.855,-1.145l947.71,0l0,-32.71l-947.71,0l0,32.71Z"/>
-        </g>
-    </g>
-    <g id="controls">
-        <path id="prevButton_glyph" d="M2.36,17.092l30.632,-14.784l-1.266,30.002l-29.366,-15.218Z" style="fill:#0a0a0a;stroke:#000;stroke-width:1.55px;"/>
-        <path id="nextButton_glyph" d="M808.895,17.004l-30,15l0,-30l30,15Z" style="fill:#0a0a0a;stroke:#000;stroke-width:1.55px;"/>
-        <text id="txtScore" x="35.292px" y="25.225px" style="font-family:'BookmanOldStyle-BoldItalic', 'Bookman Old Style', serif;font-weight:600;font-style:italic;font-size:24px;fill:#fff;">Score:</text>
-        <path id="btnContinue_glyph" d="M945.393,3.429l0.633,1.066c-2.592,2.295 -5.477,5.829 -8.654,10.601c-3.177,4.773 -5.603,9.23 -7.279,13.374l-1.344,1.069c-1.115,0.913 -1.872,1.59 -2.272,2.032c-0.156,-0.669 -0.499,-1.763 -1.029,-3.285l-0.505,-1.386c-0.723,-1.99 -1.395,-3.462 -2.016,-4.414c-0.622,-0.952 -1.319,-1.584 -2.093,-1.895c1.309,-1.624 2.508,-2.438 3.596,-2.44c0.932,-0.001 1.964,1.483 3.096,4.455l0.56,1.493c2.051,-4.059 4.682,-8.005 7.894,-11.838c3.211,-3.833 6.349,-6.777 9.413,-8.832Z" style="fill-opacity:0.971429;fill-rule:nonzero;"/>
-        <path id="btnHigherScore_glyph" d="M842.71,2.727l11.209,11.201l0,8.446l-8.219,-8.213l0,16.432l-5.979,0l0,-16.432l-8.22,8.213l0,-8.446l11.209,-11.201Z" style="fill-rule:nonzero;"/>
-        <path id="btnLowerScore_glyph" d="M871.43,32.554l-11.209,-11.201l0,-8.447l8.219,8.214l0,-16.433l5.979,0l0,16.433l8.22,-8.214l0,8.447l-11.209,11.201Z" style="fill-rule:nonzero;"/>
-        <rect id="btnHigherScore" x="827.538" y="1.164" width="29.024" height="32.631" style="fill:#c1d1de;fill-opacity:0.01;"/>
-        <rect id="nextButton" x="775" y="0.688" width="36.24" height="32.631" style="fill:#c1d1de;fill-opacity:0.01;"/>
-        <rect id="prevButton" x="1.201" y="1.184" width="32.915" height="32.631" style="fill:#c1d1de;fill-opacity:0.01;"/>
-        <rect id="btnLowerScore" x="856.561" y="1.164" width="29.024" height="32.631" style="fill:#c1d1de;fill-opacity:0.01;"/>
-        <rect id="btnContinue" x="919.99" y="1.164" width="29.024" height="32.631" style="fill:#c1d1de;fill-opacity:0.02;"/>
-    </g>
+<svg width="100%" height="100%" viewBox="0 0 950 105" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <rect x="0" y="0" width="950" height="105" style="fill:#6b8aa5;"/>
+    <path d="M950,105l-950,0l0,-105l950,0l0,105Zm-948.855,-1.145l947.71,0l0,-102.71l-947.71,0l0,102.71Z"/>
+    <path id="prevButton_glyph" d="M2.36,87.092l30.632,-14.784l-1.266,30.002l-29.366,-15.218Z" style="fill:#0a0a0a;stroke:#000;stroke-width:1.55px;"/>
+    <path id="nextButton_glyph" d="M808.895,87.004l-30,15l0,-30l30,15Z" style="fill:#0a0a0a;stroke:#000;stroke-width:1.55px;"/>
+    <text id="txtScore" x="34.115px" y="95.225px" style="font-family:'BookmanOldStyle', 'Bookman Old Style', serif;font-weight:300;font-size:24px;fill:#fff;">(1 of 2) Score:</text>
+    <text id="txtMessage" x="6.764px" y="24.679px" style="font-family:'BookmanOldStyle-BoldItalic', 'Bookman Old Style', serif;font-weight:600;font-style:italic;font-size:24px;fill:#fff;">Message:</text>
+    <path id="btnContinue_glyph" d="M945.393,73.429l0.633,1.066c-2.592,2.295 -5.477,5.829 -8.654,10.601c-3.177,4.773 -5.603,9.23 -7.279,13.374l-1.344,1.069c-1.115,0.913 -1.872,1.59 -2.272,2.032c-0.156,-0.669 -0.499,-1.763 -1.029,-3.285l-0.505,-1.386c-0.723,-1.99 -1.395,-3.462 -2.016,-4.414c-0.622,-0.952 -1.319,-1.584 -2.093,-1.895c1.309,-1.624 2.508,-2.438 3.596,-2.44c0.932,-0.001 1.964,1.483 3.096,4.455l0.56,1.493c2.051,-4.059 4.682,-8.005 7.894,-11.838c3.211,-3.833 6.349,-6.777 9.413,-8.832Z" style="fill-opacity:0.971429;fill-rule:nonzero;"/>
+    <path id="btnHigherScore_glyph" d="M842.71,72.727l11.209,11.201l0,8.446l-8.219,-8.213l0,16.432l-5.979,0l0,-16.432l-8.22,8.213l0,-8.446l11.209,-11.201Z" style="fill-rule:nonzero;"/>
+    <path id="btnLowerScore_glyph" d="M871.43,102.554l-11.209,-11.201l0,-8.447l8.219,8.214l0,-16.433l5.979,0l0,16.433l8.22,-8.214l0,8.447l-11.209,11.201Z" style="fill-rule:nonzero;"/>
+    <rect id="btnHigherScore" x="827.538" y="71.164" width="29.024" height="32.631" style="fill:#c1d1de;fill-opacity:0.01;"/>
+    <rect id="nextButton" x="775" y="70.688" width="36.24" height="32.631" style="fill:#c1d1de;fill-opacity:0.01;"/>
+    <rect id="prevButton" x="1.201" y="71.184" width="32.915" height="32.631" style="fill:#c1d1de;fill-opacity:0.01;"/>
+    <rect id="btnLowerScore" x="856.561" y="71.164" width="29.024" height="32.631" style="fill:#c1d1de;fill-opacity:0.01;"/>
+    <rect id="btnContinue" x="919.99" y="71.164" width="29.024" height="32.631" style="fill:#c1d1de;fill-opacity:0.02;"/>
 </svg>

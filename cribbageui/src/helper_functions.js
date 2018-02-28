@@ -4,10 +4,35 @@ import util, { debuglog } from 'util';
 
 export class StaticHelpers
 {
+    ////////////////////////////////////
+
+    /***
+     * get live runtime value of an element's css style
+     *   http://robertnyman.com/2006/04/24/get-the-rendered-style-of-an-element
+     *     note: "styleName" is in CSS form (i.e. 'font-size', not 'fontSize').
+     ***/
+    static getStyle = function (e, styleName)
+    {
+        var styleValue = "";
+        if (document.defaultView && document.defaultView.getComputedStyle)
+        {
+            styleValue = document.defaultView.getComputedStyle(e, "").getPropertyValue(styleName);
+        }
+        else if (e.currentStyle)
+        {
+            // eslint-disable-next-line
+            styleName = styleName.replace(/\-(\w)/g, function (strMatch, p1)
+            {
+                return p1.toUpperCase();
+            });
+            styleValue = e.currentStyle[styleName];
+        }
+        return styleValue;
+    }
 
     static wait = (ms) =>
     {
-     //   util.log ("waiting for %s ms", ms);
+        //   util.log ("waiting for %s ms", ms);
         return new Promise((resolve, reject) =>
         {
             setTimeout(() =>
@@ -19,11 +44,11 @@ export class StaticHelpers
 
     static dumpObject(msg, obj)
     {
-        console.log("%s: %o", msg, obj);      
+        console.log("%s: %o", msg, obj);
     }
 
 
-    static animateAsync =  async (divToAnimate, animationString, timeoutMs) =>
+    static animateAsync = async (divToAnimate, animationString, timeoutMs) =>
     {
         var myTimeout;
         return new Promise((resolve_func, reject_func) =>
@@ -33,7 +58,7 @@ export class StaticHelpers
                 try
                 {
                     //util.log("resolving animation: %s", animationString);
-                    clearTimeout(myTimeout);                    
+                    clearTimeout(myTimeout);
                     resolve_func();
                     divToAnimate.removeEventListener("transitionend", endAnimationAndResolvePromise);
                 }
@@ -62,7 +87,7 @@ export class StaticHelpers
 
                 myTimeout = setTimeout(() =>
                 {
-                   // util.log ("%s:%s timed out after %sms", divToAnimate, animationString, timeoutMs);
+                    // util.log ("%s:%s timed out after %sms", divToAnimate, animationString, timeoutMs);
                     endAnimationAndResolvePromise();
 
                 }, timeoutMs);

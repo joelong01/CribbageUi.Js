@@ -9,42 +9,14 @@ export class CribbageServiceProxy
     //
     static getHandAsync = async (dealersHand) =>
     {
-        let returnObject =
-            {
-                allCards: [],
-                computerCrib: [],
-                sharedCard: [],
-                hisNibs: false,
-            };
-
-        try
-        {
-
             let url = 'http://localhost:8080/api/getrandomhand/';
             url += dealersHand ? 'true' : 'false';
             console.log("fetching url: %s", url);
             let res = await fetch(url);
-            let jObj = await res.json();
-            returnObject.allCards = jObj["RandomCards"];
-            returnObject.computerCrib = jObj["ComputerCribCards"];
-            returnObject.hisNibs = jObj["HisNibs"];
-
-            for (let serviceCard of returnObject.allCards)
-            {
-                if (serviceCard.owner === "shared")
-                {
-                    returnObject.sharedCard = serviceCard;
-                    break;
-                }
-            }
-
-        }
-        catch (error)
-        {
-            util.log("error thrown in GetHandAsync %s", error.message);
-        }
-        StaticHelpers.dumpObject("getHandAsync returns:", returnObject);
-        return returnObject
+            let jObj = await res.json();           
+            StaticHelpers.dumpObject("getHandAsync returns:", jObj);
+            return jObj;
+        
 
     }
 
@@ -147,19 +119,9 @@ export class CribbageServiceProxy
         url += "/";
         url += (isCrib) ? "true" : "false";
         util.log("getScoreForHandAsync url: %s", url);
-        let returnObj = 
-        {
-            Score: 0,
-            ScoreInfo: []
-        };
-
         let res = await fetch(url);
         let jObj = await res.json();
-
-        returnObj.score = jObj["Score"];
-        returnObj.scoreInfo = jObj["ScoreInfo"];
-        
-        return returnObj;
+        return jObj;
     }
 
     //
