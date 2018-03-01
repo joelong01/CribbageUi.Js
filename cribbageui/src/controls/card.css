@@ -5,7 +5,7 @@
   transition-duration: 0.5s;
   transition-property: transform;
   transform: translate(0px, 0px) rotate(0deg);
-  transition-timing-function: ease-in-out;
+  transition-timing-function: linear;
   
   
   

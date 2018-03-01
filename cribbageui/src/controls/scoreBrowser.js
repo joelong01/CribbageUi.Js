@@ -101,6 +101,7 @@ export class ScoreBrowser extends Component
             {
                 try
                 {
+                    util.log("resolving waitForContinue");
                     svgDoc.getElementById("btnContinue").removeEventListener('click', onContinue);
                     resolve_func();
 
@@ -117,6 +118,17 @@ export class ScoreBrowser extends Component
 
         });
 
+    }
+
+    //
+    //  called by game.js when the user clicks on a card to play it during counting phase.
+    //  treat that as clicking the check mark
+    simulateClick = (scoreBrowser) =>
+    {
+        
+        var event = document.createEvent("SVGEvents"); 
+        event.initEvent("click",true,true);
+        scoreBrowser.scoreBrowser.contentDocument.getElementById("btnContinue").dispatchEvent(event);
     }
 
     showUpDownButtons = (show) =>
