@@ -1,0 +1,88 @@
+/* style for the whole card class.  it has a faceup and a facedown. */
+[class$='_card']
+{  
+  perspective: 500px;
+  transition-duration: 0.5s;
+  transition-property: transform;
+  transform: translate(0px, 0px) rotate(0deg);
+  transition-timing-function: linear;
+  
+  
+  
+}
+[class$='_card'],  [class$='_flipper'], [class$='_faceup'],[class$='_facedown'], [class$='_selected']
+{
+  width: 150px;
+  height: 225px;
+  padding: 0px;
+  margin: 2px;
+  top: 0px;
+  left: 0px;
+  fill: transparent;
+  float: left;
+  
+}
+
+
+ .flip [class$='_flipper'] 
+{
+  transform-style: preserve-3d;
+  position: relative;
+  transform: rotateY(180deg);
+  
+}
+
+
+
+[class$='_flipper']
+{
+  transition: 500ms;
+  transform-style: preserve-3d;
+  transform: rotateY(0deg);
+  position: relative;
+  fill: transparent;
+  border: 1px solid black;
+  border-radius: 5px;
+  
+ 
+}
+
+
+[class$='_faceup'], [class$='_facedown']
+{
+  backface-visibility: hidden;
+  position: absolute;
+  border: 1px solid black;
+  border-radius: 5px;
+  
+}
+
+
+[class$='_faceup']
+{  
+  /* for firefox 31 */
+  transform: rotateY(180deg);
+  left: 0px;
+  
+}
+
+[class$='_facedown']
+{  
+  z-index: 2;
+  transform: rotateY(0deg);  
+  
+  
+}
+
+[class$='_selected']
+{
+  z-index: 1;
+  margin-left: 0px;
+  position: absolute;
+  border: 4px darkgray solid;
+  border-radius: 3px;
+  width: 150px;
+  height: 225px;
+  box-sizing: border-box;
+
+}
