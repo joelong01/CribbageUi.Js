@@ -154,7 +154,7 @@ export class Card extends React.Component
     {
         var cmd = util.format("rotateY(%sdeg)", orientation === "faceup" ? 180 : 0);
         this.setState({ orientation: orientation });
-        return StaticHelpers.animateAsync(this.myFlipper, cmd, 1000);
+        return StaticHelpers.animateAsync(this.myFlipper, cmd, 500);
     }
 
     handleClick = () =>
@@ -177,15 +177,18 @@ export class Card extends React.Component
     {        
         let y = this.state.animateY;        
         var cmd = util.format("translate(%spx, %spx) rotate(%sdeg)",this.state.animateX, this.state.animateY - 10, this.state.animateRotate);
-        return StaticHelpers.animateAsync(this.myCard, cmd, 500);
+        return StaticHelpers.animateAsync(this.myCard, cmd, 25);
         
     }
 
-    animateAsync = (x, y, deg) =>
+    animateAsync = (x, y, deg, timeoutMs) =>
     {
+        if (timeoutMs === undefined)
+            timeoutMs = 500;
+            
         this.setState({animateY: y, animateX: x, animateRotate: deg});
         var cmd = util.format("translate(%spx, %spx) rotate(%sdeg)", x, y, deg);
-        return StaticHelpers.animateAsync(this.myCard, cmd, 2000);
+        return StaticHelpers.animateAsync(this.myCard, cmd, timeoutMs);
     }
     getTransform = () =>
     {

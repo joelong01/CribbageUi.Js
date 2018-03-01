@@ -51,6 +51,7 @@ export class StaticHelpers
     static animateAsync = async (divToAnimate, animationString, timeoutMs) =>
     {
         var myTimeout;
+        divToAnimate.style['transition-duration'] = util.format("%sms", timeoutMs);
         return new Promise((resolve_func, reject_func) =>
         {
             var endAnimationAndResolvePromise = () =>
