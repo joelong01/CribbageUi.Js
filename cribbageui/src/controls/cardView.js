@@ -79,7 +79,8 @@ export class CardView extends React.Component
                 cardClickedCallback: null,
                 animateY: 0,
                 animateX: 0,
-                animateRotate: 0
+                animateRotate: 0,
+                cardData: null
 
 
             }
@@ -99,7 +100,8 @@ export class CardView extends React.Component
             owner: this.props.owner,
             cardClickedCallback: this.props.cardClickedCallback,
             cardName: this.props.cardName,
-            selected: this.props.selected
+            selected: this.props.selected,
+            cardData: this.props.cardData
         }, () =>
             {
                 this.setState({ orientation: this.props.orientation });
