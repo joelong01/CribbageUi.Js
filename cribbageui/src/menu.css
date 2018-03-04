@@ -1,12 +1,13 @@
 
 [class^="Menu_"]
 {
-    margin: 10px;
+    margin: 0px;
     
 }
 
 .Menu_LayoutRoot
-{
+{    
+    
     background: purple;
 }
 
@@ -24,6 +25,7 @@
     background:black;
     opacity: 1;
 }
+
 
 .bm-cross-button 
 {
@@ -43,7 +45,14 @@
 
 .bm-overlay 
 {
-    background: rgb(0, 0, 0);    
+    background: rgb(0, 0, 0);   
+    
+
+}
+
+.outer-container
+{
+    margin-top: 10px;
 }
 
   /* General sidebar styles */

@@ -13,52 +13,6 @@ var PropTypes = require('prop-types');
 
 
 
-const cardSource =
-    {
-        beginDrag(props)
-        {
-            console.log("beginDrag %s", props);
-            return { cardName: props.cardName };
-        },
-        isDragging(props, monitor)
-        {
-            util.log("dragging %s", props.cardName);
-            return props.cardName === monitor.getItem().cardName;
-        },
-        endDrag(props, monitor)
-        {
-            util.log("end drag");
-            const item = monitor.getItem();
-            const dropResult = monitor.getDropResult();
-            if (dropResult)
-            {
-                util.log("dropped %s", props.cardName);
-            }
-        },
-    }
-
-/**
- * Specifies the props to inject into your component.
- */
-function collect(connect, monitor)
-{
-    util.log("collect called");
-    return {
-        connectDragSource: connect.dragSource(),
-        isDragging: monitor.isDragging(),
-    }
-}
-
-const propTypes =
-    {
-        cardName: PropTypes.string.isRequired,
-        orientation: PropTypes.string.isRequired,
-        location: PropTypes.string.isRequired,
-        owner: PropTypes.string.isRequired,
-        // Injected by React DnD:
-        /*  isDragging: PropTypes.bool.isRequired,
-         connectDragSource: PropTypes.func.isRequired */
-    };
 
 
 export class CardView extends React.Component
@@ -175,11 +129,13 @@ export class CardView extends React.Component
         }
     }
 
-    bump = () =>
+    //
+    //  move the card up or down 10px
+    bump = (up) =>
     {        
         let y = this.state.animateY;        
-        var cmd = util.format("translate(%spx, %spx) rotate(%sdeg)",this.state.animateX, this.state.animateY - 10, this.state.animateRotate);
-        return StaticHelpers.animateAsync(this.myCard, cmd, 25);
+        var cmd = util.format("translate(%spx, %spx) rotate(%sdeg)",this.state.animateX, this.state.animateY - (up ? 10 : 0), this.state.animateRotate);
+        return StaticHelpers.animateAsync(this.myCard, cmd, 250);
         
     }
 
@@ -210,7 +166,9 @@ export class CardView extends React.Component
 
     translateSpeed = (ms) =>
     {
+        
         this.myCard.style['transition'] = ms + "ms";
+        util.log ("[%s] translatespeed: %s", this.state.cardName, this.myCard.style['transition']);
     }
 
     select = async (isSelected) =>
@@ -238,9 +196,9 @@ export class CardView extends React.Component
 
         const { cardName, orientation, location, owner, isDragging, connectDragSource, selected } = this.props;
 
-        const opacity = isDragging ? 0.5 : 1;
-        //        console.log("[%s].selected = %s", this.props.cardName, this.props.selected);
-        //     return connectDragSource(            
+        
+        //console.log("[%s] rendered .selected = %s", this.props.cardName, this.props.selected);
+        
         return (
             <div className={cardClassName} ref={myCard => this.myCard = myCard}
                 onClick={this.handleClick} opacity={this.state.countable ? 1 : 0.5}>
@@ -290,10 +248,6 @@ CardView.prototype.toString = function cardToString()
     }
 }
 
-CardView.propTypes = propTypes;
-export const ItemTypes =
-    {
-        CARD: 'card'
-    };
 
-export default DragSource(ItemTypes.CARD, cardSource, collect)(CardView);
+
+export default CardView;

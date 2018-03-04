@@ -61,6 +61,9 @@ export class ScoreBrowser extends Component
         {
             svgDoc.getElementById(name).addEventListener('mouseenter', this.onMouseEnter);
             svgDoc.getElementById(name).addEventListener('mouseleave', this.onMouseLeave);
+            svgDoc.getElementById(name).addEventListener('mousedown', this.onMouseDown);
+            svgDoc.getElementById(name).addEventListener('mouseup', this.onMouseUp);
+            
         }
 
         this.setState({
@@ -71,11 +74,33 @@ export class ScoreBrowser extends Component
             this.resetMessages();
             this.showPrevNextButtons(false);
             this.showUpDownButtons(false);
-            this.setMessage("Click the check below to the right to continue in this game.");
-            svgDoc.getElementById("txtScore").textContent = "Use the menu to start a new game";
+            this.setMessage("Use the menu to start a new game");            
         });
 
-      
+        this.showContinueButton(false);        
+        
+    }
+
+    showContinueButton = (bShow) =>
+    {
+        let vis = (bShow) ? "visible" : "hidden";
+        var svgDoc = this.scoreBrowser.contentDocument;
+        svgDoc.getElementById("btnContinue").style.visibility = vis;
+        svgDoc.getElementById("btnContinue_glyph").style.visibility = vis;
+    }
+    
+    onMouseDown = (e) =>
+    {
+        var svgDoc = this.scoreBrowser.contentDocument;
+        let glyph = e.currentTarget.id + "_glyph";
+        svgDoc.getElementById(glyph).style.fill = 'darkgray';
+    }
+
+    onMouseUp = (e) =>
+    {
+        var svgDoc = this.scoreBrowser.contentDocument;
+        let glyph = e.currentTarget.id + "_glyph";
+        svgDoc.getElementById(glyph).style.fill = 'black';
     }
 
     onMouseEnter = (e) =>
@@ -94,7 +119,8 @@ export class ScoreBrowser extends Component
 
     waitForContinue = () =>
     {
-        var svgDoc = this.scoreBrowser.contentDocument;
+        
+        this.showContinueButton(true);
         return new Promise((resolve_func, reject_func) =>
         {
             var onContinue = () =>
@@ -102,18 +128,18 @@ export class ScoreBrowser extends Component
                 try
                 {
                     util.log("resolving waitForContinue");
-                    svgDoc.getElementById("btnContinue").removeEventListener('click', onContinue);
+                    this.showContinueButton(false);
                     resolve_func();
 
                 }
                 catch (e)
                 {
-
+                    this.showContinueButton(false);
                     reject_func();
                 }
             };
 
-
+            var svgDoc = this.scoreBrowser.contentDocument;
             svgDoc.getElementById("btnContinue").addEventListener('click', onContinue);
 
         });
@@ -142,7 +168,7 @@ export class ScoreBrowser extends Component
 
     showPrevNextButtons = (show) =>
     {
-
+        console.log("showPrevNextButtons: %s", show);
         var svgDoc = this.scoreBrowser.contentDocument;
         svgDoc.getElementById("nextButton_glyph").style['opacity'] = show ? 1 : 0;
         svgDoc.getElementById("prevButton_glyph").style['opacity'] = show ? 1 : 0;

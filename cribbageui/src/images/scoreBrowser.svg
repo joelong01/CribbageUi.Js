@@ -7,12 +7,12 @@
     <path id="nextButton_glyph" d="M808.895,87.004l-30,15l0,-30l30,15Z" style="fill:#0a0a0a;stroke:#000;stroke-width:1.55px;"/>
     <text id="txtScore" x="34.115px" y="95.225px" style="font-family:'BookmanOldStyle', 'Bookman Old Style', serif;font-weight:300;font-size:24px;fill:#fff;">(1 of 2) Score:</text>
     <text id="txtMessage" x="6.764px" y="24.679px" style="font-family:'BookmanOldStyle-BoldItalic', 'Bookman Old Style', serif;font-weight:600;font-style:italic;font-size:24px;fill:#fff;">Message:</text>
-    <path id="btnContinue_glyph" d="M945.393,73.429l0.633,1.066c-2.592,2.295 -5.477,5.829 -8.654,10.601c-3.177,4.773 -5.603,9.23 -7.279,13.374l-1.344,1.069c-1.115,0.913 -1.872,1.59 -2.272,2.032c-0.156,-0.669 -0.499,-1.763 -1.029,-3.285l-0.505,-1.386c-0.723,-1.99 -1.395,-3.462 -2.016,-4.414c-0.622,-0.952 -1.319,-1.584 -2.093,-1.895c1.309,-1.624 2.508,-2.438 3.596,-2.44c0.932,-0.001 1.964,1.483 3.096,4.455l0.56,1.493c2.051,-4.059 4.682,-8.005 7.894,-11.838c3.211,-3.833 6.349,-6.777 9.413,-8.832Z" style="fill-opacity:0.971429;fill-rule:nonzero;"/>
-    <path id="btnHigherScore_glyph" d="M842.71,72.727l11.209,11.201l0,8.446l-8.219,-8.213l0,16.432l-5.979,0l0,-16.432l-8.22,8.213l0,-8.446l11.209,-11.201Z" style="fill-rule:nonzero;"/>
-    <path id="btnLowerScore_glyph" d="M871.43,102.554l-11.209,-11.201l0,-8.447l8.219,8.214l0,-16.433l5.979,0l0,16.433l8.22,-8.214l0,8.447l-11.209,11.201Z" style="fill-rule:nonzero;"/>
-    <rect id="btnHigherScore" x="827.538" y="71.164" width="29.024" height="32.631" style="fill:#c1d1de;fill-opacity:0.01;"/>
+    <path id="btnContinue_glyph" d="M944.166,-0.044l1.974,3.853c-8.084,8.294 -17.079,21.063 -26.987,38.308c-9.907,17.244 -17.475,33.353 -22.703,48.327l-4.192,3.864c-3.475,3.298 -5.836,5.745 -7.083,7.341c-0.486,-2.416 -1.554,-6.373 -3.205,-11.872l-1.576,-5.011c-2.251,-7.194 -4.344,-12.512 -6.281,-15.954c-1.936,-3.441 -4.111,-5.726 -6.522,-6.852c4.082,-5.87 7.82,-8.808 11.214,-8.814c2.904,-0.006 6.119,5.362 9.647,16.102l1.744,5.396c6.397,-14.667 14.603,-28.926 24.618,-42.777c10.016,-13.851 19.8,-24.488 29.352,-31.911Z" style="fill-opacity:0.971429;fill-rule:nonzero;"/>
+    <path id="btnHigherScore_glyph" d="M836.21,9.994l16,16.078l0,12.124l-11.733,-11.79l0,23.588l-8.535,0l0,-23.588l-11.732,11.79l0,-12.124l16,-16.078Z" style="fill-rule:nonzero;"/>
+    <path id="btnLowerScore_glyph" d="M836.21,97.103l-16,-16.079l0,-12.123l11.732,11.789l0,-23.587l8.535,0l0,23.587l11.733,-11.789l0,12.123l-16,16.079Z" style="fill-rule:nonzero;"/>
+    <rect id="btnHigherScore" x="820.21" y="7.487" width="32" height="42.506" style="fill:#c1d1de;fill-opacity:0.01;"/>
     <rect id="nextButton" x="775" y="70.688" width="36.24" height="32.631" style="fill:#c1d1de;fill-opacity:0.01;"/>
     <rect id="prevButton" x="1.201" y="71.184" width="32.915" height="32.631" style="fill:#c1d1de;fill-opacity:0.01;"/>
-    <rect id="btnLowerScore" x="856.561" y="71.164" width="29.024" height="32.631" style="fill:#c1d1de;fill-opacity:0.01;"/>
-    <rect id="btnContinue" x="919.99" y="71.164" width="29.024" height="32.631" style="fill:#c1d1de;fill-opacity:0.02;"/>
+    <rect id="btnLowerScore" x="820.21" y="57.103" width="32" height="40" style="fill:#c1d1de;fill-opacity:0.01;"/>
+    <rect id="btnContinue" x="872.372" y="0" width="76.641" height="103.795" style="fill:#c1d1de;fill-opacity:0.02;"/>
 </svg>
