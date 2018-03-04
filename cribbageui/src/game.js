@@ -182,6 +182,8 @@ export class CribbageGame extends Component
                     {
                         let scoreObj = this.createScoreObject(2, "Nobs", [this.state.sharedCardView]);
                         await this.addScore(Dealer, scoreObj);
+                        this.nextScoreCallback();
+                        this.waitForContinue();
                     }
                     await this.setStateAsync({ gameState: "Count" });
                     break;
