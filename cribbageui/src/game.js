@@ -11,7 +11,7 @@ import "./menu.css";
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
 import DragDropContextProvider from 'react-dnd/lib/DragDropContextProvider';
-import { CribbageServiceProxy } from './serviceProxy';
+import serviceProxy, { CribbageServiceProxy } from './serviceProxy';
 import { ScoreCtrl } from './controls/scoreCtrl';
 import { randomBytes } from 'crypto';
 import scoreBrowser, { ScoreBrowser } from './controls/scoreBrowser';
@@ -148,7 +148,7 @@ export class CribbageGame extends Component
         let nextState = "";
         let loopCount = 0;
 
-        while (this.state.computerFrontScore <  this.state.WinningScore && this.state.playerFrontScore <  this.state.WinningScore)
+        while (this.state.computerFrontScore < this.state.WinningScore && this.state.playerFrontScore < this.state.WinningScore)
         {
             loopCount++;
             util.log("state: %s", this.state.gameState);
@@ -156,11 +156,12 @@ export class CribbageGame extends Component
             {
                 case "Start":
                     await this.resetScoreList();
-                    //
-                    //  need a way to pick the dealer
-                    await this.setStateAsync({ gameState: "Deal" });
                     this.myScoreBrowser.showUpDownButtons(false);
                     this.myScoreBrowser.showPrevNextButtons(false);
+                    let startRes = await serviceProxy.cutCards();                    
+                    Dealer = await this.showCutCardAnimation(startRes.CutCards.Player, startRes.CutCards.Computer);
+                    await this.onReset();
+                    await this.setStateAsync({ gameState: "Deal" });
                     break;
                 case "Deal":
                     await this.animateCribGridToOwner(Dealer);
@@ -326,7 +327,7 @@ export class CribbageGame extends Component
         }
 
         if (this.state.computerFrontScore < this.state.WinningScore)
-        {   
+        {
             this.myScoreBrowser.setMessage("Congratulations!  You won!");
         }
         else
@@ -339,6 +340,38 @@ export class CribbageGame extends Component
     {
         let deltaY = (to === "computer") ? -280 : 280;
         await this.state.sharedCardView.animateAsync(0, deltaY, 0, 1000);
+    }
+
+
+    showCutCardAnimation = async (playerDataCard, computerDataCard) =>
+    {
+        
+        await this.setState({ cardDataObjs: [playerDataCard, computerDataCard] });
+        
+        
+        let playerCard = this.refs[playerDataCard.cardName];
+        let computerCard = this.refs[computerDataCard.cardName];
+
+        this.state.cardViewsInGrid["deck"] = [playerCard, computerCard];        
+        await this.markCardToMoveAsync(playerCard, 0, "deck", "player");
+        await this.markCardToMoveAsync(computerCard, 0, "deck", "computer");
+        await StaticHelpers.wait(250);
+        let promises = this.redoGridLayoutAsync(["computer", "player"], 1000);
+        await Promise.all(promises);
+
+        await playerCard.setOrientationAsync("faceup");
+        await computerCard.setOrientationAsync("faceup");
+
+        let Dealer = "computer";
+
+        if (playerDataCard.Ordinal < computerDataCard.Ordinal)
+        {
+            Dealer = "player";
+        }
+
+        this.myScoreBrowser.setMessage(util.format("%s won first deal", Dealer === "player" ? "You" : "The Computer"));
+        await this.waitForContinue();
+        return Dealer;
     }
 
     endOfTurn = async () =>
@@ -670,12 +703,12 @@ export class CribbageGame extends Component
 
         if (newOwner === "player") 
         {
-            cmd = "translate(0px, 563px)";
+            cmd = "translate(0px, 283px)";
 
         }
         else
         {
-            cmd = "translate(0px, 0px)";
+            cmd = "translate(0px, -283px)";
         }
 
         this.myCribDiv.style['transform'] = cmd;
@@ -1284,13 +1317,13 @@ export class CribbageGame extends Component
 
     markCardToMoveAsync = async (cardView, index, from, to) =>
     {
-        //util.log("[%s]: markCardToMoveAsync from %s to %s", card.state.cardName, from, to);        
-
+        //util.log("[%s]: markCardToMoveAsync from %s to %s", card.state.cardName, from, to);                
         let cardsFrom = this.state.cardViewsInGrid[from];
-        let newCardsFrom = cardsFrom.splice(index, 1);
-        this.state.cardViewsInGrid[to].push(cardView);
-        console.assert(newCardsFrom.cardName === cardView.cardName, "splice returned a different card than the one passed in");
-        await cardView.setStateAsync({ location: to });
+        console.log ("index of %s in %s is %s", cardView.state.cardName, from, cardsFrom.indexOf(cardView));
+        console.log("markCardToMoveAsync - cardsFrom %s", cardsFrom.map(c => c.state.cardName));
+        let newCardsFrom = cardsFrom.splice(index, 1);          // take it out of the "from" location
+        this.state.cardViewsInGrid[to].push(cardView);          // put it in the "to" location
+        await cardView.setStateAsync({ location: to });         // update its location
     }
 
 
@@ -1574,7 +1607,12 @@ export class CribbageGame extends Component
             for (let [index, cardView] of cardViews.entries())            
             {
                 let pos = {};
-                let degrees = (cardView.state.cardName === this.state.sharedCardView.state.cardName) ? 0 : 360;
+                let degrees = 360;
+                if (this.state.sharedCardView !== null)
+                {
+                     degrees = (cardView.state.cardName === this.state.sharedCardView.state.cardName) ? 0 : 360;
+                }
+                
                 pos = self.getCardPosition(grid, index);
                 promises.push(cardView.animateAsync(pos["xPos"], pos["yPos"], degrees, timeoutMs));
                 let zIndex = 20 + index;
