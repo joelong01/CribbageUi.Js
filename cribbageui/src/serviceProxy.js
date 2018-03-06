@@ -1,6 +1,8 @@
 import util from 'util';
 import { StaticHelpers } from './helper_functions';
 
+const HOST_NAME = "http://localhost:8080/api/";
+
 export class CribbageServiceProxy
 {
 
@@ -9,14 +11,14 @@ export class CribbageServiceProxy
     //
     static getHandAsync = async (dealersHand) =>
     {
-            let url = 'http://localhost:8080/api/getrandomhand/';
-            url += dealersHand ? 'true' : 'false';
-            console.log("fetching url: %s", url);
-            let res = await fetch(url);
-            let jObj = await res.json();           
-            StaticHelpers.dumpObject("getHandAsync returns:", jObj);
-            return jObj;
-        
+        let url = HOST_NAME + 'getrandomhand/';
+        url += dealersHand ? 'true' : 'false';
+        console.log("fetching url: %s", url);
+        let res = await fetch(url);
+        let jObj = await res.json();
+        StaticHelpers.dumpObject("getHandAsync returns:", jObj);
+        return jObj;
+
 
     }
 
@@ -36,16 +38,27 @@ export class CribbageServiceProxy
         else
             return csv;
     }
+
+    static cutCards = async () =>
+    {
+        let url = HOST_NAME + "cutcards";
+        let res = await fetch(url);
+        let jobj = await res.json();
+        console.log("cutcards repeatable url: %s", jobj.RepeatUrl);
+        return jobj;
+
+    }
+
     //
     //  hand: the uncounted cards left in the hand
     //  countedCards: the cards that are part of the current counting run
     //  currentCount: the int value of the current count
     static getComputerCountCardAsync = async (hand, countedCards, currentCount) =>
     {
-       
+
 
         //URL should look like /getnextcountedcard/:cardsleft/:currentCount/:countedcards
-        let url = "http://localhost:8080/api/getnextcountedcard/";
+        let url = HOST_NAME + "getnextcountedcard/";
 
         let csv = CribbageServiceProxy.cardArrayToCardNameCsv(hand);
         url += csv;
@@ -59,7 +72,7 @@ export class CribbageServiceProxy
         url += csv;
         console.log("getComputerCountCardAsync url: %s", url);
         let res = await fetch(url);
-        let jobj = await res.json();       
+        let jobj = await res.json();
         return jobj;
     }
 
@@ -67,13 +80,13 @@ export class CribbageServiceProxy
     {
         ///scorecountedcards/:playedcard/:currentCount
         // '/scorecountedcards/:playedcard/:currentCount/:countedcards/'
-        let url = "http://localhost:8080/api/scorecountedcards/";
+        let url = HOST_NAME + "scorecountedcards/";
         url += inCard.state.cardName;
         url += "/";
         url += currentCount;
 
         url += "/";
-        
+
         if (countedCards.length > 0)
         {
             let cards = [];
@@ -81,16 +94,16 @@ export class CribbageServiceProxy
             {
                 if (card.state.cardName !== inCard.state.cardName)
                     cards.push(card);
-            }           
+            }
             let csv = CribbageServiceProxy.cardArrayToCardNameCsv(cards);
             url += csv;
         }
         console.log("getCountedScoreAsync url: %s", url);
-       
+
         let res = await fetch(url);
         let jObj = await res.json();
-        console.log("jObj: %o", jObj);       
-        return jObj;       
+        console.log("jObj: %o", jObj);
+        return jObj;
     }
 
     //
@@ -111,7 +124,7 @@ export class CribbageServiceProxy
             };
         StaticHelpers.dumpObject("getScoreForHandAsyn inputs", inObject);
 
-        let url = "http://localhost:8080/api/scorehand/";
+        let url = HOST_NAME + "scorehand/";
         let csv = CribbageServiceProxy.cardArrayToCardNameCsv(hand);
         url += csv;
         url += "/";
@@ -132,7 +145,7 @@ export class CribbageServiceProxy
     //
     static getCribCardsAsync = async (hand, isMyCrib) =>
     {
-        let url = 'http://localhost:8080/api/getcribcards/';
+        let url = HOST_NAME + 'getcribcards/';
         let csv = CribbageServiceProxy.cardArrayToCardNameCsv(hand);
         url += csv;
         url += (isMyCrib) ? "/true" : "/false";
