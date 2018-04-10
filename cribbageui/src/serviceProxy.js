@@ -1,7 +1,7 @@
 import util from 'util';
 import { StaticHelpers } from './helper_functions';
 
-const HOST_NAME = "http://localhost:8080/api/";
+const HOST_NAME = "https://cribbagelx.azurewebsites.net/api/"; // "http://localhost:8080/api/";
 
 export class CribbageServiceProxy
 {
