@@ -1,0 +1,15 @@
+.cribDiv
+{
+  
+  transition-duration: 0.5s;
+  transition-property: transform;	
+  transform: translate(0px, 0px);
+  transition-timing-function: ease-in-out;
+  width: 168px;
+  padding: 0px;
+  margin: 0px;
+  border: 1px solid black !important;
+  border-radius: 5px;
+}
+
+
