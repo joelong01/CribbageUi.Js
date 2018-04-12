@@ -1173,7 +1173,7 @@ export class CribbageGame extends Component
                         </div>
                         <button className="burgerItemButton" onClick={this.getSuggestion.bind(this)}>Suggestion</button>
                     </div>
-                    <fieldset>
+              {/*       <fieldset>
                         <legend> Crib Owner </legend>
                         <div className="Menu_radioButton">
                             <label>
@@ -1195,8 +1195,9 @@ export class CribbageGame extends Component
                         </span>
                             </label>
                         </div>
-                    </fieldset>
-                    <fieldset className="Menu_TestButtons"  >
+                    </fieldset> */}
+                    
+                  {/*   <fieldset className="Menu_TestButtons"  >
                         <legend> Test Buttons </legend>
                         <div>
                             <button onClick={this.onReset.bind(this)} className="menu-item--large" >Reset</button>
@@ -1217,7 +1218,8 @@ export class CribbageGame extends Component
                             <button onClick={this.onTestBump.bind(this)} className="menu-item--large" >Test Bump</button>
                             <button onClick={this.onRedoPlayerLayout.bind(this)} className="menu-item--large" >onRedoPlayerLayout</button>
                         </div>
-                    </fieldset>
+                    </fieldset> */}
+                    
                     <fieldset>
                         <legend> Options </legend>
                         <label>
