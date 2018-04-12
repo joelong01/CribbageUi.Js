@@ -1173,54 +1173,7 @@ export class CribbageGame extends Component
                         </div>
                         <button className="burgerItemButton" onClick={this.getSuggestion.bind(this)}>Suggestion</button>
                     </div>
-              {/*       <fieldset>
-                        <legend> Crib Owner </legend>
-                        <div className="Menu_radioButton">
-                            <label>
-                                <input type="radio" value="computer"
-                                    checked={this.state.cribOwner === 'computer'}
-                                    onChange={this.handleChooseCribPlayer} />
-                                <span className="radioTextBlock">
-                                    Computer
-                        </span>
-                            </label>
-                        </div>
-                        <div className="Menu_radioButton">
-                            <label>
-                                <input type="radio" value="player"
-                                    checked={this.state.cribOwner === 'player'}
-                                    onChange={this.handleChooseCribPlayer} />
-                                <span className="radioTextBlock">
-                                    Player
-                        </span>
-                            </label>
-                        </div>
-                    </fieldset> */}
-                    
-                  {/*   <fieldset className="Menu_TestButtons"  >
-                        <legend> Test Buttons </legend>
-                        <div>
-                            <button onClick={this.onReset.bind(this)} className="menu-item--large" >Reset</button>
-                        </div>
-                        <div>
-                            <div>
-                                <button onClick={this.onDeal.bind(this)} className="menu-item--large" ref="mnu_onGetHand">Deal</button>
-                            </div>
-                            <button onClick={this.onGetHandAsync.bind(this)} className="menu-item--large" ref="mnu_onGetHand">GetHandAsync</button>
-                            <div>
-                                <button onClick={this.getComputerCribCards.bind(this)} className="menu-item--large" ref="mnu_animateComputerCribCards">Crib Cards</button>
-                            </div>
-                            <button onClick={this.animateCardsToCrib.bind(this)} className="menu-item--large" ref="mnu_animateCardsToCrib">Move Cards to Crib</button>
-                            <button onClick={this.onAnimateCribCardsToOwner.bind(this)} className="menu-item--large" ref="mnu_onAnimateCribCardsToOwner">Crib back to owner</button>
-                            <button onClick={this.onTestMoveToCounted.bind(this)} className="menu-item--large" ref="mnu_onTestMoveToCounted">Move Cards to Counted</button>
-                            <button onClick={this.onTestSetScore.bind(this)} className="menu-item--large" ref="mnu_onTestSetScore">Test Set Score</button>
-                            <button onClick={this.onTestScoreBrowser.bind(this)} className="menu-item--large" ref="mnu_onTestScoreBrowser">Test Score Browser</button>
-                            <button onClick={this.onTestBump.bind(this)} className="menu-item--large" >Test Bump</button>
-                            <button onClick={this.onRedoPlayerLayout.bind(this)} className="menu-item--large" >onRedoPlayerLayout</button>
-                        </div>
-                    </fieldset> */}
-                    
-                    <fieldset>
+                <fieldset>
                         <legend> Options </legend>
                         <label>
                             <input type="checkbox" checked={this.state.doZoomWindow} onChange={this.toggleZoomWindow} />
