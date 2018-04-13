@@ -74,10 +74,10 @@ export class ScoreBrowser extends Component
             this.resetMessages();
             this.showPrevNextButtons(false);
             this.showUpDownButtons(false);
-            this.setMessage("Use the menu to start a new game");            
+            this.setMessage("Use menu to start a new game. The check is to 'continue' in the game.  ");            
         });
 
-        this.showContinueButton(false);        
+        this.showContinueButton(true);        
         
     }
 
@@ -127,7 +127,7 @@ export class ScoreBrowser extends Component
             {
                 try
                 {
-                    util.log("resolving waitForContinue");
+          //          util.log("resolving waitForContinue");
                     this.showContinueButton(false);
                     resolve_func();
 
@@ -168,7 +168,7 @@ export class ScoreBrowser extends Component
 
     showPrevNextButtons = (show) =>
     {
-        console.log("showPrevNextButtons: %s", show);
+     //   console.log("showPrevNextButtons: %s", show);
         var svgDoc = this.scoreBrowser.contentDocument;
         svgDoc.getElementById("nextButton_glyph").style['opacity'] = show ? 1 : 0;
         svgDoc.getElementById("prevButton_glyph").style['opacity'] = show ? 1 : 0;

@@ -1,7 +1,8 @@
 import util from 'util';
 import { StaticHelpers } from './helper_functions';
 
-const HOST_NAME = "https://cribbage.azurewebsites.net/api/"; // "http://localhost:8080/api/";
+const HOST_NAME = "https://cribbage.azurewebsites.net/api/"; 
+//const HOST_NAME =  "http://localhost:8080/api/";
 
 export class CribbageServiceProxy
 {
@@ -44,7 +45,7 @@ export class CribbageServiceProxy
         let url = HOST_NAME + "cutcards";
         let res = await fetch(url);
         let jobj = await res.json();
-        console.log("cutcards repeatable url: %s", jobj.RepeatUrl);
+        StaticHelpers.dumpObject("cutCards: ", jobj);        
         return jobj;
 
     }
@@ -113,16 +114,7 @@ export class CribbageServiceProxy
     //
     static getScoreForHandAsync = async (hand, sharedCard, isCrib) =>
     {
-        // /scorehand/:hand/:sharedcard/:isCrib'
-        //localhost:8080/api/scorehand/FiveOfHearts,SixOfHearts,FourOfHearts,FourOfClubs/SixOfDiamonds/true 
-
-        let inObject =
-            {
-                hand: hand,
-                sharedCard: sharedCard,
-                isCrib: isCrib
-            };
-        StaticHelpers.dumpObject("getScoreForHandAsyn inputs", inObject);
+       //  StaticHelpers.dumpObject("getScoreForHandAsync inputs", inObject);
 
         let url = HOST_NAME + "scorehand/";
         let csv = CribbageServiceProxy.cardArrayToCardNameCsv(hand);
@@ -150,7 +142,7 @@ export class CribbageServiceProxy
         url += csv;
         url += (isMyCrib) ? "/true" : "/false";
 
-        console.log("getCribCards url: %s", url);
+    //    console.log("getCribCards url: %s", url);
         let res = await fetch(url);
         let cribcards = await res.json();
         StaticHelpers.dumpObject("crib cards: ", cribcards);

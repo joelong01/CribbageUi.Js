@@ -168,7 +168,7 @@ export class CardView extends React.Component
     {
         
         this.myCard.style['transition'] = ms + "ms";
-        util.log ("[%s] translatespeed: %s", this.state.cardName, this.myCard.style['transition']);
+    //    util.log ("[%s] translatespeed: %s", this.state.cardName, this.myCard.style['transition']);
     }
 
     select = async (isSelected) =>

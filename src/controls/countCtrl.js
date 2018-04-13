@@ -35,7 +35,7 @@ export class CountCtrl extends Component
             });
 
         let cmd = util.format("transform (0px, %spx)", ytrans);
-        util.log("setting countCtrl transform to: %s", cmd);
+     //   util.log("setting countCtrl transform to: %s", cmd);
         this.myCountCtrl.style['transform'] = cmd;
     }
 

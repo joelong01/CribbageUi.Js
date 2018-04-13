@@ -66,7 +66,7 @@
 
 .DIV_counted
 {
-    width: 725px;
+    width: 775px;
     min-width: 725px;    
     margin-top: 280px;
     margin-left: 230px;
@@ -147,7 +147,25 @@
       
 }
 
+.helpContinue
+{
+    transform: scale(2, 2.5);
+    transform-origin: top left;
+    position: absolute;
+    margin-top: 860px;
+    margin-left: 1150px;
+    z-index: 999;
+}
 
+.helpMenu
+{
+    transform: scale(1.5, 1.5);
+    transform-origin: top left;
+    position: absolute;
+    margin-top: -18px;
+    margin-left: 50px;
+    z-index: 999; 
+}
 
 
 [class^="grid_"]
