@@ -1093,7 +1093,15 @@ export class CribbageGame extends Component
         //util.log("[%s].clicked.  countable:%s state:%s", cardView.state.cardName, cardView.state.countable, this.state.gameState);
         if (this.state.gameState === "PlayerSelectsCribCards")
         {
-            await this.markAndMoveMultipleCardsAsync([cardView], "player", "counted");
+            if (cardView.state.location === "player")  // player wants it in their crib
+            {
+                await this.markAndMoveMultipleCardsAsync([cardView], "player", "counted");
+            }
+            else if (cardView.state.location === "counted") // player wants to undo it
+            {
+                await this.markAndMoveMultipleCardsAsync([cardView], "counted", "player");
+                return;
+            }
             if (this.state.cardViewsInGrid["counted"].length === 4)            
             {
                 this.state.waitForUserCallback();
@@ -1109,7 +1117,7 @@ export class CribbageGame extends Component
 
             if (!cardView.state.countable)
             {
-                this.myScoreBrowser.setMessage(util.format("$s is not playable at this time, card.cardName.  hit the check mark to continue..."));
+                this.myScoreBrowser.setMessage(util.format("%s is not playable at this time.", cardView.state.cardName));
                 await this.waitForContinue();
                 return;
             }
