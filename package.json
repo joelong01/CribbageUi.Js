@@ -20,7 +20,8 @@
     "react-konva": "^1.7.1",
     "react-scripts": "1.1.0",
     "react-shapes": "^0.1.0",
-    "request": "^2.85.0"
+    "request": "^2.85.0",
+    "simple-statistics": "^6.0.0"
   },
   "scripts": {
     "start": "react-scripts start",

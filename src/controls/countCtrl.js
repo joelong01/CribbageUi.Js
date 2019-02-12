@@ -38,6 +38,7 @@ export class CountCtrl extends Component
      //   util.log("setting countCtrl transform to: %s", cmd);
         this.myCountCtrl.style['transform'] = cmd;
     }
+    
 
     setXform = (cmd) =>
     {
