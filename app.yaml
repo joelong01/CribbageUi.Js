@@ -1,0 +1,9 @@
+template: external-service
+values:
+    fqdn: cribbage.cloud
+    image: tpark.azurecr.io/cribbage-ux:20211025T221214Z
+    app: cribbage-ux
+    cpu: 0.5 
+    memory: 256M
+    replicas: 2
+    port: 80 
