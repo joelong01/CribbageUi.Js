@@ -1,0 +1,50 @@
+name: React CI/CD
+
+on:
+    push:
+        branches: [master]
+    pull_request:
+        branches: [master]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                node-version: [14.x]
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2
+
+            - name: Set up Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v1
+              with:
+                  node-version: ${{ matrix.node-version }}
+
+            # `yarn install`
+            - uses: borales/actions-yarn@v2.3.0
+              with:
+                  cmd: install
+
+            # `yarn build`
+            - uses: borales/actions-yarn@v2.3.0
+              with:
+                  cmd: build
+
+            - name: "Login via Azure CLI"
+              uses: azure/login@v1
+              with:
+                  creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+            - name: "Build and Push Image"
+              uses: azure/docker-login@v1
+              with:
+                  login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+                  username: ${{ secrets.REGISTRY_USERNAME }}
+                  password: ${{ secrets.REGISTRY_PASSWORD }}
+            - run: |
+                  export TAG=`date -u +"%Y%m%dT%H%M%SZ"`
+                  docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/cribbage-ux:$TAG
+                  docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/cribbage-ux:$TAG
