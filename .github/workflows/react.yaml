@@ -34,10 +34,10 @@ jobs:
             - name: "Build and Push Image"
               uses: azure/docker-login@v1
               with:
-                  login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+                  login-server: tpark.azurecr.io
                   username: ${{ secrets.REGISTRY_USERNAME }}
                   password: ${{ secrets.REGISTRY_PASSWORD }}
             - run: |
                   export TAG=`date -u +"%Y%m%dT%H%M%SZ"`
-                  docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/cribbage-ux:$TAG
-                  docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/cribbage-ux:$TAG
+                  docker build . -t tpark.azurecr.io/cribbage-ux:$TAG
+                  docker push tpark.azurecr.io/cribbage-ux:$TAG
