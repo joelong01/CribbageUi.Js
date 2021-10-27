@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 import React, { Component } from 'react';
-
+import Board from '../images/board.svg'
 
 
 
@@ -11,8 +11,8 @@ export class CribbageBoard extends React.Component
     {
         return (
             <img className="cribbageBoard" width={"250"} height={800}
-                        alt={require("../images/Cards/error.png")}
-                        srcSet={require("../images/board.svg")}                        
+                        alt="../images/Cards/error.png"
+                        srcSet={Board}
                         ref={myBoard => this.myBoard = myBoard}
 
                     />

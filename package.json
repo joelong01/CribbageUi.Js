@@ -3,23 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "enum": "^2.5.0",
-    "konva": "^1.7.6",
-    "makerjs": "^0.9.93",
-    "prop-types": "^15.7.2",
     "react": "^16.14.0",
-    "react-absolute-grid": "^3.0.1",
     "react-burger-menu": "^2.9.2",
-    "react-dnd": "^2.6.0",
-    "react-dnd-html5-backend": "^2.6.0",
-    "react-dom": "^16.14.0",
-    "react-grid-layout": "^0.16.6",
-    "react-hybrid-canvas": "^1.0.0",
-    "react-inlinesvg": "^0.7.5",
-    "react-konva": "^16.8.6",
-    "react-shapes": "^0.1.0",
-    "request": "^2.88.2",
-    "simple-statistics": "^6.1.1"
+    "react-dom": "^16.14.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -29,6 +15,10 @@
   },
   "devDependencies": {
     "react-scripts": "^4.0.3"
+  },
+  "peerDependencies": {
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0"
   },
   "browserslist": {
     "production": [

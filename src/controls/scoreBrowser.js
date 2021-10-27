@@ -3,21 +3,30 @@ import React, { Component } from 'react';
 import util from 'util';
 import ScoreBrowserSvg from '../images/scoreBrowser.svg';
 
-export class ScoreBrowser extends Component {
-    constructor(props) {
+import { StaticHelpers } from '../helper_functions';
+
+export class ScoreBrowser extends Component
+{
+    constructor(props)
+    {
         super(props);
         this.state =
-        {
-            message: "",
-            nextScoreCallback: null,
-            prevScoreCallback: null,
-            playerSetScoreCallback: null,
-            txtScore: null,
-            txtMsg: null,
-        }
+            {
+                message: "",
+                nextScoreCallback: null,
+                prevScoreCallback: null,
+                playerSetScoreCallback: null,
+                txtScore: null,
+                txtMsg: null,
+               
+            }
+
     }
 
-    componentDidMount() {
+
+
+    componentDidMount() 
+    {
 
         this.setState({
             message: this.props.frontScore,
@@ -27,86 +36,104 @@ export class ScoreBrowser extends Component {
         });
     }
 
-    scoreBrowserLoaded = () => {
+
+
+
+    scoreBrowserLoaded = () =>
+    {
         var buttonNames = ["nextButton", "prevButton", "btnHigherScore", "btnLowerScore", "btnContinue"];
         var self = this;
         var svgDoc = this.scoreBrowser.contentDocument;
-        console.log(svgDoc);
-        svgDoc.getElementById("nextButton").addEventListener('click', () => {
+        svgDoc.getElementById("nextButton").addEventListener('click', () => 
+        {
             self.state.nextScoreCallback();
         });
 
-        svgDoc.getElementById("prevButton").addEventListener('click', () => {
+        svgDoc.getElementById("prevButton").addEventListener('click', () => 
+        {
             self.state.prevScoreCallback();
         });
 
         svgDoc.getElementById("btnHigherScore").addEventListener('click', this.onUpScore);
         svgDoc.getElementById("btnLowerScore").addEventListener('click', this.onDownScore);
-
-        for (let name of buttonNames) {
+       
+        for (let name of buttonNames)
+        {
             svgDoc.getElementById(name).addEventListener('mouseenter', this.onMouseEnter);
             svgDoc.getElementById(name).addEventListener('mouseleave', this.onMouseLeave);
             svgDoc.getElementById(name).addEventListener('mousedown', this.onMouseDown);
             svgDoc.getElementById(name).addEventListener('mouseup', this.onMouseUp);
-
+            
         }
 
         this.setState({
             txtScore: svgDoc.getElementById("txtScore"),
-            txtMsg: svgDoc.getElementById("txtMessage"),
-        }, () => {
+            txtMsg: svgDoc.getElementById("txtMessage"),            
+        }, () => 
+        {
             this.resetMessages();
             this.showPrevNextButtons(false);
             this.showUpDownButtons(false);
-            this.setMessage("Use menu to start a new game. The check is to 'continue' in the game.  ");
+            this.setMessage("Use menu to start a new game. The check is to 'continue' in the game.  ");            
         });
 
-        this.showContinueButton(true);
+        this.showContinueButton(true);        
+        
     }
 
-    showContinueButton = (bShow) => {
+    showContinueButton = (bShow) =>
+    {
         let vis = (bShow) ? "visible" : "hidden";
         var svgDoc = this.scoreBrowser.contentDocument;
         svgDoc.getElementById("btnContinue").style.visibility = vis;
         svgDoc.getElementById("btnContinue_glyph").style.visibility = vis;
     }
-
-    onMouseDown = (e) => {
+    
+    onMouseDown = (e) =>
+    {
         var svgDoc = this.scoreBrowser.contentDocument;
         let glyph = e.currentTarget.id + "_glyph";
         svgDoc.getElementById(glyph).style.fill = 'darkgray';
     }
 
-    onMouseUp = (e) => {
+    onMouseUp = (e) =>
+    {
         var svgDoc = this.scoreBrowser.contentDocument;
         let glyph = e.currentTarget.id + "_glyph";
         svgDoc.getElementById(glyph).style.fill = 'black';
     }
 
-    onMouseEnter = (e) => {
+    onMouseEnter = (e) =>
+    {
         var svgDoc = this.scoreBrowser.contentDocument;
         let glyph = e.currentTarget.id + "_glyph";
         svgDoc.getElementById(glyph).style.fill = 'white';
     }
 
-    onMouseLeave = (e) => {
+    onMouseLeave = (e) =>
+    {
         var svgDoc = this.scoreBrowser.contentDocument;
         let glyph = e.currentTarget.id + "_glyph";
         svgDoc.getElementById(glyph).style.fill = 'black';
     }
 
-    waitForContinue = () => {
-
+    waitForContinue = () =>
+    {
+        
         this.showContinueButton(true);
-        return new Promise((resolve_func, reject_func) => {
-            var onContinue = () => {
-                try {
-                    //          util.log("resolving waitForContinue");
+        return new Promise((resolve_func, reject_func) =>
+        {
+            var onContinue = () =>
+            {
+                try
+                {
+          //          util.log("resolving waitForContinue");
                     this.showContinueButton(false);
                     resolve_func();
 
                 }
-                catch (e) {
+                catch (e)
+                {
                     this.showContinueButton(false);
                     reject_func();
                 }
@@ -114,19 +141,24 @@ export class ScoreBrowser extends Component {
 
             var svgDoc = this.scoreBrowser.contentDocument;
             svgDoc.getElementById("btnContinue").addEventListener('click', onContinue);
+
         });
+
     }
 
     //
     //  called by game.js when the user clicks on a card to play it during counting phase.
     //  treat that as clicking the check mark
-    simulateClick = (scoreBrowser) => {
-        var event = document.createEvent("SVGEvents");
-        event.initEvent("click", true, true);
+    simulateClick = (scoreBrowser) =>
+    {
+        
+        var event = document.createEvent("SVGEvents"); 
+        event.initEvent("click",true,true);
         scoreBrowser.scoreBrowser.contentDocument.getElementById("btnContinue").dispatchEvent(event);
     }
 
-    showUpDownButtons = (show) => {
+    showUpDownButtons = (show) =>
+    {
         var svgDoc = this.scoreBrowser.contentDocument;
         svgDoc.getElementById("btnHigherScore_glyph").style['opacity'] = show ? 1 : 0;
         svgDoc.getElementById("btnLowerScore_glyph").style['opacity'] = show ? 1 : 0;
@@ -134,16 +166,19 @@ export class ScoreBrowser extends Component {
         svgDoc.getElementById("btnLowerScore").style['opacity'] = show ? .01 : 0;
     }
 
-    showPrevNextButtons = (show) => {
-        //   console.log("showPrevNextButtons: %s", show);
+    showPrevNextButtons = (show) =>
+    {
+     //   console.log("showPrevNextButtons: %s", show);
         var svgDoc = this.scoreBrowser.contentDocument;
         svgDoc.getElementById("nextButton_glyph").style['opacity'] = show ? 1 : 0;
         svgDoc.getElementById("prevButton_glyph").style['opacity'] = show ? 1 : 0;
         svgDoc.getElementById("nextButton").style['opacity'] = show ? .01 : 0;
         svgDoc.getElementById("prevButton").style['opacity'] = show ? .01 : 0;
+
     }
 
-    onUpScore = () => {
+    onUpScore = () =>
+    {
         let scoreMsg = this.state.txtScore.textContent;
         let score = parseInt(scoreMsg, 10);
         if (isNaN(score))
@@ -152,10 +187,13 @@ export class ScoreBrowser extends Component {
         if (score > 29)
             score = 29;
 
+
         scoreMsg.textContent = score;
     }
 
-    onDownScore = () => {
+
+    onDownScore = () =>
+    {
         let scoreMsg = this.state.txtScore.textContent;
         let score = parseInt(scoreMsg, 10);
         if (isNaN(score))
@@ -167,30 +205,39 @@ export class ScoreBrowser extends Component {
         scoreMsg.textContent = score;
     }
 
-    resetMessages = () => {
+    resetMessages = () =>
+    {
         let scoreMsg = this.state.txtScore; // this gets rid of a React warning about setting state directly
-        if (scoreMsg !== null) {
+        if (scoreMsg !== null)
+        {
             scoreMsg.textContent = "";
             this.setMessage("");
         }
     }
 
-    setScoreText = (n, m, score) => {
+    setScoreText = (n, m, score) =>
+    {
         let scoreMsg = this.state.txtScore; // this gets rid of a React warning about setting state directly
         scoreMsg.textContent = util.format("(%s of %s) Score: %s", n, m, score);
     }
 
-    setMessage = (msg) => {
+    setMessage = (msg) =>
+    {
         let txtMsg = this.state.txtMsg;
         txtMsg.textContent = msg;
     }
 
-    getScoreText = () => {
+    getScoreText = () =>
+    {
         return parseInt(this.state.txtScore.textContent, 10);
     }
 
-    render() {
+    render()
+    {
+
+
         return (
+
             <div className="DIV_scoreBrowser">
                 <object className="ScoreBrowser"
                     data={ScoreBrowserSvg}
@@ -200,8 +247,10 @@ export class ScoreBrowser extends Component {
                     onLoad={this.scoreBrowserLoaded}
                 />
             </div>
+
         );
     }
+
 }
 
 export default ScoreBrowser;
