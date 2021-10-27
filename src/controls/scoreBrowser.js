@@ -1,6 +1,7 @@
 /*eslint no-unused-vars: off*/
 import React, { Component } from 'react';
 import util from 'util';
+import ScoreBrowserSvg from '../images/scoreBrowser.svg';
 
 import { StaticHelpers } from '../helper_functions';
 
@@ -33,7 +34,6 @@ export class ScoreBrowser extends Component
             prevScoreCallback: this.props.prevScoreCallback,
             playerSetScoreCallback: this.props.playerSetScoreCallback
         });
-
     }
 
 
@@ -240,7 +240,7 @@ export class ScoreBrowser extends Component
 
             <div className="DIV_scoreBrowser">
                 <object className="ScoreBrowser"
-                    data={require("../images/scoreBrowser.svg")}
+                    data={ScoreBrowserSvg}
                     type="image/svg+xml"
                     ref={scoreBrowser => this.scoreBrowser = scoreBrowser}
                     title="scoreBrowser"

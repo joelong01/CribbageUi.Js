@@ -8,13 +8,14 @@ import { StaticHelpers } from './helper_functions';
 import { CardView } from './controls/cardView';
 import "./game.css";
 import "./menu.css";
-import HTML5Backend from 'react-dnd-html5-backend';
-import { DragDropContext } from 'react-dnd';
-import DragDropContextProvider from 'react-dnd/lib/DragDropContextProvider';
+
 import serviceProxy, { CribbageServiceProxy } from './serviceProxy';
 import { ScoreCtrl } from './controls/scoreCtrl';
 import { randomBytes } from 'crypto';
 import scoreBrowser, { ScoreBrowser } from './controls/scoreBrowser';
+import Board from './images/board.svg';
+import ShowCheckbox from './images/showcheckbox.svg';
+import HelpMenu from './images/showmenu.svg';
 
 const g_allGridNames = ["deck", "player", "computer", "crib", "counted"];
 
@@ -153,6 +154,7 @@ export class CribbageGame extends Component
         while (this.state.computerFrontScore < this.state.WinningScore && this.state.playerFrontScore < this.state.WinningScore)
         {
             loopCount++;
+            let score = null;
             util.log("state: %s", this.state.gameState);
             switch (this.state.gameState)
             {
@@ -276,7 +278,7 @@ export class CribbageGame extends Component
                 case "ScorePlayerHand":
                     await this.moveSharedCard("player");
                     await this.resetScoreList();
-                    let score = await this.getScoreForHand("player", false);
+                    score = await this.getScoreForHand("player", false);
                     await this.addScore("player", score);
                     await this.waitForContinue();
                     nextState = Dealer === "computer" ? "ScoreComputerHand" : "ScorePlayerCrib";
@@ -806,8 +808,7 @@ export class CribbageGame extends Component
                 let uiCard = this.refs[cardData.cardName];
                 uiCardList.push(uiCard); // put it in the "all cards collection"
                 this.state.cardViewsInGrid[uiCard.state.location].push(uiCard); // stuff it in the location collect - should all be in "deck" at this point
-                if (uiCard.state.owner === "shared")
-                {
+                if (uiCard.state.owner === "shared") {
                     sharedCardView = uiCard;
                 }
             }
@@ -1244,25 +1245,25 @@ export class CribbageGame extends Component
                     <div className="LayoutRoot">
                         {cardsList}
                         <object className="cribbageBoard" width={"250"} height={"800"}
-                            data={require("./images/board.svg")}
+                            data={Board}
                             type="image/svg+xml"
                             ref={myBoard => this.myBoard = myBoard}
                             title="Cribbage Board"
-                        /> 
+                        />
                         {this.state.showHelp && ( // yes this is strange: It works because of how JavaScript resolve logical conditions if showHelp is true it renders the object.  otherwise skips it.
-                        <object className="helpContinue" width={100} height={30}
-                            data={require("./images/showcheckbox.svg")}
-                            type="image/svg+xml"
-                            ref={myCheckHelp => this.myCheckHelp = myCheckHelp}
-                            title="continue helper"                         
-                        />)}
-                        {this.state.showHelp && (      
-                        <object className="helpMenu" width={100} height={30}
-                            data={require("./images/showmenu.svg")}
-                            type="image/svg+xml"
-                            ref={myCheckHelp => this.myCheckHelp = myCheckHelp}
-                            title="Menu Helper"                            
-                        />)}
+                            <object className="helpContinue" width={100} height={30}
+                                data={ShowCheckbox}
+                                type="image/svg+xml"
+                                ref={myCheckHelp => this.myCheckHelp = myCheckHelp}
+                                title="continue helper"
+                            />)}
+                        {this.state.showHelp && (
+                            <object className="helpMenu" width={100} height={30}
+                                data={HelpMenu}
+                                type="image/svg+xml"
+                                ref={myCheckHelp => this.myCheckHelp = myCheckHelp}
+                                title="Menu Helper"
+                            />)}
 
                         <div className="DIV_crib" ref={myCribDiv => this.myCribDiv = myCribDiv} />
                         <CountCtrl ref={myCountCtrl => this.myCountCtrl = myCountCtrl} count={this.state.currentCount} visible={this.isCountState()} isComputerCrib={this.state.isComputerCrib} />

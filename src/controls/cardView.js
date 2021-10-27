@@ -4,12 +4,10 @@ import React, { Component } from 'react';
 import cardImages from './deck';
 import './cardView.css';
 import util from 'util';
-import { wait, StaticHelpers } from './../helper_functions';
-import { DragSource } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { StaticHelpers } from './../helper_functions';
+import SelectCard from '../images/selectCard.svg';
 
 
-var PropTypes = require('prop-types');
 
 
 
@@ -204,12 +202,12 @@ export class CardView extends React.Component
                 onClick={this.handleClick} opacity={this.state.countable ? 1 : 0.5}>
                 <div className={flipperName} ref={myFlipper => this.myFlipper = myFlipper} >
                     <img className={faceupName}
-                        alt={require("../images/Cards/error.png")}
+                        alt="../images/Cards/error.png"
                         srcSet={faceupImage}
                         ref={faceupCard => this.faceupCard = faceupCard}
                     />
                     <img className={facedownName}
-                        alt={require("../images/Cards/error.png")}
+                        alt="../images/Cards/error.png"
                         srcSet={facedownImage}
                         ref={facedownCard => this.facedownCard = facedownCard}
                     />
@@ -217,8 +215,8 @@ export class CardView extends React.Component
                 <div className={selectedName}
                     ref={mySelectSvg => this.mySelectSvg = mySelectSvg}>
                     <img
-                        alt={require("../images/Cards/error.png")}
-                        srcSet={require("../images/selectCard.svg")}
+                        alt="../images/Cards/error.png"
+                        srcSet={SelectCard}
 
                     />
                 </div>
